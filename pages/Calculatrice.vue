@@ -1,9 +1,15 @@
 <template>
   <div class="calculator">
-    <h1 class="title">Calculator</h1>
+    <h1 class="title">Calculatrice</h1>
 
-    <!-- Affichage -->
-    <div class="display">{{ display || "0" }}</div>
+    <input
+    id="calc-display"
+    name="calc-display"
+    v-model="display"
+    class="display"
+    @keyup.enter="handleEnter"
+    />
+
 
     <!-- Boutons -->
     <div class="buttons">
@@ -17,10 +23,10 @@
 <script setup>
 import { ref } from "vue"
 
-const display = ref("")
-const current = ref("")
+const display = ref("")  
+const current = ref("") 
+const previous = ref("") 
 const operator = ref(null)
-const previous = ref(null)
 
 const buttons = [
   "7", "8", "9", "/",
@@ -30,12 +36,15 @@ const buttons = [
   "C"
 ]
 
-// Fonction de calcul
+
 function calculate() {
   const prev = parseFloat(previous.value)
   const curr = parseFloat(current.value)
 
-  if (isNaN(prev) || isNaN(curr)) return
+  if (isNaN(prev) || isNaN(curr)) {
+    console.error("Erreur: un des opérandes n’est pas un nombre valide.", { prev, curr })
+    return
+  }
 
   if (operator.value === "+") {
     current.value = (prev + curr).toString()
@@ -44,11 +53,19 @@ function calculate() {
   } else if (operator.value === "*") {
     current.value = (prev * curr).toString()
   } else if (operator.value === "/") {
-    current.value = curr === 0 ? "Erreur" : (prev / curr).toString()
+    if (curr === 0) {
+      console.error("Erreur: division par zéro.")
+      current.value = "Erreur"
+    } else {
+      current.value = (prev / curr).toString()
+    }
+  } else {
+    console.warn("Aucun opérateur défini au moment du calcul.")
   }
 
+  display.value = current.value
   operator.value = null
-  previous.value = null
+  previous.value = ""
 }
 
 function press(btn) {
@@ -57,8 +74,11 @@ function press(btn) {
     display.value = current.value
   } 
   else if (["+", "-", "*", "/"].includes(btn)) {
-    if (current.value === "") return
-    if (previous.value !== null && operator.value) {
+    if (current.value === "") {
+      console.warn("Tentative de poser un opérateur sans nombre courant.")
+      return
+    }
+    if (previous.value !== "" && operator.value) {
       calculate()
     }
     operator.value = btn
@@ -66,16 +86,35 @@ function press(btn) {
     current.value = ""
   } 
   else if (btn === "=") {
-    if (previous.value !== null && operator.value && current.value !== "") {
+    if (previous.value !== "" && operator.value && current.value !== "") {
       calculate()
-      display.value = current.value
+    } else {
+      console.warn("Impossible de calculer: expression incomplète.", {
+        previous: previous.value,
+        operator: operator.value,
+        current: current.value
+      })
     }
   } 
   else if (btn === "C") {
+    console.info("Réinitialisation de la calculatrice.")
     current.value = ""
-    previous.value = null
+    previous.value = ""
     operator.value = null
     display.value = ""
+  }
+}
+
+
+function handleEnter() {
+  const match = display.value.match(/(-?\d+(\.\d+)?)([+\-*/])(-?\d+(\.\d+)?)/)
+  if (match) {
+    previous.value = match[1]
+    operator.value = match[3]
+    current.value = match[4]
+    calculate()
+  } else {
+    console.error("Expression invalide saisie dans l’input :", display.value)
   }
 }
 </script>
@@ -98,7 +137,6 @@ function press(btn) {
 }
 
 .display {
-  width: 240px;
   padding: 10px;
   margin-bottom: 10px;
   border: 2px solid #00ff66;
@@ -111,7 +149,7 @@ function press(btn) {
 
 .buttons {
   display: grid;
-  grid-template-columns: repeat(4, 60px);
+  grid-template-columns: repeat(4, 78px);
   gap: 8px;
 }
 

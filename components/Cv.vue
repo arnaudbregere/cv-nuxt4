@@ -40,18 +40,9 @@
 </template>
 
 <script setup lang="ts">
-import { cvText, experienceText, formationText, competencesText, projetsText, contactText } from '~/utils/cv_content';
+import { cvText, experienceText, formationText, competencesText, projetsText, contactText, helpText, welcomeAscii } from '~/utils/cv_content';
 
-// ASCII art bienvenue (BIENVENUE)
-const welcomeAscii = `
-BBBBB   IIIII EEEEEEE NN   NN VV     VV EEEEEEE NN   NN UU   UU EEEEEEE
-BB   B   III  EE      NNN  NN VV     VV EE      NNN  NN UU   UU EE     
-BBBBBB   III  EEEEE   NN N NN  VV   VV  EEEEE   NN N NN UU   UU EEEEE  
-BB   BB  III  EE      NN  NNN   VV VV   EE      NN  NNN UU   UU EE     
-BBBBBB  IIIII EEEEEEE NN   NN    VVV    EEEEEEE NN   NN  UUUUU  EEEEEEE
 
-> Commandes disponibles: 'cv', 'experience', 'formation', 'competences', 'projets', 'contact', 'help', 'clear'
-`;
 
 const initialMessage = ref("");
 const displayed = ref("");
@@ -90,18 +81,7 @@ const sections: { [key in SectionKey]: string } = {
   competences: competencesText,
   projets: projetsText,
   contact: contactText,
-  help: `
-<span class="title" style="color: orange">==================== AIDE ====================</span>
-<span class="text">Commandes disponibles:</span>
-<span class="subtitle">• cv - Affiche le CV complet</span>
-<span class="subtitle">• experience - Expériences professionnelles</span>
-<span class="subtitle">• formation - Formation et diplômes</span>
-<span class="subtitle">• competences - Compétences techniques</span>
-<span class="subtitle">• projets - Projets réalisés</span>
-<span class="subtitle">• contact - Informations de contact</span>
-<span class="subtitle">• help - Affiche cette aide</span>
-<span class="subtitle">• clear - Efface l'écran</span>
-`,
+  help: helpText,
 };
 
 function playSound(url: string) {
