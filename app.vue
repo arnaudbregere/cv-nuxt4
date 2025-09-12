@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header>
-      <img src="/src/images/logo.png" alt="Logo" />
+      <NuxtLink to="/"><img src="/src/images/logo.png" alt="Logo" /></NuxtLink>
     </header>
     <main>
       <NuxtPage />

@@ -11,7 +11,11 @@
       class="download-btn"
     >
       Télécharger le CV en PDF
-    </a></li>
+    </a>
+      <NuxtLink to="/calculatrice" class="text-blue-500 underline">
+      calculatrice
+    </NuxtLink>
+  </li>
   </ul>
 </template>
 
