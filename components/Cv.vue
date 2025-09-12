@@ -28,7 +28,7 @@
         <TerminalPrompt v-model:command="command" @enter="handleEnter" />
 
         <!-- Progress bar -->
-        <ProgressBar :loading="loading" :progress="progress" />
+        <ProgressBar :loading="loading" :progress="progress" :section="currentSection" />
 
         <!-- Contenu affiché -->
         <div v-if="showContent" class="mt-4">
@@ -138,10 +138,19 @@ function typeASCII() {
 function typeContent(text: string) {
   contentDisplayed.value = "";
   contentIndex = 0;
-  
+
+  // Fonction pour transformer les classes en styles inline
+  function applyInlineStyles(input: string): string {
+    return input
+      .replace(/<span class="title"/g, '<span style="color: #00ff00; text-shadow: 0 0 10px #00ff00, 0 0 15px #ff8800; font-weight: bold; margin-bottom: 0.5rem;"')
+      .replace(/<span class="date"/g, '<span style="color: #00ffff; text-shadow: 0 0 5px #00ffff; font-style: italic; margin-left: 1rem;"')
+  }
+
+  const styledText = applyInlineStyles(text);
+
   function type() {
-    if (contentIndex < text.length) {
-      contentDisplayed.value += text[contentIndex];
+    if (contentIndex < styledText.length) {
+      contentDisplayed.value += styledText[contentIndex];
       contentIndex++;
       setTimeout(type, 5); // Très rapide pour une meilleure UX
     }
@@ -357,26 +366,6 @@ onBeforeUnmount(() => {
 
 .content-text {
   color: #a9b7c0;
-  
-  /* Styles pour les différents éléments du CV */
-  :deep(.title) {
-    color: #ffa500;
-    font-weight: bold;
-  }
-  
-  :deep(.subtitle) {
-    color: #00ff00;
-    font-weight: bold;
-  }
-  
-  :deep(.date) {
-    color: #00ffff;
-    font-style: italic;
-  }
-  
-  :deep(.text) {
-    color: #a9b7c0;
-  }
 }
 
 .mt-4 {

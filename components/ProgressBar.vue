@@ -1,6 +1,6 @@
 <template>
   <div v-if="loading" class="mt-4">
-    <p>Chargement du CV...</p>
+    <p>Chargement de {{ formattedSection }}...</p>
     <div class="progress-bar">
       <div class="progress" :style="{ width: progress + '%' }"></div>
     </div>
@@ -8,15 +8,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, watch } from "vue";
+import { ref, defineProps, watch, computed } from "vue";
 
 const props = defineProps<{
   loading: boolean;
   progress: number;
+  section: string;
 }>();
 
 const loading = ref(props.loading);
 const progress = ref(props.progress);
+
+// Formater la section pour un affichage convivial
+const formattedSection = computed(() => {
+  const sectionMap: { [key: string]: string } = {
+    cv: "CV",
+    experience: "Expériences",
+    formation: "Formation",
+    competences: "Compétences",
+    projets: "Projets",
+    contact: "Contact",
+    help: "Aide",
+  };
+  return sectionMap[props.section.toLowerCase()] || props.section;
+});
 
 watch(() => props.loading, (newLoading) => {
   loading.value = newLoading;
