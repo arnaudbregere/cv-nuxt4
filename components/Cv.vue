@@ -72,8 +72,18 @@ const bootDone = ref(false);
 const showFlash = ref(false);
 const currentSection = ref("");
 
+// Type pour les clés de section
+type SectionKey =
+  | "cv"
+  | "experience"
+  | "formation"
+  | "competences"
+  | "projets"
+  | "contact"
+  | "help";
+
 // Contenu des sections
-const sections = {
+const sections: { [key in SectionKey]: string } = {
   cv: cvText,
   experience: experienceText,
   formation: formationText,
@@ -108,7 +118,7 @@ function typeInitialMessage() {
   if (index < text.length) {
     initialMessage.value += text[index];
     index++;
-    setTimeout(typeInitialMessage, 100);
+    setTimeout(typeInitialMessage, 25);
   } else {
     index = 0;
   }
@@ -119,7 +129,7 @@ function typeASCII() {
     const char = welcomeAscii[index];
     displayed.value += `<span style="color:orange;">${char}</span>`;
     index++;
-    setTimeout(typeASCII, 20); // Plus rapide
+    setTimeout(typeASCII, 10); // Plus rapide
   } else {
     index = 0;
   }
@@ -157,7 +167,7 @@ function handleEnter(enteredCommand: string) {
     return;
   }
   
-  if (sections[cmd]) {
+  if (isSectionKey(cmd)) {
     currentSection.value = cmd;
     displayed.value += `\nCommande reconnue: "${cmd}"... Chargement...\n`;
     startLoading(cmd);
@@ -168,10 +178,10 @@ function handleEnter(enteredCommand: string) {
 }
 
 function handleNavigation(section: string) {
-  if (sections[section]) {
-    currentSection.value = section;
+  if (sections[section as SectionKey]) {
+    currentSection.value = section as SectionKey;
     displayed.value += `\nNavigation vers ${section}... Chargement...\n`;
-    startLoading(section);
+    startLoading(section as SectionKey);
   }
 }
 
@@ -187,19 +197,22 @@ function startLoading(section: string) {
       clearInterval(progressInterval!);
       loading.value = false;
       showContent.value = true;
-      typeContent(sections[section]);
+      typeContent(sections[section as SectionKey]);
       playSound("https://www.orangefreesounds.com/wp-content/uploads/2021/01/Sci-fi-beep-sound-effect.mp3");
     }
   }, 100);
 }
 
 function clearScreen() {
-  displayed.value = "";
+  displayed.value = `<span style="color:orange;">${welcomeAscii}</span>`; // Afficher l'ASCII art immédiatement
   contentDisplayed.value = "";
   showContent.value = false;
   showWelcome.value = true;
   index = 0;
-  typeASCII();
+}
+
+function isSectionKey(key: string): key is SectionKey {
+  return ["cv", "experience", "formation", "competences", "projets", "contact", "help"].includes(key);
 }
 
 onMounted(() => {
