@@ -5,7 +5,6 @@
 </template>
 
 <script setup>
-// Métadonnées de la page
 useHead({
   title: 'TodoList - Arnaud Brégère',
   meta: [

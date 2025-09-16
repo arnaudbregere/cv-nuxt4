@@ -33,9 +33,18 @@ async function writeTodos(todos) {
 }
 
 // Fonction pour générer un ID unique
-function generateId() {
-  return Date.now().toString(36) + Math.random().toString(36).substr(2)
+// Fonction pour générer un ID incrémental style "todo_001"
+async function generateId() {
+  const todos = await readTodos()
+  const ids = todos
+    .map(todo => todo.id)
+    .filter(id => id.startsWith("todo_"))
+    .map(id => parseInt(id.replace("todo_", ""), 10))
+  
+  const nextId = ids.length > 0 ? Math.max(...ids) + 1 : 1
+  return `todo_${String(nextId).padStart(3, "0")}`
 }
+
 
 export default defineEventHandler(async (event) => {
   const method = getMethod(event)
@@ -76,7 +85,7 @@ export default defineEventHandler(async (event) => {
       const todos = await readTodos()
       
       const newTodo = {
-        id: generateId(),
+        id: await generateId(),
         title: body.title.trim(),
         description: body.description ? body.description.trim() : '',
         completed: false,

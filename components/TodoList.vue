@@ -79,8 +79,9 @@
             </div>
           </div>
           <div class="todo-actions">
+            <!-- ✅ on force l’envoi de la string id -->
+            <button @click="() => deleteTodo(todo.id)" class="btn-delete">Supprimer</button>
             <button @click="startEdit(todo)" class="btn-edit">Modifier</button>
-            <button @click="deleteTodo(todo.id)" class="btn-delete">Supprimer</button>
           </div>
         </div>
 
@@ -206,12 +207,7 @@ const addTodo = async () => {
     
     todos.value.unshift(response)
     
-    // Reset form
-    newTodo.value = {
-      title: '',
-      description: '',
-      priority: 'medium'
-    }
+    newTodo.value = { title: '', description: '', priority: 'medium' }
   } catch (err) {
     error.value = 'Erreur lors de l\'ajout de la tâche'
     console.error('Add todo error:', err)
@@ -242,15 +238,13 @@ const updateTodo = async (todo) => {
 }
 
 const deleteTodo = async (id) => {
+  console.log('deleteTodo called with id:', id) // ✅ debug
   if (!confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?')) return
   
   loading.value = true
   error.value = ''
   try {
-    await $fetch(`/api/todos/${id}`, {
-      method: 'DELETE'
-    })
-    
+    await $fetch(`/api/todos/${id}`, { method: 'DELETE' })
     todos.value = todos.value.filter(todo => todo.id !== id)
   } catch (err) {
     error.value = 'Erreur lors de la suppression'

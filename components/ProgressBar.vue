@@ -8,7 +8,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineProps, watch, computed } from "vue";
 
 const props = defineProps<{
   loading: boolean;
