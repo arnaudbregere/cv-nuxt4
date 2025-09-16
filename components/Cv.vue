@@ -212,7 +212,7 @@ onMounted(() => {
       showFlash.value = false;
       typeInitialMessage();
     }, 200);
-  }, 3000);
+  }, 1000);
 });
 
 onBeforeUnmount(() => {
@@ -265,7 +265,7 @@ onBeforeUnmount(() => {
   width: 100%;
   height: 4px;
   background: rgba(0, 255, 0, 0.8);
-  animation: scan 3s linear infinite;
+  animation: scan 1s linear infinite;
 }
 
 @keyframes scan {

@@ -1,0 +1,65 @@
+[
+  {
+    "id": "todo_001",
+    "title": "Apprendre Vue.js 3",
+    "description": "Étudier la Composition API et les nouvelles fonctionnalités",
+    "completed": false,
+    "priority": "high",
+    "createdAt": "2025-01-15T10:30:00.000Z",
+    "updatedAt": "2025-09-16T08:00:53.629Z"
+  },
+  {
+    "id": "todo_002",
+    "title": "Créer une API REST avec Nuxt",
+    "description": "Implémenter les opérations CRUD pour la TodoList",
+    "completed": false,
+    "priority": "high",
+    "createdAt": "2025-01-16T09:15:00.000Z",
+    "updatedAt": "2025-01-16T09:15:00.000Z"
+  },
+  {
+    "id": "todo_003",
+    "title": "Améliorer le CSS terminal",
+    "description": "Ajouter plus d'animations et d'effets visuels",
+    "completed": false,
+    "priority": "medium",
+    "createdAt": "2025-01-16T11:45:00.000Z",
+    "updatedAt": "2025-01-16T11:45:00.000Z"
+  },
+  {
+    "id": "todo_004",
+    "title": "Tests unitaires",
+    "description": "Écrire des tests pour les composants Vue",
+    "completed": false,
+    "priority": "medium",
+    "createdAt": "2025-01-16T13:00:00.000Z",
+    "updatedAt": "2025-09-16T08:02:46.699Z"
+  },
+  {
+    "id": "todo_005",
+    "title": "Déployer sur Vercel",
+    "description": "Configuration et déploiement de l'application",
+    "completed": false,
+    "priority": "low",
+    "createdAt": "2025-01-16T15:30:00.000Z",
+    "updatedAt": "2025-09-16T08:00:20.386Z"
+  },
+  {
+    "id": "todo_006",
+    "title": "Documentation projetds",
+    "description": "Rédiger le README et la documentation technique",
+    "completed": false,
+    "priority": "low",
+    "createdAt": "2025-01-16T16:00:00.000Z",
+    "updatedAt": "2025-09-16T08:09:20.264Z"
+  },
+  {
+    "id": "mfm9jpjew76ymtsun3",
+    "title": "Courses",
+    "description": "Pour se nourrir",
+    "completed": false,
+    "priority": "high",
+    "createdAt": "2025-09-16T08:00:37.130Z",
+    "updatedAt": "2025-09-16T08:02:53.170Z"
+  }
+]

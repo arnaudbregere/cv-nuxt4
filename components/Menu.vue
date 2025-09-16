@@ -10,12 +10,20 @@
       download="Arnaud-Bregere-CV.pdf"
       class="download-btn"
     >
-      Télécharger le CV en PDF
+      Télécharger le CV
     </a>
-      <NuxtLink to="/calculatrice" class="text-blue-500 underline">
+    </li>
+    <li>█ 
+           <NuxtLink to="/calculatrice" class="text-blue-500 underline">
       calculatrice
     </NuxtLink>
-  </li>
+    </li>
+ 
+  
+  <li>█ <NuxtLink to="/todolist" class="text-blue-500 underline">
+  TodoList
+</NuxtLink>
+</li>
   </ul>
 </template>
 
