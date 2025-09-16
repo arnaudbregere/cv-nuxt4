@@ -62,7 +62,7 @@ onBeforeUnmount(() => {
 .cursor {
   display: inline-block;
   width: 10px;
-  background: #00ff00;
+  /* background: #00ff00; */
   margin-left: 2px;
   animation: blink 1s step-start infinite;
 }

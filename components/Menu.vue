@@ -1,34 +1,18 @@
 <template>
   <ul>
-    <li>█ <a href="#" @click.prevent="$emit('navigate', 'experience')">EXPERIENCES PROFESSIONNELLES</a></li>
-    <li>█ <a href="#" @click.prevent="$emit('navigate', 'formation')">FORMATION</a></li>
-    <li>█ <a href="#" @click.prevent="$emit('navigate', 'competences')">COMPETENCES</a></li>
-    <li>█ <a href="#" @click.prevent="$emit('navigate', 'projets')">PROJETS</a></li>
-    <li>█ <a href="#" @click.prevent="$emit('navigate', 'contact')">CONTACT</a></li>
-    <li>█ <a 
-      href="/pdf/arnaud_bregere.pdf" 
-      download="Arnaud-Bregere-CV.pdf"
-      class="download-btn"
-    >
-      Télécharger le CV
-    </a>
-    </li>
-    <li>█ 
-           <NuxtLink to="/calculatrice" class="text-blue-500 underline">
-      calculatrice
-    </NuxtLink>
-    </li>
- 
-  
-  <li>█ <NuxtLink to="/todolist" class="text-blue-500 underline">
-  TodoList
-</NuxtLink>
-</li>
+    <li><a href="#" @click.prevent="$emit('navigate', 'experience')"><i class="fas fa-briefcase"></i> EXPERIENCES PROFESSIONNELLES</a></li>
+    <li><a href="#" @click.prevent="$emit('navigate', 'formation')"><i class="fas fa-graduation-cap"></i> FORMATION</a></li>
+    <li><a href="#" @click.prevent="$emit('navigate', 'competences')"><i class="fas fa-tools"></i> COMPETENCES</a></li>
+    <li><a href="#" @click.prevent="$emit('navigate', 'projets')"><i class="fas fa-project-diagram"></i> PROJETS</a></li>
+    <li><a href="#" @click.prevent="$emit('navigate', 'contact')"><i class="fas fa-envelope"></i> CONTACT</a></li>
+    <li><NuxtLink to="/calculatrice"><i class="fas fa-calculator"></i> calculatrice</NuxtLink></li>
+    <li><NuxtLink to="/todolist"><i class="fas fa-list"></i> TodoList</NuxtLink></li>
+    <li><a href="/pdf/arnaud_bregere.pdf" download="Arnaud-Bregere-CV.pdf" class="download-btn"><i class="fas fa-download"></i> Télécharger le CV</a></li>
+
   </ul>
 </template>
 
 <script setup lang="ts">
-// Définir l'émission d'événements
 const emit = defineEmits(['navigate']);
 </script>
 
@@ -36,37 +20,46 @@ const emit = defineEmits(['navigate']);
 ul {
   list-style: none;
   display: flex;
-  flex-wrap: wrap; // Amélioration responsive
-  gap: 1.5rem; // Réduit pour mobile
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: center;
   margin: 0 auto;
   text-align: center;
   align-items: center;
   padding: 0;
-  
-  // Responsive pour mobile
+
   @media (max-width: 768px) {
     flex-direction: column;
-    gap: 1rem;
+    gap: 0.8rem;
   }
-  
+
   li {
-    // Responsive pour les éléments
+    display: flex;
+    align-items: center;
+    gap: 5px;
     @media (max-width: 768px) {
       width: 100%;
     }
-    
+
     a {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      border: 1px solid #00ff00;
+      border-radius: 4px;
+      transition: all 0.3s ease;
+      background: rgba(0, 255, 0, 0.05);
       color: #00ff00;
       text-decoration: none;
-      padding: 0.25rem 0.5rem;
-      border-radius: 2px;
-      transition: all 0.2s ease;
-      
+      font-size: 14px;
+
       &:hover {
-        background-color: rgba(0, 255, 0, 0.1);
-        text-shadow: 0 0 5px #00ff00;
+        background: rgba(0, 255, 0, 0.2);
+        box-shadow: 0 0 10px #00ff00;
+        transform: scale(1.05);
       }
-      
+
       &.download-btn {
         display: inline-block;
         padding: 0.5rem 1rem;
@@ -76,13 +69,18 @@ ul {
         text-decoration: none;
         transition: 0.2s;
         font-weight: bold;
-        
+
         &:hover {
           background-color: #000;
           color: #00ff00;
           border: 1px solid #00ff00;
           text-shadow: 0 0 5px #00ff00;
         }
+      }
+
+      i {
+        color: #00ff00;
+        font-size: 1.2rem;
       }
     }
   }
