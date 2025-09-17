@@ -1,2 +1,7 @@
-User-Agent: *
-Disallow:
+User-agent: *
+Allow: /
+Disallow: /server/
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_nuxt/
+Sitemap: https://arnaudbregere.fr/sitemap.xml
