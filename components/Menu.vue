@@ -1,88 +1,259 @@
 <template>
-  <ul>
-    <li><a href="#" @click.prevent="$emit('navigate', 'experience')"><i class="fas fa-briefcase"></i> EXPERIENCES PROFESSIONNELLES</a></li>
-    <li><a href="#" @click.prevent="$emit('navigate', 'formation')"><i class="fas fa-graduation-cap"></i> FORMATION</a></li>
-    <li><a href="#" @click.prevent="$emit('navigate', 'competences')"><i class="fas fa-tools"></i> COMPETENCES</a></li>
-    <li><a href="#" @click.prevent="$emit('navigate', 'projets')"><i class="fas fa-project-diagram"></i> PROJETS</a></li>
-    <li><a href="#" @click.prevent="$emit('navigate', 'contact')"><i class="fas fa-envelope"></i> CONTACT</a></li>
-    <li><NuxtLink to="/calculatrice"><i class="fas fa-calculator"></i> calculatrice</NuxtLink></li>
-    <li><NuxtLink to="/todolist"><i class="fas fa-list"></i> TodoList</NuxtLink></li>
-    <li><a href="/pdf/arnaud_bregere.pdf" download="Arnaud-Bregere-CV.pdf" class="download-btn"><i class="fas fa-download"></i> Télécharger le CV</a></li>
-
-  </ul>
+  <div class="menu-wrapper">
+    <!-- Bouton burger pour mobile -->
+    <button class="burger-btn" @click="toggleMenu" v-if="isMobile" aria-label="Ouvrir le menu">
+      <svg class="burger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 6H21M3 12H21M3 18H21" stroke="var(--neon-blue)" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    
+    <!-- Liste de navigation -->
+    <ul :class="{ 'mobile-open': menuOpen }" v-show="!isMobile || menuOpen">
+      <!-- Bouton de fermeture pour mobile -->
+      <button v-if="isMobile && menuOpen" class="close-btn" @click="closeMenu" aria-label="Fermer le menu">
+        <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 18L18 6M6 6L18 18" stroke="var(--neon-blue)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+      <li><a href="#" @click.prevent="navigate('terminal')">Terminal</a></li>
+      <li><a href="#" @click.prevent="navigate('experience')">Expériences Professionnelles</a></li>
+      <li><a href="#" @click.prevent="navigate('formation')">Formation</a></li>
+      <li><a href="#" @click.prevent="navigate('competences')">Compétences</a></li>
+      <li><a href="#" @click.prevent="navigate('projets')">Projets</a></li>
+      <li><a href="#" @click.prevent="navigate('contact')">Contact</a></li>
+      <li><a href="#" @click.prevent="navigate('calculatrice')">Calculatrice</a></li>
+      <li><a href="#" @click.prevent="navigate('todolist')">TodoList</a></li>
+      <li><a href="/pdf/arnaud_bregere.pdf" download="Arnaud-Bregere-CV.pdf" class="download-btn" @click="closeMenu">Télécharger le CV</a></li>
+    </ul>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, onUnmounted } from 'vue';
+
 const emit = defineEmits(['navigate']);
+
+const menuOpen = ref(false);
+const isMobile = ref(false);
+
+const toggleMenu = () => {
+  menuOpen.value = !menuOpen.value;
+};
+
+const navigate = (section: string) => {
+  emit('navigate', section);
+  closeMenu();
+};
+
+const closeMenu = () => {
+  menuOpen.value = false;
+};
+
+// Vérifier si mobile
+const checkMobile = () => {
+  isMobile.value = window.innerWidth <= 768;
+  if (!isMobile.value) {
+    menuOpen.value = false;
+  }
+};
+
+onMounted(() => {
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', checkMobile);
+});
 </script>
 
 <style scoped lang="scss">
+.menu-wrapper {
+  position: relative;
+}
+
+.burger-btn {
+  background: none;
+  border: none;
+  color: var(--neon-blue);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: all 0.3s ease;
+  z-index: 200;
+}
+
+.burger-btn:hover {
+  color: var(--electric-cyan);
+  text-shadow: 0 0 10px var(--electric-cyan);
+}
+
+.burger-icon {
+  transition: all 0.3s ease;
+}
+
+.burger-btn:hover .burger-icon {
+  stroke: var(--electric-cyan);
+}
+
+.close-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  z-index: 201;
+}
+
+.close-icon {
+  transition: all 0.3s ease;
+}
+
+.close-btn:hover .close-icon {
+  stroke: var(--electric-cyan);
+}
+
 ul {
   list-style: none;
   display: flex;
-  flex-wrap: wrap;
-  gap: .5rem;
-  justify-content: center;
-  margin: 0 auto;
-  text-align: center;
-  align-items: center;
-  padding: 0;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 1rem 2rem;
+  background: rgba(0, 153, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
 
-  @media (max-width: 768px) {
-    flex-direction: column;
-    gap: 0.8rem;
+ul.mobile-open {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: var(--bg-darker);
+  border: none;
+  border-radius: 0;
+  padding: 6rem 1rem 1rem;
+  z-index: 150;
+  flex-direction: column;
+  gap: 1rem;
+  transform: translateY(0);
+  opacity: 1;
+  overflow-y: auto;
+}
+
+ul:not(.mobile-open) {
+  transform: translateY(-100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+}
+
+a {
+  color: var(--text-light);
+  text-decoration: none;
+  padding: 0.8rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  position: relative;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.03);
+  width: 100%;
+  text-align: center;
+}
+
+a::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--neon-blue), var(--electric-cyan));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+a:hover {
+  color: var(--bright-white);
+  text-shadow: 0 0 10px var(--bright-white);
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 153, 255, 0.4);
+}
+
+a:hover::before {
+  opacity: 1;
+}
+
+a.download-btn {
+  display: inline-flex;
+  padding: 0.8rem 1.5rem;
+  background-color: var(--neon-blue);
+  color: var(--bg-deepest);
+  border-radius: 12px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-weight: bold;
+  justify-content: center;
+  width: 100%;
+}
+
+a.download-btn:hover {
+  background-color: var(--bg-deepest);
+  color: var(--neon-blue);
+  border: 1px solid var(--electric-cyan);
+  text-shadow: 0 0 5px var(--neon-blue);
+  transform: translateY(-2px) scale(1.05);
+}
+
+@media (min-width: 769px) {
+  .burger-btn {
+    display: none;
+  }
+
+  .close-btn {
+    display: none;
+  }
+
+  ul {
+    flex-direction: row;
+    position: static;
+    background: rgba(0, 153, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 12px;
+    padding: 1rem 2rem;
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
+    width: auto; /* Ensure full width is not forced */
   }
 
   li {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    @media (max-width: 768px) {
-      width: 100%;
-    }
+    width: auto;
+  }
 
-    a {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem;
-      border: 1px solid var(--neon-blue);
-      border-radius: 4px;
-      transition: all 0.3s ease;
-      background: rgba(0, 153, 255, 0.05);
-      color: var(--neon-blue);
-      text-decoration: none;
-      font-size: 14px;
+  a {
+    width: auto;
+  }
+}
 
-      &:hover {
-        background: rgba(0, 153, 255, 0.2);
-        box-shadow: 0 0 10px var(--electric-cyan);
-        transform: scale(1.05);
-      }
-
-      &.download-btn {
-        display: inline-block;
-        padding: 0.5rem 1rem;
-        background-color: var(--neon-blue);
-        color: var(--bg-deepest);
-        border-radius: 4px;
-        text-decoration: none;
-        transition: 0.2s;
-        font-weight: bold;
-
-        &:hover {
-          background-color: var(--bg-deepest);
-          color: var(--neon-blue);
-          border: 1px solid var(--electric-cyan);
-          text-shadow: 0 0 5px var(--neon-blue);
-        }
-      }
-
-      i {
-        color: var(--neon-blue);
-        font-size: 1.2rem;
-      }
-    }
+@media (max-width: 768px) {
+  ul {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
   }
 }
 </style>

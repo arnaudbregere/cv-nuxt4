@@ -47,11 +47,6 @@
           </div>
         </div>
 
-        <!-- Navigation modernisée -->
-        <div class="terminal-nav">
-          <Menu @navigate="handleNavigation" />
-        </div>
-
         <!-- Fenêtre terminal principale -->
         <div class="terminal-window">
           <!-- Message initial avec effet de typing moderne -->
@@ -97,7 +92,11 @@
 </template>
 
 <script setup lang="ts">
+import { ref, onMounted, watch } from 'vue';
 import { cvText, experienceText, formationText, competencesText, projetsText, contactText, helpText, welcomeAscii } from '~/utils/cv_content';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
 
 const initialMessage = ref("");
 const displayed = ref("");
@@ -118,7 +117,6 @@ const bootDone = ref(false);
 const showFlash = ref(false);
 const currentSection = ref("");
 
-// Type pour les clés de section
 type SectionKey =
   | "cv"
   | "experience"
@@ -269,6 +267,7 @@ function clearScreen() {
   typeInitialMessage();
 }
 
+// Écouter les événements de navigation depuis App.vue
 onMounted(() => {
   typeInitialMessage();
   setTimeout(() => {
@@ -278,7 +277,34 @@ onMounted(() => {
       showFlash.value = false;
     }, 800);
   }, 3000);
+
+  // Gérer la navigation basée sur la query string
+  if (route.query.section && isSectionKey(route.query.section as string)) {
+    currentSection.value = route.query.section as SectionKey;
+    startLoading(route.query.section as string);
+  }
+
+  // Écouter les événements de navigation globaux
+  window.addEventListener('navigate-section', (event: any) => {
+    const section = event.detail;
+    if (isSectionKey(section)) {
+      currentSection.value = section;
+      startLoading(section);
+    }
+  });
 });
+
+// === AJOUT : watcher pour réagir aux changements de query (router.push avec query) ===
+watch(
+  () => route.query.section,
+  (newSection) => {
+    if (newSection && isSectionKey(newSection as string)) {
+      currentSection.value = newSection as SectionKey;
+      startLoading(newSection as string);
+    }
+  }
+);
+// ================================================================
 
 // Vérification de type pour les sections
 function isSectionKey(key: string): key is SectionKey {
@@ -296,69 +322,75 @@ function isSectionKey(key: string): key is SectionKey {
   border-radius: 20px;
   overflow: hidden;
   box-shadow: var(--neo-shadow);
-  position: relative;
-  border: 1px solid var(--glass-border);
 }
 
 .boot-screen {
-  height: 100vh;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-deepest);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-darker);
-  position: relative;
   overflow: hidden;
 }
 
 .boot-content {
   text-align: center;
-  position: relative;
-  z-index: 2;
+  z-index: 1;
+}
+
+.boot-logo {
+  margin-bottom: 2rem;
 }
 
 .hexagon {
-  width: 120px;
-  height: 104px;
-  background: var(--neon-blue);
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   position: relative;
-  margin: 0 auto 2rem;
-  animation: hexagonPulse 2s ease-in-out infinite alternate;
-  box-shadow: 0 0 30px var(--neon-blue);
+  width: 100px;
+  height: 86.6px;
+  background: var(--neon-blue);
+  margin: 50px auto;
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+  animation: hexagonPulse 2s ease-in-out infinite;
 }
 
 .hexagon-inner {
-  width: 100%;
-  height: 100%;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  right: 5px;
+  bottom: 5px;
+  background: var(--bg-deepest);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-darker);
-  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 }
 
 .boot-text {
-  color: var(--bright-white);
-  font-size: 1rem;
+  color: var(--electric-cyan);
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  text-transform: uppercase;
   letter-spacing: 2px;
-  text-shadow: 0 0 15px var(--electric-cyan);
+  text-shadow: 0 0 10px var(--neon-blue);
 }
 
 .boot-progress {
   width: 300px;
-  height: 6px;
+  height: 8px;
   background: rgba(0, 153, 255, 0.2);
-  margin: 2rem auto;
-  border-radius: 3px;
+  border-radius: 4px;
   overflow: hidden;
-  box-shadow: 0 0 15px var(--border-glow);
+  margin: 2rem auto;
 }
 
 .boot-bar {
+  width: 0;
   height: 100%;
   background: var(--neon-blue);
-  animation: bootProgress 2.5s ease-in-out forwards;
-  box-shadow: 0 0 20px var(--electric-cyan);
+  animation: bootProgress 3s ease-in-out forwards;
+  box-shadow: 0 0 15px var(--electric-cyan);
 }
 
 .boot-status {
@@ -515,15 +547,6 @@ function isSectionKey(key: string): key is SectionKey {
   border-radius: 50%;
   animation: statusBlink 2s ease-in-out infinite;
   box-shadow: 0 0 10px var(--electric-cyan);
-}
-
-.terminal-nav {
-  background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--border-glow);
-  border-top: none;
-  padding: 1rem;
-  margin-bottom: 0;
 }
 
 .terminal-window {

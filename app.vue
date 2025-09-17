@@ -20,16 +20,9 @@
           </div>
         </NuxtLink>
         
-        <!-- Navigation moderne -->
+        <!-- Navigation moderne avec Menu.vue -->
         <nav class="main-nav">
-          <div class="nav-container">
-            <div class="nav-line"></div>
-            <ul class="nav-list">
-              <li><NuxtLink to="/" class="nav-link">Terminal</NuxtLink></li>
-              <li><NuxtLink to="/calculatrice" class="nav-link">Calculatrice</NuxtLink></li>
-              <li><NuxtLink to="/todolist" class="nav-link">TodoList</NuxtLink></li>
-            </ul>
-          </div>
+          <Menu @navigate="handleNavigation" />
         </nav>
       </div>
     </header>
@@ -67,8 +60,12 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { onMounted, onBeforeUnmount } from 'vue';
+import { useRouter } from 'vue-router';
 import { seoConfig } from '~/utils/seoConfig';
+
+const router = useRouter();
 
 useHead({
   title: seoConfig.title,
@@ -76,6 +73,18 @@ useHead({
   link: seoConfig.link,
   script: seoConfig.script,
 });
+
+const handleNavigation = (section: string) => {
+  if (['calculatrice', 'todolist'].includes(section)) {
+    router.push(`/${section}`);
+  } else {
+    if (router.currentRoute.value.path === '/') {
+      window.dispatchEvent(new CustomEvent('navigate-section', { detail: section }));
+    } else {
+      router.push({ path: '/', query: { section } });
+    }
+  }
+};
 
 // Particle and circuit animations
 const createParticles = () => {
@@ -111,18 +120,23 @@ const createCircuits = () => {
   }
 };
 
+// === CORRECTION : gestion propre du scroll handler ===
+let onScroll: EventListenerOrEventListenerObject | null = null;
+
 const initScrollEffects = () => {
-  window.addEventListener('scroll', () => {
+  onScroll = () => {
     const header = document.querySelector('.modern-header');
+    if (!header) return;
     if (window.scrollY > 50) {
       header.classList.add('scrolled');
     } else {
       header.classList.remove('scrolled');
     }
-  });
+  };
+  window.addEventListener('scroll', onScroll);
 };
+// =====================================================
 
-// Initialize animations on mount
 onMounted(() => {
   console.log("App montée - Design modernisé avec palette bleue");
   createParticles();
@@ -130,14 +144,16 @@ onMounted(() => {
   initScrollEffects();
 });
 
-// Cleanup scroll event listener
 onBeforeUnmount(() => {
-  window.removeEventListener('scroll', initScrollEffects);
+  // suppression correcte du listener
+  if (onScroll) {
+    window.removeEventListener('scroll', onScroll);
+    onScroll = null;
+  }
 });
 </script>
 
 <style>
-/* Palette de couleurs modernisée */
 :root {
   --neon-blue: #0099ff;
   --electric-cyan: #00d4ff;
@@ -164,7 +180,7 @@ onBeforeUnmount(() => {
 }
 
 body {
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: 'Courier New', Courier, monospace;
   background: var(--bg-deepest);
   color: var(--text-light);
   overflow-x: hidden;
@@ -178,7 +194,6 @@ body {
   flex-direction: column;
 }
 
-/* Background animé modernisé */
 .bg-overlay {
   position: fixed;
   top: 0;
@@ -246,7 +261,6 @@ body {
   box-shadow: 0 0 10px var(--electric-cyan);
 }
 
-/* Header moderne */
 .modern-header {
   background: var(--glass-bg);
   backdrop-filter: blur(25px) saturate(200%);
@@ -254,7 +268,7 @@ body {
   padding: 1.5rem 0;
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 100; /* Z-index inférieur au menu mobile */
   transition: all 0.3s ease;
 }
 
@@ -270,6 +284,8 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
+  position: relative;
+  z-index: 101; /* Assure que le contenu du header reste au-dessus du fond */
 }
 
 .logo-container {
@@ -324,87 +340,15 @@ body {
   letter-spacing: 1px;
 }
 
-.nav-container {
+.main-nav {
   position: relative;
-  padding: 1rem 2rem;
-  background: rgba(0, 153, 255, 0.05);
-  border-radius: 12px;
-  border: 1px solid var(--glass-border);
 }
 
-.nav-line {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(90deg, 
-    transparent, 
-    var(--neon-blue) 20%, 
-    var(--electric-cyan) 50%,
-    var(--accent-purple) 80%, 
-    transparent
-  );
-  border-radius: 3px;
-  animation: colorShift 3s ease-in-out infinite alternate;
-}
-
-.nav-list {
-  list-style: none;
-  display: flex;
-  gap: 1.5rem;
-  margin: 0;
-}
-
-.nav-link {
-  color: var(--text-light);
-  text-decoration: none;
-  padding: 0.8rem 1.5rem;
-  border: 1px solid transparent;
-  border-radius: 12px;
-  transition: all 0.3s ease;
-  position: relative;
-  font-weight: 600;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.nav-link::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 12px;
-  background: linear-gradient(135deg, var(--neon-blue), var(--electric-cyan));
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: -1;
-}
-
-.nav-link:hover {
-  color: var(--bright-white);
-  text-shadow: 0 0 10px var(--bright-white);
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 10px 25px rgba(0, 153, 255, 0.4);
-}
-
-.nav-link:hover::before {
-  opacity: 1;
-}
-
-.nav-link.router-link-active {
-  color: var(--neon-blue);
-  border-color: var(--neon-blue);
-  text-shadow: 0 0 15px var(--neon-blue);
-  background: rgba(0, 153, 255, 0.1);
-}
-
-/* Main content */
 .modern-main {
   flex: 1;
   position: relative;
   padding: 3rem 0;
+  z-index: 1; 
 }
 
 .content-wrapper {
@@ -413,7 +357,6 @@ body {
   padding: 0 2rem;
 }
 
-/* Footer ultra-moderne */
 .modern-footer {
   background: var(--glass-bg);
   backdrop-filter: blur(25px) saturate(200%);
@@ -421,6 +364,7 @@ body {
   padding: 3rem 0;
   margin-top: auto;
   box-shadow: 0 -8px 32px rgba(0, 153, 255, 0.2);
+  z-index: 1; 
 }
 
 .footer-content {
@@ -517,7 +461,6 @@ body {
   font-weight: 500;
 }
 
-/* Animations modernisées */
 @keyframes gridMove {
   0% { transform: translate(0, 0); }
   100% { transform: translate(60px, 60px); }
@@ -563,7 +506,6 @@ body {
   100% { background-position: 0% 50%; }
 }
 
-/* Scrollbar futuriste */
 ::-webkit-scrollbar {
   width: 14px;
 }
@@ -585,7 +527,6 @@ body {
   box-shadow: inset 0 0 15px rgba(0, 212, 255, 0.7);
 }
 
-/* Sélection de texte */
 ::selection {
   background: var(--neon-blue);
   color: var(--bright-white);
@@ -596,7 +537,6 @@ body {
   color: var(--bright-white);
 }
 
-/* Responsive Design amélioré */
 @media (max-width: 1200px) {
   .header-content,
   .content-wrapper,
@@ -615,15 +555,8 @@ body {
     justify-content: center;
   }
   
-  .nav-list {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
-  }
-  
-  .contact-grid {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  .main-nav {
+    width: 100%;
   }
   
   .logo {
@@ -637,10 +570,6 @@ body {
   .title {
     font-size: 0.8rem;
   }
-  
-  .nav-container {
-    padding: 1rem 1.5rem;
-  }
 }
 
 @media (max-width: 480px) {
@@ -652,17 +581,19 @@ body {
     padding: 2rem 0;
   }
   
-  .nav-container {
-    padding: 1rem;
-  }
-  
-  .nav-link {
-    font-size: 0.8rem;
-    padding: 0.6rem 1.2rem;
-  }
-  
   .contact-item {
     padding: 1.2rem;
+  }
+}
+
+@media (min-width: 769px) {
+  .main-nav ul {
+    transform: none !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    display: flex !important;
+    position: static !important;
+    width: auto !important;
   }
 }
 </style>
