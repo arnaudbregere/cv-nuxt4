@@ -44,17 +44,17 @@ watch(() => props.progress, (newProgress) => {
 <style scoped>
 .progress-bar {
   width: 100%;
-  border: 1px solid #00ff00;
+  border: 1px solid var(--neon-blue);
   height: 20px;
   margin-top: 0.5rem;
   position: relative;
-  background: #000;
+  background: var(--bg-darker);
 }
 
 .progress {
   height: 100%;
-  background: #00ff00;
-  box-shadow: 0 0 10px #00ff00;
+  background: var(--neon-blue);
+  box-shadow: 0 0 10px var(--electric-cyan);
   transition: width 0.15s linear;
 }
 </style>

@@ -62,9 +62,10 @@ onBeforeUnmount(() => {
 .cursor {
   display: inline-block;
   width: 10px;
-  /* background: #00ff00; */
   margin-left: 2px;
   animation: blink 1s step-start infinite;
+  color: var(--neon-blue);
+  text-shadow: 0 0 5px var(--electric-cyan);
 }
 
 @keyframes blink {

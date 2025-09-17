@@ -242,152 +242,142 @@ function startLoading(section: string) {
   loading.value = true;
   progress.value = 0;
   if (progressInterval) clearInterval(progressInterval);
-
-  progressInterval = window.setInterval(() => {
-    if (progress.value < 100) {
-      progress.value += 12;
-    } else {
+  progressInterval = setInterval(() => {
+    progress.value += Math.random() * 10;
+    if (progress.value >= 100) {
+      progress.value = 100;
       clearInterval(progressInterval!);
+      progressInterval = null;
       loading.value = false;
       showContent.value = true;
       typeContent(sections[section as SectionKey]);
-      playSound("https://www.orangefreesounds.com/wp-content/uploads/2021/01/Sci-fi-beep-sound-effect.mp3");
+      playSound("http://www.alienmovies.ca/html/sounds/alien1/mother.wav");
     }
-  }, 80);
+  }, 200);
 }
 
 function clearScreen() {
-  displayed.value = `<span class="ascii-char">${welcomeAscii}</span>`;
-  contentDisplayed.value = "";
+  displayed.value = "";
   showContent.value = false;
-  showWelcome.value = true;
-  index = 0;
-}
-
-function isSectionKey(key: string): key is SectionKey {
-  return ["cv", "experience", "formation", "competences", "projets", "contact", "help"].includes(key);
+  showWelcome.value = false;
+  command.value = "";
+  currentSection.value = "";
+  loading.value = false;
+  progress.value = 0;
+  initialMessage.value = "";
+  hasStarted.value = false;
+  typeInitialMessage();
 }
 
 onMounted(() => {
+  typeInitialMessage();
   setTimeout(() => {
     bootDone.value = true;
     showFlash.value = true;
     setTimeout(() => {
       showFlash.value = false;
-      typeInitialMessage();
-    }, 300);
-  }, 2000);
+    }, 800);
+  }, 3000);
 });
 
-onBeforeUnmount(() => {
-  if (progressInterval) clearInterval(progressInterval);
-});
+// Vérification de type pour les sections
+function isSectionKey(key: string): key is SectionKey {
+  return key in sections;
+}
 </script>
 
-<style scoped>
-/* Variables CSS pour cohérence */
-:root {
-  --primary-cyan: #00ffff;
-  --secondary-green: #00ff41;
-  --accent-orange: #ff6b35;
-  --warning-yellow: #ffff00;
-  --danger-red: #ff3366;
-  --bg-terminal: #0a0f14;
-  --bg-darker: #000000;
-  --glass-bg: rgba(10, 15, 20, 0.8);
-  --border-glow: rgba(0, 255, 255, 0.5);
+<style scoped lang="scss">
+/* Utilisation des variables de App.vue pour une cohérence bleue rétro-moderne */
+.terminal-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: var(--neo-shadow);
+  position: relative;
+  border: 1px solid var(--glass-border);
 }
 
-.terminal-container {
-  width: 100%;
-  min-height: 100vh;
-  background: radial-gradient(ellipse at center, #0f1419 0%, #000000 100%);
+.boot-screen {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-darker);
   position: relative;
   overflow: hidden;
 }
 
-/* Boot Screen Modernisé */
-.boot-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
 .boot-content {
   text-align: center;
+  position: relative;
   z-index: 2;
-}
-
-.boot-logo {
-  margin-bottom: 2rem;
 }
 
 .hexagon {
   width: 120px;
   height: 104px;
+  background: var(--neon-blue);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   position: relative;
-  margin: 0 auto;
+  margin: 0 auto 2rem;
+  animation: hexagonPulse 2s ease-in-out infinite alternate;
+  box-shadow: 0 0 30px var(--neon-blue);
 }
 
 .hexagon-inner {
   width: 100%;
   height: 100%;
-  background: linear-gradient(45deg, var(--primary-cyan), var(--secondary-green));
-  position: relative;
-  clip-path: polygon(25% 6.7%, 75% 6.7%, 100% 50%, 75% 93.3%, 25% 93.3%, 0% 50%);
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: hexagonPulse 2s ease-in-out infinite alternate;
+  background: var(--bg-darker);
+  clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
 }
 
 .boot-text {
-  color: #000;
-  font-weight: bold;
-  font-size: 0.9rem;
+  color: var(--bright-white);
+  font-size: 1rem;
   letter-spacing: 2px;
+  text-shadow: 0 0 15px var(--electric-cyan);
 }
 
 .boot-progress {
   width: 300px;
-  height: 4px;
-  background: rgba(0, 255, 255, 0.2);
-  margin: 0 auto 1rem;
-  border-radius: 2px;
+  height: 6px;
+  background: rgba(0, 153, 255, 0.2);
+  margin: 2rem auto;
+  border-radius: 3px;
   overflow: hidden;
+  box-shadow: 0 0 15px var(--border-glow);
 }
 
 .boot-bar {
   height: 100%;
-  background: linear-gradient(90deg, var(--primary-cyan), var(--secondary-green));
-  width: 0;
-  animation: bootProgress 2s ease-in-out infinite;
-  border-radius: 2px;
-  box-shadow: 0 0 10px var(--primary-cyan);
+  background: var(--neon-blue);
+  animation: bootProgress 2.5s ease-in-out forwards;
+  box-shadow: 0 0 20px var(--electric-cyan);
 }
 
 .boot-status {
-  color: var(--primary-cyan);
+  color: var(--text-light);
   font-family: 'Courier New', monospace;
-  font-size: 0.9rem;
   letter-spacing: 1px;
-  animation: textGlow 1s ease-in-out infinite alternate;
+  animation: textGlow 1.5s ease-in-out infinite alternate;
+  text-shadow: 0 0 10px var(--neon-blue);
 }
 
 .scanline {
   position: absolute;
+  top: -10%;
+  left: 0;
   width: 100%;
-  height: 2px;
-  background: rgba(0, 255, 255, 0.8);
-  animation: scanlineMove 1.5s linear infinite;
-  box-shadow: 0 0 20px var(--primary-cyan);
+  height: 5px;
+  background: rgba(0, 212, 255, 0.3);
+  animation: scanlineMove 3s linear infinite;
+  box-shadow: 0 0 20px var(--electric-cyan);
 }
 
 .grid-overlay {
@@ -396,44 +386,43 @@ onBeforeUnmount(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: 
-    linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
   background-size: 50px 50px;
-  animation: gridFloat 10s linear infinite;
+  background-image: 
+    linear-gradient(rgba(0, 153, 255, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 153, 255, 0.1) 1px, transparent 1px);
+  animation: gridFloat 60s linear infinite;
   opacity: 0.3;
 }
 
-/* Flash Screen Modernisé */
 .flash-screen {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle, #00ffff 0%, #000000 70%);
+  background: var(--bright-white);
+  animation: modernFlash 0.8s ease-out forwards;
   z-index: 999;
-  animation: modernFlash 0.3s ease-out forwards;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .flash-pulse {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 100px;
-  height: 100px;
-  border: 2px solid var(--primary-cyan);
+  width: 0;
+  height: 0;
+  background: var(--neon-blue);
   border-radius: 50%;
-  transform: translate(-50%, -50%);
-  animation: pulseExpand 0.3s ease-out forwards;
+  animation: pulseExpand 0.8s ease-out forwards;
+  box-shadow: 0 0 50px var(--electric-cyan);
 }
 
-/* Interface Terminal Modernisée */
 .terminal-interface {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 2rem;
-  min-height: 100vh;
+  padding: 1.5rem;
+  position: relative;
 }
 
 .terminal-header {
@@ -489,10 +478,10 @@ onBeforeUnmount(() => {
 }
 
 .control-dot.green {
-  background: var(--secondary-green);
+  background: var(--neon-blue);
 }
 .control-dot.green::before {
-  box-shadow: 0 0 10px var(--secondary-green);
+  box-shadow: 0 0 10px var(--neon-blue);
 }
 
 .control-dot:hover::before {
@@ -503,7 +492,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 2rem;
-  color: var(--primary-cyan);
+  color: var(--electric-cyan);
   font-family: 'Courier New', monospace;
 }
 
@@ -522,10 +511,10 @@ onBeforeUnmount(() => {
 .status-indicator {
   width: 8px;
   height: 8px;
-  background: var(--secondary-green);
+  background: var(--neon-blue);
   border-radius: 50%;
   animation: statusBlink 2s ease-in-out infinite;
-  box-shadow: 0 0 10px var(--secondary-green);
+  box-shadow: 0 0 10px var(--electric-cyan);
 }
 
 .terminal-nav {
@@ -544,7 +533,7 @@ onBeforeUnmount(() => {
   border-top: none;
   border-radius: 0 0 10px 10px;
   padding: 2rem;
-  color: var(--primary-cyan);
+  color: var(--electric-cyan);
   font-family: 'Courier New', monospace;
   line-height: 1.6;
   position: relative;
@@ -563,8 +552,8 @@ onBeforeUnmount(() => {
       0deg,
       transparent,
       transparent 2px,
-      rgba(0, 255, 255, 0.02) 2px,
-      rgba(0, 255, 255, 0.02) 4px
+      rgba(0, 212, 255, 0.02) 2px,
+      rgba(0, 212, 255, 0.02) 4px
     );
   pointer-events: none;
   z-index: 0;
@@ -576,9 +565,9 @@ onBeforeUnmount(() => {
 }
 
 .initial-message {
-  color: var(--secondary-green);
+  color: var(--neon-blue);
   font-size: 1.1rem;
-  text-shadow: 0 0 10px var(--secondary-green);
+  text-shadow: 0 0 10px var(--electric-cyan);
   margin-bottom: 2rem;
 }
 
@@ -591,8 +580,8 @@ onBeforeUnmount(() => {
 .hologram-effect {
   position: relative;
   padding: 1rem;
-  background: rgba(0, 255, 255, 0.05);
-  border: 1px solid rgba(0, 255, 255, 0.3);
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.3);
   border-radius: 8px;
 }
 
@@ -603,7 +592,7 @@ onBeforeUnmount(() => {
   left: -2px;
   right: -2px;
   bottom: -2px;
-  background: linear-gradient(45deg, transparent, var(--primary-cyan), transparent);
+  background: linear-gradient(45deg, transparent, var(--electric-cyan), transparent);
   border-radius: 10px;
   opacity: 0.5;
   z-index: -1;
@@ -616,8 +605,8 @@ onBeforeUnmount(() => {
 }
 
 .ascii-char {
-  color: var(--accent-orange);
-  text-shadow: 0 0 5px var(--accent-orange);
+  color: var(--accent-purple);
+  text-shadow: 0 0 5px var(--accent-purple);
   display: inline;
   animation: glitchText 0.1s ease-in-out;
 }
@@ -632,20 +621,20 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(0, 255, 255, 0.05);
+  background: rgba(0, 212, 255, 0.05);
   padding: 0.5rem;
   border-radius: 5px;
-  border-left: 3px solid var(--primary-cyan);
+  border-left: 3px solid var(--electric-cyan);
 }
 
 .prompt-symbol {
-  color: var(--secondary-green);
+  color: var(--neon-blue);
   font-size: 1.2rem;
-  text-shadow: 0 0 10px var(--secondary-green);
+  text-shadow: 0 0 10px var(--electric-cyan);
 }
 
 .prompt-path {
-  color: var(--primary-cyan);
+  color: var(--electric-cyan);
   font-weight: bold;
 }
 
@@ -657,29 +646,29 @@ onBeforeUnmount(() => {
 
 .content-frame {
   background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(0, 255, 65, 0.3);
+  border: 1px solid rgba(0, 153, 255, 0.3);
   border-radius: 8px;
   overflow: hidden;
 }
 
 .content-header {
-  background: rgba(0, 255, 65, 0.1);
+  background: rgba(0, 153, 255, 0.1);
   padding: 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(0, 255, 65, 0.3);
+  border-bottom: 1px solid rgba(0, 153, 255, 0.3);
 }
 
 .content-title {
-  color: var(--secondary-green);
+  color: var(--neon-blue);
   font-weight: bold;
   font-size: 1.1rem;
-  text-shadow: 0 0 10px var(--secondary-green);
+  text-shadow: 0 0 10px var(--electric-cyan);
 }
 
 .content-timestamp {
-  color: var(--primary-cyan);
+  color: var(--electric-cyan);
   font-size: 0.8rem;
   opacity: 0.8;
 }
@@ -689,22 +678,22 @@ onBeforeUnmount(() => {
 }
 
 .content-text {
-  color: #a9b7c0;
+  color: var(--text-light);
   line-height: 1.6;
 }
 
 /* Styles pour le contenu typé */
 :deep(.content-title-span) {
-  color: var(--secondary-green);
-  text-shadow: 0 0 10px var(--secondary-green);
+  color: var(--neon-blue);
+  text-shadow: 0 0 10px var(--electric-cyan);
   font-weight: bold;
   margin-bottom: 0.5rem;
   display: block;
 }
 
 :deep(.content-date-span) {
-  color: var(--primary-cyan);
-  text-shadow: 0 0 5px var(--primary-cyan);
+  color: var(--electric-cyan);
+  text-shadow: 0 0 5px var(--neon-blue);
   font-style: italic;
   margin-left: 1rem;
 }
@@ -722,8 +711,8 @@ onBeforeUnmount(() => {
 }
 
 @keyframes textGlow {
-  0% { text-shadow: 0 0 5px var(--primary-cyan); }
-  100% { text-shadow: 0 0 20px var(--primary-cyan), 0 0 30px var(--primary-cyan); }
+  0% { text-shadow: 0 0 5px var(--electric-cyan); }
+  100% { text-shadow: 0 0 20px var(--electric-cyan), 0 0 30px var(--neon-blue); }
 }
 
 @keyframes scanlineMove {

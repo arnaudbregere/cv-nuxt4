@@ -46,40 +46,40 @@ ul {
       align-items: center;
       gap: 0.5rem;
       padding: 0.5rem;
-      border: 1px solid #00ff00;
+      border: 1px solid var(--neon-blue);
       border-radius: 4px;
       transition: all 0.3s ease;
-      background: rgba(0, 255, 0, 0.05);
-      color: #00ff00;
+      background: rgba(0, 153, 255, 0.05);
+      color: var(--neon-blue);
       text-decoration: none;
       font-size: 14px;
 
       &:hover {
-        background: rgba(0, 255, 0, 0.2);
-        box-shadow: 0 0 10px #00ff00;
+        background: rgba(0, 153, 255, 0.2);
+        box-shadow: 0 0 10px var(--electric-cyan);
         transform: scale(1.05);
       }
 
       &.download-btn {
         display: inline-block;
         padding: 0.5rem 1rem;
-        background-color: #00ff00;
-        color: #000;
+        background-color: var(--neon-blue);
+        color: var(--bg-deepest);
         border-radius: 4px;
         text-decoration: none;
         transition: 0.2s;
         font-weight: bold;
 
         &:hover {
-          background-color: #000;
-          color: #00ff00;
-          border: 1px solid #00ff00;
-          text-shadow: 0 0 5px #00ff00;
+          background-color: var(--bg-deepest);
+          color: var(--neon-blue);
+          border: 1px solid var(--electric-cyan);
+          text-shadow: 0 0 5px var(--neon-blue);
         }
       }
 
       i {
-        color: #00ff00;
+        color: var(--neon-blue);
         font-size: 1.2rem;
       }
     }
