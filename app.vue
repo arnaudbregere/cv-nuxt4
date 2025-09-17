@@ -12,11 +12,11 @@
       <div class="header-content">
         <NuxtLink to="/" class="logo-container">
           <div class="logo-glow">
-            <img src="/src/images/logo.png" alt="Logo" class="logo" />
+            <img src="/src/images/logo.png" alt="Logo Arnaud Brégère" class="logo" />
           </div>
           <div class="logo-text">
-            <span class="name">ARNAUD BRÉGÈRE</span>
-            <span class="title">DÉVELOPPEUR FRONT-END</span>
+            <h1 class="name">Arnaud Brégère</h1>
+            <h2 class="title">Développeur Front-End</h2>
           </div>
         </NuxtLink>
         
@@ -25,9 +25,9 @@
           <div class="nav-container">
             <div class="nav-line"></div>
             <ul class="nav-list">
-              <li><NuxtLink to="/" class="nav-link">TERMINAL</NuxtLink></li>
-              <li><NuxtLink to="/calculatrice" class="nav-link">CALCULATRICE</NuxtLink></li>
-              <li><NuxtLink to="/todolist" class="nav-link">TODOLIST</NuxtLink></li>
+              <li><NuxtLink to="/" class="nav-link">Terminal</NuxtLink></li>
+              <li><NuxtLink to="/calculatrice" class="nav-link">Calculatrice</NuxtLink></li>
+              <li><NuxtLink to="/todolist" class="nav-link">TodoList</NuxtLink></li>
             </ul>
           </div>
         </nav>
@@ -67,64 +67,73 @@
   </div>
 </template>
 
-<script>
-export default {
-  mounted() {
-    console.log("App montée - Design modernisé avec palette bleue");
-    this.createParticles();
-    this.createCircuits();
-    this.initScrollEffects();
-  },
-  
-  methods: {
-    createParticles() {
-      const particlesContainer = document.querySelector('.particles');
-      if (!particlesContainer) return;
-      
-      // Créer des particules avec couleurs bleues
-      for (let i = 0; i < 60; i++) {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-        particle.style.left = Math.random() * 100 + '%';
-        particle.style.top = Math.random() * 100 + '%';
-        particle.style.animationDelay = Math.random() * 10 + 's';
-        particle.style.animationDuration = (5 + Math.random() * 10) + 's';
-        
-        // Variation de couleurs bleues
-        const blueVariants = ['var(--neon-blue)', 'var(--electric-cyan)', 'var(--deep-blue)'];
-        particle.style.background = blueVariants[Math.floor(Math.random() * blueVariants.length)];
-        particle.style.boxShadow = `0 0 6px ${blueVariants[Math.floor(Math.random() * blueVariants.length)]}`;
-        
-        particlesContainer.appendChild(particle);
-      }
-    },
+<script setup>
+import { seoConfig } from '~/utils/seoConfig';
 
-    createCircuits() {
-      const circuitsContainer = document.querySelector('.neo-circuits');
-      if (!circuitsContainer) return;
-      
-      // Créer des circuits néon animés
-      for (let i = 0; i < 5; i++) {
-        const circuit = document.createElement('div');
-        circuit.className = 'circuit-line';
-        circuit.style.top = (20 + i * 20) + '%';
-        circuit.style.animationDelay = i * 0.5 + 's';
-        circuitsContainer.appendChild(circuit);
-      }
-    },
-    
-    initScrollEffects() {
-      window.addEventListener('scroll', () => {
-        const header = document.querySelector('.modern-header');
-        if (window.scrollY > 50) {
-          header.classList.add('scrolled');
-        } else {
-          header.classList.remove('scrolled');
-        }
-      });
-    }
+useHead({
+  title: seoConfig.title,
+  meta: seoConfig.meta,
+  link: seoConfig.link,
+  script: seoConfig.script,
+});
+
+// Particle and circuit animations
+const createParticles = () => {
+  const particlesContainer = document.querySelector('.particles');
+  if (!particlesContainer) return;
+
+  for (let i = 0; i < 60; i++) {
+    const particle = document.createElement('div');
+    particle.className = 'particle';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.top = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 10 + 's';
+    particle.style.animationDuration = (5 + Math.random() * 10) + 's';
+
+    const blueVariants = ['var(--neon-blue)', 'var(--electric-cyan)', 'var(--deep-blue)'];
+    particle.style.background = blueVariants[Math.floor(Math.random() * blueVariants.length)];
+    particle.style.boxShadow = `0 0 6px ${blueVariants[Math.floor(Math.random() * blueVariants.length)]}`;
+
+    particlesContainer.appendChild(particle);
   }
-}
+};
+
+const createCircuits = () => {
+  const circuitsContainer = document.querySelector('.neo-circuits');
+  if (!circuitsContainer) return;
+
+  for (let i = 0; i < 5; i++) {
+    const circuit = document.createElement('div');
+    circuit.className = 'circuit-line';
+    circuit.style.top = (20 + i * 20) + '%';
+    circuit.style.animationDelay = i * 0.5 + 's';
+    circuitsContainer.appendChild(circuit);
+  }
+};
+
+const initScrollEffects = () => {
+  window.addEventListener('scroll', () => {
+    const header = document.querySelector('.modern-header');
+    if (window.scrollY > 50) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+};
+
+// Initialize animations on mount
+onMounted(() => {
+  console.log("App montée - Design modernisé avec palette bleue");
+  createParticles();
+  createCircuits();
+  initScrollEffects();
+});
+
+// Cleanup scroll event listener
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', initScrollEffects);
+});
 </script>
 
 <style>
@@ -237,140 +246,97 @@ body {
   box-shadow: 0 0 10px var(--electric-cyan);
 }
 
-/* Header ultra-moderne */
+/* Header moderne */
 .modern-header {
   background: var(--glass-bg);
   backdrop-filter: blur(25px) saturate(200%);
   border-bottom: 1px solid var(--glass-border);
-  padding: 1rem 0;
+  padding: 1.5rem 0;
   position: sticky;
   top: 0;
-  z-index: 100;
-  transition: all 0.4s ease;
-  box-shadow: var(--neo-shadow);
+  z-index: 1000;
+  transition: all 0.3s ease;
 }
 
 .modern-header.scrolled {
-  background: rgba(15, 15, 35, 0.95);
   box-shadow: 0 8px 32px rgba(0, 153, 255, 0.3);
-  border-bottom-color: var(--neon-blue);
+  background: var(--glass-bg);
 }
 
 .header-content {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 2rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 2rem;
+  justify-content: space-between;
+  padding: 0 2rem;
 }
 
 .logo-container {
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  gap: 1rem;
   text-decoration: none;
-  transition: all 0.4s ease;
-}
-
-.logo-container:hover {
-  transform: translateY(-3px) scale(1.02);
 }
 
 .logo-glow {
   position: relative;
-  padding: 0.8rem;
-  border: 2px solid var(--neon-blue);
-  border-radius: 16px;
-  background: linear-gradient(145deg, rgba(0, 153, 255, 0.1), rgba(0, 212, 255, 0.05));
-  transition: all 0.4s ease;
-  overflow: hidden;
+}
+
+.logo {
+  max-width: 80px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
 }
 
 .logo-glow::before {
   content: '';
   position: absolute;
-  inset: -3px;
-  border-radius: 18px;
-  padding: 3px;
-  background: linear-gradient(60deg, var(--neon-blue), var(--electric-cyan), var(--accent-purple));
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  animation: borderGlow 3s ease-in-out infinite;
+  inset: -8px;
+  background: radial-gradient(circle, var(--neon-blue) 10%, transparent 60%);
+  opacity: 0.3;
+  z-index: -1;
+  border-radius: 16px;
+  transition: opacity 0.3s ease;
 }
 
 .logo-container:hover .logo-glow::before {
-  opacity: 1;
+  opacity: 0.6;
 }
 
-.logo {
-  max-width: 70px;
-  height: auto;
-  filter: drop-shadow(0 0 10px var(--neon-blue));
-}
-
-.logo-text {
-  display: flex;
-  flex-direction: column;
+.logo-container:hover .logo {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px var(--neon-blue);
 }
 
 .name {
-  font-size: 1.4rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  color: var(--neon-blue);
-  text-shadow: 0 0 15px var(--neon-blue);
-  letter-spacing: 2px;
-  background: linear-gradient(45deg, var(--neon-blue), var(--electric-cyan));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--bright-white);
+  text-shadow: 0 0 10px var(--neon-blue);
 }
 
 .title {
-  font-size: 0.9rem;
-  color: var(--accent-purple);
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
+  font-size: 1rem;
+  color: var(--text-dim);
   font-weight: 500;
-  text-shadow: 0 0 8px var(--accent-purple);
-}
-
-/* Navigation futuriste */
-.main-nav {
-  position: relative;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .nav-container {
   position: relative;
-  padding: 1.2rem 2rem;
-  background: var(--glass-bg);
+  padding: 1rem 2rem;
+  background: rgba(0, 153, 255, 0.05);
+  border-radius: 12px;
   border: 1px solid var(--glass-border);
-  border-radius: 20px;
-  backdrop-filter: blur(15px) saturate(180%);
-  box-shadow: var(--neo-shadow);
-  overflow: hidden;
-}
-
-.nav-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 153, 255, 0.1), transparent);
-  animation: navScan 4s ease-in-out infinite;
 }
 
 .nav-line {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
+  width: 100%;
   height: 3px;
   background: linear-gradient(90deg, 
     transparent, 

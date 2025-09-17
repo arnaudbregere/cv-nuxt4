@@ -21,7 +21,7 @@ ul {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: .5rem;
   justify-content: center;
   margin: 0 auto;
   text-align: center;
