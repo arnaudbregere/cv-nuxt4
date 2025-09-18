@@ -1,3 +1,5 @@
 export default defineNuxtConfig({
-  // Aucune configuration spécifique ici pour l'instant
+  css: [
+    '~/assets/scss/base.scss'
+  ]
 })
