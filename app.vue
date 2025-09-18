@@ -101,12 +101,8 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss">
-@use "/assets/scss/base.scss";
 @use "/assets/scss/animations.scss";
 
-
-
-/* Background overlay (hors animations déplacées) */
 .bg-overlay {
   position: fixed;
   top: 0;
