@@ -33,11 +33,6 @@
       <div class="terminal-interface">
         <!-- Barre de titre moderne -->
         <div class="terminal-header">
-          <div class="window-controls">
-            <div class="control-dot red"></div>
-            <div class="control-dot yellow"></div>
-            <div class="control-dot green"></div>
-          </div>
           <div class="terminal-title">
             <span class="terminal-path">~/arnaud-bregere/portfolio</span>
             <div class="connection-status">
@@ -460,64 +455,13 @@ function isSectionKey(key: string): key is SectionKey {
 .terminal-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: end;
   background: var(--glass-bg);
   backdrop-filter: blur(10px);
   border: 1px solid var(--border-glow);
   border-radius: 10px 10px 0 0;
   padding: 1rem 1.5rem;
   margin-bottom: 0;
-}
-
-.window-controls {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.control-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  position: relative;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.control-dot::before {
-  content: '';
-  position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
-  border-radius: 50%;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.control-dot.red {
-  background: var(--danger-red);
-}
-.control-dot.red::before {
-  box-shadow: 0 0 10px var(--danger-red);
-}
-
-.control-dot.yellow {
-  background: var(--warning-yellow);
-}
-.control-dot.yellow::before {
-  box-shadow: 0 0 10px var(--warning-yellow);
-}
-
-.control-dot.green {
-  background: var(--neon-blue);
-}
-.control-dot.green::before {
-  box-shadow: 0 0 10px var(--neon-blue);
-}
-
-.control-dot:hover::before {
-  opacity: 1;
 }
 
 .terminal-title {

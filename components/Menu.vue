@@ -15,14 +15,22 @@
           <path d="M6 18L18 6M6 6L18 18" stroke="var(--neon-blue)" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </button>
+      <li v-if="isMobile && menuOpen" class="logo-container">
+        <NuxtLink to="/" @click="closeMenu">
+           <div class="logo-text">
+              <h1 class="name">Arnaud Brégère</h1>
+              <h2 class="title">Développeur Front-End</h2>
+          </div>
+        </NuxtLink>
+      </li>
       <li><a href="#" @click.prevent="navigate('terminal')">Terminal</a></li>
-      <li><a href="#" @click.prevent="navigate('experience')">Expériences Professionnelles</a></li>
+      <li><a href="#" @click.prevent="navigate('experience')">Expériences</a></li>
       <li><a href="#" @click.prevent="navigate('formation')">Formation</a></li>
       <li><a href="#" @click.prevent="navigate('competences')">Compétences</a></li>
       <li><a href="#" @click.prevent="navigate('projets')">Projets</a></li>
       <li><a href="#" @click.prevent="navigate('contact')">Contact</a></li>
-      <li><a href="#" @click.prevent="navigate('calculatrice')">Calculatrice</a></li>
-      <li><a href="#" @click.prevent="navigate('todolist')">TodoList</a></li>
+     <li><a href="#" @click.prevent="navigate('calculatrice')">Calculatrice</a></li>
+      <li><a href="#" @click.prevent="navigate('todolist')">TodoList</a></li> 
       <li><a href="/pdf/arnaud_bregere.pdf" download="Arnaud-Bregere-CV.pdf" class="download-btn" @click="closeMenu">Télécharger le CV</a></li>
     </ul>
   </div>
@@ -118,6 +126,7 @@ onUnmounted(() => {
 ul {
   list-style: none;
   display: flex;
+      justify-content: center;
   gap: 1.5rem;
   margin: 0;
   padding: 1rem 2rem;
@@ -136,19 +145,13 @@ ul.mobile-open {
   background: var(--bg-darker);
   border: none;
   border-radius: 0;
-  padding: 6rem 1rem 1rem;
+  padding: 2rem 1rem 1rem;
   z-index: 150;
   flex-direction: column;
   gap: 1rem;
   transform: translateY(0);
   opacity: 1;
   overflow-y: auto;
-}
-
-ul:not(.mobile-open) {
-  transform: translateY(-100%);
-  opacity: 0;
-  pointer-events: none;
 }
 
 li {

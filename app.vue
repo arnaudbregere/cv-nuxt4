@@ -11,9 +11,9 @@
     <header class="modern-header">
       <div class="header-content">
         <NuxtLink to="/" class="logo-container">
-          <div class="logo-glow">
+    <!--       <div class="logo-glow">
             <img src="/src/images/logo.png" alt="Logo Arnaud Brégère" class="logo" />
-          </div>
+          </div> -->
           <div class="logo-text">
             <h1 class="name">Arnaud Brégère</h1>
             <h2 class="title">Développeur Front-End</h2>
@@ -75,11 +75,7 @@ const handleNavigation = (section: string) => {
   if (['calculatrice', 'todolist'].includes(section)) {
     router.push(`/${section}`);
   } else {
-    if (router.currentRoute.value.path === '/') {
-      window.dispatchEvent(new CustomEvent('navigate-section', { detail: section }));
-    } else {
-      router.push({ path: '/', query: { section } });
-    }
+    router.push({ path: '/', query: { section } });
   }
 };
 
@@ -109,7 +105,6 @@ onBeforeUnmount(() => {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
   pointer-events: none;
 }
 
@@ -140,11 +135,12 @@ onBeforeUnmount(() => {
 
 /* --- Header --- */
 .modern-header {
+  width: 100%;
   background: var(--glass-bg);
   backdrop-filter: blur(25px) saturate(200%);
   border-bottom: 1px solid var(--glass-border);
   padding: 1.5rem 0;
-  position: sticky;
+  position: fixed;
   top: 0;
   z-index: 100;
   transition: all 0.3s ease;
@@ -155,9 +151,9 @@ onBeforeUnmount(() => {
 }
 
 .header-content {
-  max-width: 1400px;
+  width: 100%;
   margin: 0 auto;
-  display: flex;
+  display: block;
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
@@ -166,35 +162,17 @@ onBeforeUnmount(() => {
 }
 
 .logo-container {
-  display: flex;
+  display: block;
   align-items: center;
-  gap: 1rem;
+  margin: 0 auto 2rem auto;
+  text-align: center;
   text-decoration: none;
-}
-
-.logo-glow {
-  position: relative;
 }
 
 .logo {
   max-width: 80px;
   border-radius: 12px;
   transition: all 0.3s ease;
-}
-
-.logo-glow::before {
-  content: '';
-  position: absolute;
-  inset: -8px;
-  background: radial-gradient(circle, var(--neon-blue) 10%, transparent 60%);
-  opacity: 0.3;
-  z-index: -1;
-  border-radius: 16px;
-  transition: opacity 0.3s ease;
-}
-
-.logo-container:hover .logo-glow::before {
-  opacity: 0.6;
 }
 
 .logo-container:hover .logo {
@@ -224,11 +202,12 @@ onBeforeUnmount(() => {
 .modern-main {
   flex: 1;
   position: relative;
+  margin-top: 13rem;
   padding: 3rem 0;
   z-index: 1;
 }
 .content-wrapper {
-  max-width: 1400px;
+  max-width: 1800px;
   margin: 0 auto;
   padding: 0 2rem;
 }
@@ -245,7 +224,7 @@ onBeforeUnmount(() => {
 }
 
 .footer-content {
-  max-width: 1400px;
+  max-width: 1800px;
   margin: 0 auto;
   padding: 0 2rem;
 }
@@ -399,16 +378,6 @@ onBeforeUnmount(() => {
   }
   .contact-item {
     padding: 1.2rem;
-  }
-}
-@media (min-width: 769px) {
-  .main-nav ul {
-    transform: none !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    display: flex !important;
-    position: static !important;
-    width: auto !important;
   }
 }
 </style>
