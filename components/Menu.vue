@@ -2,9 +2,7 @@
   <div class="menu-wrapper">
     <!-- Bouton burger pour mobile -->
     <button class="burger-btn" @click="toggleMenu" v-if="isMobile" aria-label="Ouvrir le menu">
-      <svg class="burger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M3 6H21M3 12H21M3 18H21" stroke="var(--neon-blue)" stroke-width="2" stroke-linecap="round"/>
-      </svg>
+    <Icon name="burger" width="32" height="32" />
     </button>
     
     <!-- Liste de navigation -->
@@ -23,7 +21,7 @@
           </div>
         </NuxtLink>
       </li>
-      <li><a href="#" @click.prevent="navigate('terminal')">Terminal</a></li>
+      <li><a href="#" @click.prevent="navigate('cv')">CV</a></li>
       <li><a href="#" @click.prevent="navigate('experience')">Expériences</a></li>
       <li><a href="#" @click.prevent="navigate('formation')">Formation</a></li>
       <li><a href="#" @click.prevent="navigate('competences')">Compétences</a></li>
@@ -37,42 +35,25 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
 
 const emit = defineEmits(['navigate']);
 
 const menuOpen = ref(false);
-const isMobile = ref(false);
+const device = useDevice()
+const isMobile = computed(() => device.isMobile)
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
 };
 
+const closeMenu = () => {
+  menuOpen.value = false;
+}
 const navigate = (section: string) => {
   emit('navigate', section);
   closeMenu();
 };
 
-const closeMenu = () => {
-  menuOpen.value = false;
-};
-
-// Vérifier si mobile
-const checkMobile = () => {
-  isMobile.value = window.innerWidth <= 768;
-  if (!isMobile.value) {
-    menuOpen.value = false;
-  }
-};
-
-onMounted(() => {
-  checkMobile();
-  window.addEventListener('resize', checkMobile);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('resize', checkMobile);
-});
 </script>
 
 <style scoped lang="scss">
