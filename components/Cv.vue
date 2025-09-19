@@ -87,8 +87,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from 'vue';
 import { cvText, experienceText, formationText, competencesText, projetsText, contactText, helpText, welcomeAscii } from '~/utils/cv_content';
+import type { SectionKey } from '~/types/sections';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
@@ -111,15 +111,6 @@ const hasStarted = ref(false);
 const bootDone = ref(false);
 const showFlash = ref(false);
 const currentSection = ref("");
-
-type SectionKey =
-  | "cv"
-  | "experience"
-  | "formation"
-  | "competences"
-  | "projets"
-  | "contact"
-  | "help";
 
 // Contenu des sections
 const sections: { [key in SectionKey]: string } = {
@@ -244,7 +235,7 @@ function startLoading(section: string) {
       loading.value = false;
       showContent.value = true;
       typeContent(sections[section as SectionKey]);
-      playSound("http://www.alienmovies.ca/html/sounds/alien1/mother.wav");
+      playSound("https://www.orangefreesounds.com/wp-content/uploads/2021/01/Sci-fi-beep-sound-effect.mp3");
     }
   }, 200);
 }
