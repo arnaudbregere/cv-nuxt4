@@ -4,11 +4,10 @@
   </div>
 </template>
 
-
 <style scoped>
 .terminal-container {
   background: var(--bg-darker);
-  padding: 2rem;
+  padding: 1.5rem;
 }
 
 .terminal-window {
@@ -18,10 +17,15 @@
   font-size: 1rem;
   line-height: 1.5;
   width: 100%;
-  padding: 1rem 1.5rem;
+  padding: 1rem;
   border: 2px solid var(--border-glow);
-  box-shadow: 0 0 20px var(--neon-blue);
+  box-shadow: 0 0 15px var(--neon-blue);
   text-align: left;
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: 70vh;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .cursor {
@@ -41,7 +45,7 @@
 .progress-bar {
   width: 100%;
   border: 1px solid var(--neon-blue);
-  height: 20px;
+  height: 18px;
   margin-top: 0.5rem;
   position: relative;
   background: var(--bg-darker);
@@ -69,5 +73,42 @@
 }
 .text {
   color: var(--text-light);
+}
+
+/* Améliorations mobile */
+@media (max-width: 768px) {
+  .terminal-container {
+    padding: 0.8rem;
+  }
+
+  .terminal-window {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    max-height: 60vh;
+  }
+
+  .progress-bar {
+    height: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .terminal-container {
+    padding: 0.5rem;
+  }
+
+  .terminal-window {
+    padding: 0.5rem;
+    font-size: 0.85rem;
+    max-height: 50vh;
+  }
+
+  .progress-bar {
+    height: 14px;
+  }
+
+  .cursor {
+    width: 8px;
+  }
 }
 </style>

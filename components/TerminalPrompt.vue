@@ -1,5 +1,5 @@
 <template>
-  <div @keydown="handleKey">
+  <div @keydown="handleKey" class="prompt-input">
     <span>{{ props.command }}</span>
     <span class="cursor">█</span>
   </div>
@@ -59,6 +59,11 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+.prompt-input {
+  display: flex;
+  align-items: center;
+}
+
 .cursor {
   display: inline-block;
   width: 10px;
@@ -71,6 +76,19 @@ onBeforeUnmount(() => {
 @keyframes blink {
   50% {
     opacity: 0;
+  }
+}
+
+/* Améliorations mobile */
+@media (max-width: 768px) {
+  .cursor {
+    width: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cursor {
+    width: 6px;
   }
 }
 </style>

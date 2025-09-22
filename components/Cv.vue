@@ -51,9 +51,7 @@
 
           <!-- ASCII art de bienvenue avec effet holographique -->
           <div v-if="showWelcome" class="ascii-container">
-            <div class="hologram-effect">
-              <pre class="ascii-art" v-html="displayed"></pre>
-            </div>
+            <WelcomeAscii />
           </div>
 
           <!-- Prompt modernisé -->
@@ -87,7 +85,7 @@
 </template>
 
 <script setup lang="ts">
-import { cvText, experienceText, formationText, competencesText, projetsText, contactText, helpText, welcomeAscii } from '~/utils/cv_content';
+import { cvText, experienceText, formationText, competencesText, projetsText, contactText, helpText } from '~/utils/cv_content';
 import type { SectionKey } from '~/types/sections';
 import { useRoute } from 'vue-router';
 
@@ -143,7 +141,7 @@ function playSound(url: string) {
 }
 
 function typeInitialMessage() {
-  const text = "> Appuyez sur la touche Entrée pour démarrer...";
+  const text = "> Appuyez sur Entrée pour démarrer.";
   if (index < text.length) {
     initialMessage.value += text[index];
     index++;
@@ -154,14 +152,8 @@ function typeInitialMessage() {
 }
 
 function typeASCII() {
-  if (index < welcomeAscii.length) {
-    const char = welcomeAscii[index];
-    displayed.value += `<span class="ascii-char">${char}</span>`;
-    index++;
-    setTimeout(typeASCII, 8);
-  } else {
-    index = 0;
-  }
+  // No longer needed here as WelcomeAscii handles the typing
+  showWelcome.value = true;
 }
 
 function typeContent(text: string) {
@@ -190,8 +182,6 @@ function handleEnter(enteredCommand: string) {
   if (!hasStarted.value) {
     hasStarted.value = true;
     playSound("http://www.alienmovies.ca/html/sounds/alien1/mother.wav");
-    showWelcome.value = true;
-    index = 0;
     typeASCII();
     command.value = "";
     return;
@@ -280,7 +270,7 @@ onMounted(() => {
   });
 });
 
-// === AJOUT : watcher pour réagir aux changements de query (router.push avec query) ===
+// Watcher pour réagir aux changements de query (router.push avec query)
 watch(
   () => route.query.section,
   (newSection) => {
@@ -290,7 +280,6 @@ watch(
     }
   }
 );
-// ================================================================
 
 // Vérification de type pour les sections
 function isSectionKey(key: string): key is SectionKey {
@@ -302,10 +291,10 @@ function isSectionKey(key: string): key is SectionKey {
 /* Utilisation des variables de App.vue pour une cohérence bleue rétro-moderne */
 .terminal-container {
   max-width: 1800px;
-  margin: 2rem auto;
+  margin: 1rem auto;
   background: var(--glass-bg);
-  backdrop-filter: blur(20px);
-  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  border-radius: 15px;
   overflow: hidden;
   box-shadow: var(--neo-shadow);
 }
@@ -327,15 +316,15 @@ function isSectionKey(key: string): key is SectionKey {
 }
 
 .boot-logo {
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .hexagon {
   position: relative;
-  width: 100px;
-  height: 86.6px;
+  width: 90px;
+  height: 78px;
   background: var(--neon-blue);
-  margin: 50px auto;
+  margin: 40px auto;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   animation: hexagonPulse 2s ease-in-out infinite;
 }
@@ -363,12 +352,12 @@ function isSectionKey(key: string): key is SectionKey {
 }
 
 .boot-progress {
-  width: 300px;
+  width: 250px;
   height: 8px;
   background: rgba(0, 153, 255, 0.2);
   border-radius: 4px;
   overflow: hidden;
-  margin: 2rem auto;
+  margin: 1.5rem auto;
 }
 
 .boot-bar {
@@ -385,6 +374,7 @@ function isSectionKey(key: string): key is SectionKey {
   letter-spacing: 1px;
   animation: textGlow 1.5s ease-in-out infinite alternate;
   text-shadow: 0 0 10px var(--neon-blue);
+  font-size: 1rem;
 }
 
 .scanline {
@@ -439,7 +429,7 @@ function isSectionKey(key: string): key is SectionKey {
 }
 
 .terminal-interface {
-  padding: 1.5rem;
+  padding: 1rem;
   position: relative;
 }
 
@@ -451,14 +441,14 @@ function isSectionKey(key: string): key is SectionKey {
   backdrop-filter: blur(10px);
   border: 1px solid var(--border-glow);
   border-radius: 10px 10px 0 0;
-  padding: 1rem 1.5rem;
+  padding: 0.8rem;
   margin-bottom: 0;
 }
 
 .terminal-title {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.5rem;
   color: var(--electric-cyan);
   font-family: 'Courier New', monospace;
 }
@@ -486,16 +476,20 @@ function isSectionKey(key: string): key is SectionKey {
 
 .terminal-window {
   background: var(--glass-bg);
-  backdrop-filter: blur(20px);
+  backdrop-filter: blur(15px);
   border: 1px solid var(--border-glow);
   border-top: none;
   border-radius: 0 0 10px 10px;
-  padding: 2rem;
+  padding: 1rem;
   color: var(--electric-cyan);
   font-family: 'Courier New', monospace;
   line-height: 1.6;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: 70vh;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .terminal-window::before {
@@ -526,18 +520,18 @@ function isSectionKey(key: string): key is SectionKey {
   color: var(--neon-blue);
   font-size: 1.1rem;
   text-shadow: 0 0 10px var(--electric-cyan);
-  margin-bottom: 2rem;
+  margin-bottom: 1.5rem;
 }
 
 .ascii-container {
   position: relative;
-  margin: 2rem 0;
+  margin: 1.5rem 0;
   z-index: 1;
 }
 
 .hologram-effect {
   position: relative;
-  padding: 1rem;
+  padding: 0.8rem;
   background: rgba(0, 212, 255, 0.05);
   border: 1px solid rgba(0, 212, 255, 0.3);
   border-radius: 8px;
@@ -557,20 +551,8 @@ function isSectionKey(key: string): key is SectionKey {
   animation: hologramScan 3s linear infinite;
 }
 
-.ascii-art {
-  line-height: 1.1;
-  font-size: 0.8rem;
-}
-
-.ascii-char {
-  color: var(--accent-purple);
-  text-shadow: 0 0 5px var(--accent-purple);
-  display: inline;
-  animation: glitchText 0.1s ease-in-out;
-}
-
 .prompt-container {
-  margin: 2rem 0;
+  margin: 1.5rem 0;
   position: relative;
   z-index: 1;
 }
@@ -594,10 +576,11 @@ function isSectionKey(key: string): key is SectionKey {
 .prompt-path {
   color: var(--electric-cyan);
   font-weight: bold;
+  font-size: 1rem;
 }
 
 .content-display {
-  margin-top: 2rem;
+  margin-top: 1.5rem;
   position: relative;
   z-index: 1;
 }
@@ -611,7 +594,7 @@ function isSectionKey(key: string): key is SectionKey {
 
 .content-header {
   background: rgba(0, 153, 255, 0.1);
-  padding: 1rem;
+  padding: 0.8rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -621,23 +604,26 @@ function isSectionKey(key: string): key is SectionKey {
 .content-title {
   color: var(--neon-blue);
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   text-shadow: 0 0 10px var(--electric-cyan);
 }
 
 .content-timestamp {
   color: var(--electric-cyan);
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   opacity: 0.8;
 }
 
 .content-body {
-  padding: 1.5rem;
+  padding: 1rem;
 }
 
 .content-text {
   color: var(--text-light);
   line-height: 1.6;
+  font-size: 1.1rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 /* Styles pour le contenu typé */
@@ -647,6 +633,7 @@ function isSectionKey(key: string): key is SectionKey {
   font-weight: bold;
   margin-bottom: 0.5rem;
   display: block;
+  font-size: 1.2rem;
 }
 
 :deep(.content-date-span) {
@@ -654,6 +641,7 @@ function isSectionKey(key: string): key is SectionKey {
   text-shadow: 0 0 5px var(--neon-blue);
   font-style: italic;
   margin-left: 1rem;
+  font-size: 1rem;
 }
 
 /* Animations */
@@ -709,55 +697,151 @@ function isSectionKey(key: string): key is SectionKey {
   95% { transform: translate(-1px, 1px); }
 }
 
-/* Responsive Design */
+/* Responsive Design - Améliorations pour mobile */
 @media (max-width: 768px) {
+  .terminal-container {
+    margin: 0.5rem;
+    border-radius: 10px;
+  }
+
   .terminal-interface {
-    padding: 1rem;
+    padding: 0.5rem;
   }
   
   .terminal-header {
     flex-direction: column;
-    gap: 1rem;
-    padding: 1rem;
+    gap: 0.5rem;
+    padding: 0.5rem;
   }
   
+  .terminal-title {
+    flex-direction: column;
+    gap: 0.3rem;
+    text-align: center;
+  }
+
+  .terminal-path {
+    font-size: 0.8rem;
+  }
+
+  .connection-status {
+    font-size: 0.7rem;
+  }
+
   .terminal-window {
-    padding: 1rem;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    max-height: 60vh;
+  }
+
+  .initial-message {
+    font-size: 1rem;
+  }
+
+  .ascii-container {
+    margin: 1rem 0;
+  }
+
+  .hologram-effect {
+    padding: 0.5rem;
+  }
+
+  .prompt-line {
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    padding: 0.3rem;
+  }
+
+  .prompt-symbol {
+    font-size: 1rem;
+  }
+
+  .prompt-path {
     font-size: 0.9rem;
   }
-  
-  .ascii-art {
-    font-size: 0.6rem;
-  }
-  
+
   .content-header {
     flex-direction: column;
-    gap: 0.5rem;
-    text-align: center;
+    gap: 0.3rem;
+    padding: 0.5rem;
+  }
+
+  .content-title {
+    font-size: 1.1rem;
+  }
+
+  .content-timestamp {
+    font-size: 0.8rem;
+  }
+
+  .content-body {
+    padding: 0.8rem;
+  }
+
+  .content-text {
+    font-size: 1rem;
   }
 }
 
 @media (max-width: 480px) {
+  .terminal-container {
+    margin: 0.3rem;
+    border-radius: 8px;
+  }
+
   .terminal-interface {
-    padding: 0.5rem;
+    padding: 0.3rem;
   }
   
   .terminal-window {
-    padding: 0.5rem;
-    font-size: 0.8rem;
+    padding: 0.3rem;
+    font-size: 0.85rem;
+    max-height: 50vh;
   }
-  
+
+  .boot-progress {
+    width: 200px;
+  }
+
   .hexagon {
-    width: 80px;
-    height: 69px;
+    width: 70px;
+    height: 60px;
   }
   
   .boot-text {
     font-size: 0.7rem;
   }
-  
-  .boot-progress {
-    width: 250px;
+
+  .initial-message {
+    font-size: 0.9rem;
+  }
+
+  .ascii-container {
+    margin: 0.8rem 0;
+  }
+
+  .hologram-effect {
+    padding: 0.3rem;
+  }
+
+  .prompt-symbol {
+    font-size: 0.9rem;
+  }
+
+  .prompt-path {
+    font-size: 0.8rem;
+  }
+
+  .content-title {
+    font-size: 1rem;
+  }
+
+  .content-text {
+    font-size: 0.9rem;
+  }
+
+  .content-body {
+    padding: 0.5rem;
   }
 }
 </style>
