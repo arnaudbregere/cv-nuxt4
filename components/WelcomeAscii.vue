@@ -15,8 +15,8 @@ const welcomeText = ref("");
 const commandText = ref("");
 const index = ref(0);
 
-// Détecte si c'est un mobile (largeur <= 768px)
-const isMobile = window.innerWidth <= 768;
+const device = useDevice()
+const isMobile = computed(() => device.isMobile)
 
 // Utilise mobileWelcome pour mobile, sinon welcomeAscii
 const welcomeArt = isMobile ? mobileWelcome : welcomeAscii.trim().split('\n').slice(0, -1).join('\n');
