@@ -301,7 +301,7 @@ function isSectionKey(key: string): key is SectionKey {
 <style scoped lang="scss">
 /* Utilisation des variables de App.vue pour une cohérence bleue rétro-moderne */
 .terminal-container {
-  max-width: 1200px;
+  max-width: 1800px;
   margin: 2rem auto;
   background: var(--glass-bg);
   backdrop-filter: blur(20px);
