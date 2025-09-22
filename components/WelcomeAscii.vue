@@ -7,22 +7,28 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import { welcomeAscii, mobileWelcome, commandsList } from '~/utils/cv_content';
 
 const welcomeRef = ref<HTMLElement | null>(null);
 const commandsRef = ref<HTMLElement | null>(null);
 const welcomeText = ref("");
 const commandText = ref("");
 const index = ref(0);
-const welcomeAscii = `  
-BIENVENUE
-`;
-const commands = "Commandes disponibles: cv, experience, formation, competences, projets, contact, help, clear";
+
+// Détecte si c'est un mobile (largeur <= 768px)
+const isMobile = window.innerWidth <= 768;
+
+// Utilise mobileWelcome pour mobile, sinon welcomeAscii
+const welcomeArt = isMobile ? mobileWelcome : welcomeAscii.trim().split('\n').slice(0, -1).join('\n');
+const commands = isMobile ? commandsList.replace('> ', '') : commandsList.replace('> ', '');
 
 onMounted(() => {
   function typeWelcome() {
-    if (index.value < welcomeAscii.length) {
-      welcomeText.value += welcomeAscii[index.value];
-      index.value++;
+    if (index.value < welcomeArt.length) {
+      // Type 3 caractères par frame pour accélérer
+      const charsToAdd = welcomeArt.substr(index.value, 3);
+      welcomeText.value += charsToAdd;
+      index.value += charsToAdd.length;
       requestAnimationFrame(typeWelcome);
     } else {
       index.value = 0;
@@ -32,8 +38,10 @@ onMounted(() => {
 
   function typeCommands() {
     if (index.value < commands.length) {
-      commandText.value += commands[index.value];
-      index.value++;
+      // Type 3 caractères par frame pour accélérer
+      const charsToAdd = commands.substr(index.value, 3);
+      commandText.value += charsToAdd;
+      index.value += charsToAdd.length;
       requestAnimationFrame(typeCommands);
     }
   }
@@ -67,10 +75,10 @@ onMounted(() => {
 }
 
 .ascii-welcome {
-  color: var(--accent-purple);
+  color: orange;
   text-shadow: 0 0 5px var(--accent-purple);
   font-family: 'Courier New', monospace;
-  font-size: 1.2rem; /* Increased from 0.9rem */
+  font-size: 1rem;
   line-height: 1.3;
   margin-bottom: 0.5rem;
   white-space: pre-wrap;
@@ -81,7 +89,7 @@ onMounted(() => {
   color: var(--electric-cyan);
   text-shadow: 0 0 5px var(--neon-blue);
   font-family: 'Courier New', monospace;
-  font-size: 1.0rem; /* Increased from 0.85rem */
+  font-size: 1.2rem;
   line-height: 1.4;
   white-space: pre-wrap;
   word-wrap: break-word;
@@ -94,12 +102,12 @@ onMounted(() => {
   }
 
   .ascii-welcome {
-    font-size: 1.1rem; /* Increased from 0.8rem */
+    font-size: 1.5rem; /* Optimisé pour mobile */
     margin-bottom: 0.3rem;
   }
 
   .ascii-commands {
-    font-size: 0.9rem; /* Increased from 0.75rem */
+    font-size: 1.3rem; /* Optimisé pour mobile */
   }
 }
 
@@ -109,12 +117,12 @@ onMounted(() => {
   }
 
   .ascii-welcome {
-    font-size: 1.0rem; /* Increased from 0.7rem */
+    font-size: 1.4rem; /* Ajusté pour petits écrans */
     margin-bottom: 0.2rem;
   }
 
   .ascii-commands {
-    font-size: 0.8rem; /* Increased from 0.65rem */
+    font-size: 1.2rem; /* Ajusté pour petits écrans */
   }
 }
 

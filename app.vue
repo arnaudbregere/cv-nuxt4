@@ -426,7 +426,7 @@ onBeforeUnmount(() => {
   }
 
   .modern-main {
-    margin-top: 7rem;
+    margin-top: 9rem;
     padding: 1rem 0;
   }
 

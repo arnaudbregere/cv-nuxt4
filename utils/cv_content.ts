@@ -1,27 +1,27 @@
 export const cvText = `
-<span class="title" style="color: orange">==================== PROFIL ====================</span>
+<span class="title" style="color: orange"> PROFIL ====================</span>
 <span class="text">Initialement webdesigner, 
 j'ai évolué vers le rôle d'intégrateur web et aujourd'hui...
 développeur front-end.</span>
 
 Mon parcours atypique me permet d'allier créativité, technicité et adaptabilité.
 
-<span class="title" style="color: orange">==================== COORDONNÉES ====================</span>
+<span class="title" style="color: orange"> COORDONNÉES ====================</span>
 <span class="text">☎ 06 07 98 52 85</span>
 <span class="text">✉ arnaud.bregere@gmail.com</span>
 <span class="text">☗ 45, rue Lemercier 75017 Paris</span>
 
-<span class="title" style="color: orange">==================== LOISIRS ====================</span>
+<span class="title" style="color: orange"> LOISIRS ====================</span>
 <span class="text">Dessin | Web | Cinéma | Sport | Voyages | Cuisine</span>
 
-<span class="title" style="color: orange">==================== COMPÉTENCES ====================</span>
+<span class="title" style="color: orange"> COMPÉTENCES ====================</span>
 <span class="subtitle">- HTML5 - CSS3 / SCSS</span>
 <span class="subtitle">- Javascript / Typescript</span>
 <span class="subtitle">- Vue3 / Nuxt3</span>
 <span class="subtitle">- GraphQl, ElasticSearch, Postman</span>
 <span class="subtitle">- GitHub / Jira / Agile / Scrum</span>
 
-<span class="title" style="color: orange">==================== EXPÉRIENCE ====================</span>
+<span class="title" style="color: orange"> EXPÉRIENCE ====================</span>
 <span class="subtitle">Figaro Classifieds - Développeur Web Front-end</span>
 <span class="date">Depuis Octobre 2019</span>
 <span class="text">Vue3 / Nuxt3 - Javascript / Typescript - SCSS - TMA - SEO - UI/UX</span>
@@ -30,7 +30,7 @@ Mon parcours atypique me permet d'allier créativité, technicité et adaptabili
 <span class="date">Septembre 2018 - Octobre 2019</span>
 <span class="text">Javascript / jQuery - SCSS - UI/UX - Pages produit/liste</span>
 
-<span class="title" style="color: orange">==================== FORMATION ====================</span>
+<span class="title" style="color: orange"> FORMATION ====================</span>
 <span class="subtitle">Licence Communication & Médias (Webdesign)</span>
 <span class="date">Cergy Paris Université – 2007/2008</span>
 <span class="subtitle">BTS Communication Visuelle</span>
@@ -38,7 +38,7 @@ Mon parcours atypique me permet d'allier créativité, technicité et adaptabili
 `;
 
 export const experienceText = `
-<span class="title" style="color: orange">==================== EXPÉRIENCES PROFESSIONNELLES ====================</span>
+<span class="title" style="color: orange"> EXPÉRIENCES PROFESSIONNELLES ====================</span>
 
 <span class="subtitle">♦ Figaro Classifieds - Développeur Web Front-end</span>
 <span class="date">▸ Octobre 2019 - Présent (5+ ans)</span>
@@ -101,7 +101,7 @@ export const experienceText = `
 `;
 
 export const formationText = `
-<span class="title" style="color: orange">==================== FORMATION ====================</span>
+<span class="title" style="color: orange"> FORMATION ====================</span>
 
 <span class="subtitle">▸ Licence Communication & Médias (Webdesign)</span>
 <span class="date">▸ 2007 - 2008</span>
@@ -164,7 +164,7 @@ export const formationText = `
 `;
 
 export const competencesText = `
-<span class="title" style="color: orange">==================== COMPÉTENCES ====================</span>
+<span class="title" style="color: orange"> COMPÉTENCES ====================</span>
 
 <span class="subtitle">▸ Langages & Frameworks</span>
 <span class="text">HTML5 / CSS3 / SCSS: ████████████████████ 100%</span>
@@ -200,7 +200,7 @@ export const competencesText = `
 `;
 
 export const projetsText = `
-<span class="title" style="color: orange">==================== PROJETS RÉALISÉS ====================</span>
+<span class="title" style="color: orange"> PROJETS RÉALISÉS ====================</span>
 
 <span class="subtitle">▸ Projets Professionnels</span>
 
@@ -338,7 +338,7 @@ export const projetsText = `
 `;
 
 export const contactText = `
-<span class="title" style="color: orange">==================== CONTACT ====================</span>
+<span class="title" style="color: orange"> CONTACT ====================</span>
 
 <span class="subtitle">▸ Informations de Contact</span>
 <span class="text">☎ Téléphone: 06 07 98 52 85</span>
@@ -369,7 +369,7 @@ export const contactText = `
 `;
 
 export const helpText = `
-<span class="title" style="color: orange">==================== AIDE ====================</span>
+<span class="title" style="color: orange"> AIDE ====================</span>
 <span class="text">Commandes disponibles:</span>
 <span class="subtitle">• cv - Affiche le CV complet</span>
 <span class="subtitle">• experience - Expériences professionnelles</span>
@@ -381,6 +381,8 @@ export const helpText = `
 <span class="subtitle">• clear - Efface l'écran</span>
 `
 
+export const commandsList = "> Commandes disponibles: 'cv', 'experience', 'formation', 'competences', 'projets', 'contact', 'help', 'clear'";
+
 export const welcomeAscii = `
 BBBBB   IIIII EEEEEEE NN   NN VV     VV EEEEEEE NN   NN UU   UU EEEEEEE
 BB   B   III  EE      NNN  NN VV     VV EE      NNN  NN UU   UU EE     
@@ -388,5 +390,9 @@ BBBBBB   III  EEEEE   NN N NN  VV   VV  EEEEE   NN N NN UU   UU EEEEE
 BB   BB  III  EE      NN  NNN   VV VV   EE      NN  NNN UU   UU EE     
 BBBBBB  IIIII EEEEEEE NN   NN    VVV    EEEEEEE NN   NN  UUUUU  EEEEEEE
 
-> Commandes disponibles: 'cv', 'experience', 'formation', 'competences', 'projets', 'contact', 'help', 'clear'
+${commandsList}
+`;
+
+export const mobileWelcome = `
+BIENVENUE
 `;
