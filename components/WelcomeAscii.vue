@@ -19,8 +19,8 @@ const device = useDevice()
 const isMobile = computed(() => device.isMobile)
 
 // Utilise mobileWelcome pour mobile, sinon welcomeAscii
-const welcomeArt = isMobile ? mobileWelcome : welcomeAscii.trim().split('\n').slice(0, -1).join('\n');
-const commands = isMobile ? commandsList.replace('> ', '') : commandsList.replace('> ', '');
+const welcomeArt = isMobile.value ? mobileWelcome : welcomeAscii.trim().split('\n').slice(0, -1).join('\n');
+const commands = isMobile.value ? commandsList.replace('> ', '') : commandsList.replace('> ', '');
 
 onMounted(() => {
   function typeWelcome() {

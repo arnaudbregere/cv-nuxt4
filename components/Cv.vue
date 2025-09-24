@@ -794,7 +794,7 @@ function isSectionKey(key: string): key is SectionKey {
   }
   
   .terminal-window {
-    padding: 0.3rem;
+    padding: 1rem;
     font-size: 0.85rem;
     max-height: 50vh;
   }

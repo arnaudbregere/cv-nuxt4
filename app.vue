@@ -94,7 +94,9 @@ onBeforeUnmount(() => {
 </script>
 
 <style lang="scss">
+@use "/assets/scss/base.scss";
 @use "/assets/scss/animations.scss";
+
 
 .bg-overlay {
   position: fixed;
@@ -341,8 +343,8 @@ onBeforeUnmount(() => {
   color: var(--bright-white);
 }
 
-/* Responsiveness - Améliorations pour mobile */
-@media (max-width: 1200px) {
+/* --- Responsive (mobile-first) --- */
+@include respond-to(desktop) {
   .header-content,
   .content-wrapper,
   .footer-content {
@@ -350,32 +352,37 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 768px) {
+@include respond-to(tablet) {
   .header-content {
     flex-direction: column;
     gap: 1rem;
     padding: 0 0.8rem;
   }
+
   .logo-container {
     justify-content: center;
     margin-bottom: 0.8rem;
   }
+
   .main-nav {
     width: 100%;
     text-align: center;
   }
+
   .logo {
     max-width: 60px;
   }
+
   .name {
     font-size: 1.2rem;
   }
+
   .title {
     font-size: 0.8rem;
   }
 
   .modern-main {
-    margin-top: 9rem;
+    margin-top: 11rem;
     padding: 1.5rem 0;
   }
 
@@ -384,8 +391,7 @@ onBeforeUnmount(() => {
   }
 
   .contact-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+        gap: 1rem;
   }
 
   .contact-item {
@@ -416,7 +422,7 @@ onBeforeUnmount(() => {
   }
 }
 
-@media (max-width: 480px) {
+@include respond-to(mobile) {
   .modern-header {
     padding: 0.8rem 0;
   }
