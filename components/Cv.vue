@@ -290,11 +290,11 @@ function isSectionKey(key: string): key is SectionKey {
 <style scoped lang="scss">
 /* Utilisation des variables de App.vue pour une cohérence bleue rétro-moderne */
 .terminal-container {
-  max-width: 1800px;
+  max-width: 180rem;
   margin: 1rem auto;
   background: var(--glass-bg);
-  backdrop-filter: blur(15px);
-  border-radius: 15px;
+  backdrop-filter: blur(1.5rem);
+  border-radius: 1.5rem;
   overflow: hidden;
   box-shadow: var(--neo-shadow);
 }
@@ -321,20 +321,20 @@ function isSectionKey(key: string): key is SectionKey {
 
 .hexagon {
   position: relative;
-  width: 90px;
-  height: 78px;
+  width: 9rem;
+  height: 7.8rem;
   background: var(--neon-blue);
-  margin: 40px auto;
+  margin: 4rem auto;
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   animation: hexagonPulse 2s ease-in-out infinite;
 }
 
 .hexagon-inner {
   position: absolute;
-  top: 5px;
-  left: 5px;
-  right: 5px;
-  bottom: 5px;
+  top: .5rem;
+  left: .5rem;
+  right: .5rem;
+  bottom: .5rem;
   background: var(--bg-deepest);
   clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
   display: flex;
@@ -347,15 +347,15 @@ function isSectionKey(key: string): key is SectionKey {
   font-family: 'Courier New', monospace;
   font-size: 0.9rem;
   text-transform: uppercase;
-  letter-spacing: 2px;
-  text-shadow: 0 0 10px var(--neon-blue);
+  letter-spacing: .2rem;
+  text-shadow: 0 0 1rem var(--neon-blue);
 }
 
 .boot-progress {
-  width: 250px;
-  height: 8px;
+  width: 25rem;
+  height: .8rem;
   background: rgba(0, 153, 255, 0.2);
-  border-radius: 4px;
+  border-radius: .4rem;
   overflow: hidden;
   margin: 1.5rem auto;
 }
@@ -365,15 +365,15 @@ function isSectionKey(key: string): key is SectionKey {
   height: 100%;
   background: var(--neon-blue);
   animation: bootProgress 3s ease-in-out forwards;
-  box-shadow: 0 0 15px var(--electric-cyan);
+  box-shadow: 0 0 1.5rem var(--electric-cyan);
 }
 
 .boot-status {
   color: var(--text-light);
   font-family: 'Courier New', monospace;
-  letter-spacing: 1px;
+  letter-spacing: .1rem;
   animation: textGlow 1.5s ease-in-out infinite alternate;
-  text-shadow: 0 0 10px var(--neon-blue);
+  text-shadow: 0 0 1rem var(--neon-blue);
   font-size: 1rem;
 }
 
@@ -382,10 +382,10 @@ function isSectionKey(key: string): key is SectionKey {
   top: -10%;
   left: 0;
   width: 100%;
-  height: 5px;
+  height: .5rem;
   background: rgba(0, 212, 255, 0.3);
   animation: scanlineMove 3s linear infinite;
-  box-shadow: 0 0 20px var(--electric-cyan);
+  box-shadow: 0 0 2rem var(--electric-cyan);
 }
 
 .grid-overlay {
@@ -394,10 +394,10 @@ function isSectionKey(key: string): key is SectionKey {
   left: 0;
   width: 100%;
   height: 100%;
-  background-size: 50px 50px;
+  background-size: 5rem 5rem;
   background-image: 
-    linear-gradient(rgba(0, 153, 255, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 153, 255, 0.1) 1px, transparent 1px);
+    linear-gradient(rgba(0, 153, 255, 0.1) .1rem, transparent .1rem),
+    linear-gradient(90deg, rgba(0, 153, 255, 0.1) .1rem, transparent .1rem);
   animation: gridFloat 60s linear infinite;
   opacity: 0.3;
 }
@@ -425,7 +425,7 @@ function isSectionKey(key: string): key is SectionKey {
   background: var(--neon-blue);
   border-radius: 50%;
   animation: pulseExpand 0.8s ease-out forwards;
-  box-shadow: 0 0 50px var(--electric-cyan);
+  box-shadow: 0 0 5rem var(--electric-cyan);
 }
 
 .terminal-interface {
@@ -438,9 +438,9 @@ function isSectionKey(key: string): key is SectionKey {
   align-items: center;
   justify-content: end;
   background: var(--glass-bg);
-  backdrop-filter: blur(10px);
-  border: 1px solid var(--border-glow);
-  border-radius: 10px 10px 0 0;
+  backdrop-filter: blur(1rem);
+  border: .1rem solid var(--border-glow);
+  border-radius: 1rem 1rem 0 0;
   padding: 0.8rem;
   margin-bottom: 0;
 }
@@ -455,7 +455,7 @@ function isSectionKey(key: string): key is SectionKey {
 
 .terminal-path {
   font-size: 0.9rem;
-  letter-spacing: 1px;
+  letter-spacing: .1rem;
 }
 
 .connection-status {
@@ -466,20 +466,20 @@ function isSectionKey(key: string): key is SectionKey {
 }
 
 .status-indicator {
-  width: 8px;
-  height: 8px;
+  width: .8rem;
+  height: .8rem;
   background: var(--neon-blue);
   border-radius: 50%;
   animation: statusBlink 2s ease-in-out infinite;
-  box-shadow: 0 0 10px var(--electric-cyan);
+  box-shadow: 0 0 1rem var(--electric-cyan);
 }
 
 .terminal-window {
   background: var(--glass-bg);
-  backdrop-filter: blur(15px);
-  border: 1px solid var(--border-glow);
+  backdrop-filter: blur(1.5rem);
+  border: .1rem solid var(--border-glow);
   border-top: none;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 1rem 1rem;
   padding: 1rem;
   color: var(--electric-cyan);
   font-family: 'Courier New', monospace;
@@ -503,9 +503,9 @@ function isSectionKey(key: string): key is SectionKey {
     repeating-linear-gradient(
       0deg,
       transparent,
-      transparent 2px,
-      rgba(0, 212, 255, 0.02) 2px,
-      rgba(0, 212, 255, 0.02) 4px
+      transparent .2rem,
+      rgba(0, 212, 255, 0.02) .2rem,
+      rgba(0, 212, 255, 0.02) .4rem
     );
   pointer-events: none;
   z-index: 0;
@@ -518,8 +518,8 @@ function isSectionKey(key: string): key is SectionKey {
 
 .initial-message {
   color: var(--neon-blue);
-  font-size: 1.1rem;
-  text-shadow: 0 0 10px var(--electric-cyan);
+  font-size: 1rem;
+  text-shadow: 0 0 1rem var(--electric-cyan);
   margin-bottom: 1.5rem;
 }
 
@@ -533,19 +533,19 @@ function isSectionKey(key: string): key is SectionKey {
   position: relative;
   padding: 0.8rem;
   background: rgba(0, 212, 255, 0.05);
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  border-radius: 8px;
+  border: .1rem solid rgba(0, 212, 255, 0.3);
+  border-radius: .8rem;
 }
 
 .hologram-effect::before {
   content: '';
   position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
+  top: -.2rem;
+  left: -.2rem;
+  right: -.2rem;
+  bottom: -.2rem;
   background: linear-gradient(45deg, transparent, var(--electric-cyan), transparent);
-  border-radius: 10px;
+  border-radius: 1rem;
   opacity: 0.5;
   z-index: -1;
   animation: hologramScan 3s linear infinite;
@@ -563,14 +563,14 @@ function isSectionKey(key: string): key is SectionKey {
   gap: 0.5rem;
   background: rgba(0, 212, 255, 0.05);
   padding: 0.5rem;
-  border-radius: 5px;
-  border-left: 3px solid var(--electric-cyan);
+  border-radius: .5rem;
+  border-left: .3rem solid var(--electric-cyan);
 }
 
 .prompt-symbol {
   color: var(--neon-blue);
   font-size: 1.2rem;
-  text-shadow: 0 0 10px var(--electric-cyan);
+  text-shadow: 0 0 1rem var(--electric-cyan);
 }
 
 .prompt-path {
@@ -587,8 +587,8 @@ function isSectionKey(key: string): key is SectionKey {
 
 .content-frame {
   background: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(0, 153, 255, 0.3);
-  border-radius: 8px;
+  border: .1rem solid rgba(0, 153, 255, 0.3);
+  border-radius: .8rem;
   overflow: hidden;
 }
 
@@ -598,14 +598,14 @@ function isSectionKey(key: string): key is SectionKey {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid rgba(0, 153, 255, 0.3);
+  border-bottom: .1rem solid rgba(0, 153, 255, 0.3);
 }
 
 .content-title {
   color: var(--neon-blue);
   font-weight: bold;
   font-size: 1.2rem;
-  text-shadow: 0 0 10px var(--electric-cyan);
+  text-shadow: 0 0 1rem var(--electric-cyan);
 }
 
 .content-timestamp {
@@ -629,7 +629,7 @@ function isSectionKey(key: string): key is SectionKey {
 /* Styles pour le contenu typé */
 :deep(.content-title-span) {
   color: var(--neon-blue);
-  text-shadow: 0 0 10px var(--electric-cyan);
+  text-shadow: 0 0 1rem var(--electric-cyan);
   font-weight: bold;
   margin-bottom: 0.5rem;
   display: block;
@@ -638,7 +638,7 @@ function isSectionKey(key: string): key is SectionKey {
 
 :deep(.content-date-span) {
   color: var(--electric-cyan);
-  text-shadow: 0 0 5px var(--neon-blue);
+  text-shadow: 0 0 .5rem var(--neon-blue);
   font-style: italic;
   margin-left: 1rem;
   font-size: 1rem;
@@ -657,8 +657,8 @@ function isSectionKey(key: string): key is SectionKey {
 }
 
 @keyframes textGlow {
-  0% { text-shadow: 0 0 5px var(--electric-cyan); }
-  100% { text-shadow: 0 0 20px var(--electric-cyan), 0 0 30px var(--neon-blue); }
+  0% { text-shadow: 0 0 .5rem var(--electric-cyan); }
+  100% { text-shadow: 0 0 2rem var(--electric-cyan), 0 0 3rem var(--neon-blue); }
 }
 
 @keyframes scanlineMove {
@@ -668,7 +668,7 @@ function isSectionKey(key: string): key is SectionKey {
 
 @keyframes gridFloat {
   0% { transform: translate(0, 0); }
-  100% { transform: translate(50px, 50px); }
+  100% { transform: translate(5rem, 5rem); }
 }
 
 @keyframes modernFlash {
@@ -694,14 +694,14 @@ function isSectionKey(key: string): key is SectionKey {
 
 @keyframes glitchText {
   0%, 90%, 100% { transform: translate(0); }
-  95% { transform: translate(-1px, 1px); }
+  95% { transform: translate(-.1rem, .1rem); }
 }
 
 /* Responsive Design - Améliorations pour mobile */
-@media (max-width: 768px) {
+@include respond-to(tablet) {
   .terminal-container {
     margin: 0.5rem;
-    border-radius: 10px;
+    border-radius: 1rem;
   }
 
   .terminal-interface {
@@ -783,10 +783,10 @@ function isSectionKey(key: string): key is SectionKey {
   }
 }
 
-@media (max-width: 480px) {
+@include respond-to(mobile) {
   .terminal-container {
     margin: 0.3rem;
-    border-radius: 8px;
+    border-radius: .8rem;
   }
 
   .terminal-interface {
@@ -800,12 +800,12 @@ function isSectionKey(key: string): key is SectionKey {
   }
 
   .boot-progress {
-    width: 200px;
+    width: 20rem;
   }
 
   .hexagon {
-    width: 70px;
-    height: 60px;
+    width: 7rem;
+    height: 6rem;
   }
   
   .boot-text {
@@ -821,7 +821,7 @@ function isSectionKey(key: string): key is SectionKey {
   }
 
   .hologram-effect {
-    padding: 0.3rem;
+    padding: 1rem;
   }
 
   .prompt-symbol {

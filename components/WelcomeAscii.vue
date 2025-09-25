@@ -50,79 +50,82 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .hologram-effect {
   position: relative;
-  padding: 0.8rem;
+  padding: 0.3rem; // mobile par défaut
   background: rgba(0, 212, 255, 0.05);
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  border-radius: 8px;
+  border: .1rem solid rgba(0, 212, 255, 0.3);
+  border-radius: .8rem;
   overflow: hidden;
 }
 
 .hologram-effect::before {
   content: '';
   position: absolute;
-  top: -2px;
-  left: -2px;
-  right: -2px;
-  bottom: -2px;
+  top: -.2rem;
+  left: -.2rem;
+  right: -.2rem;
+  bottom: -.2rem;
   background: linear-gradient(45deg, transparent, var(--electric-cyan), transparent);
-  border-radius: 10px;
+  border-radius: 1rem;
   opacity: 0.5;
   z-index: -1;
   animation: hologramScan 3s linear infinite;
 }
 
+/* --- ASCII Welcome --- */
 .ascii-welcome {
   color: orange;
-  text-shadow: 0 0 5px var(--accent-purple);
+  text-shadow: 0 0 .5rem var(--accent-purple);
   font-family: 'Courier New', monospace;
-  font-size: 1rem;
+  font-size: 1.4rem; // mobile base
   line-height: 1.3;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.2rem;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
 
+/* --- ASCII Commands --- */
 .ascii-commands {
   color: var(--electric-cyan);
-  text-shadow: 0 0 5px var(--neon-blue);
+  text-shadow: 0 0 .5rem var(--neon-blue);
   font-family: 'Courier New', monospace;
-  font-size: 1.2rem;
+  font-size: 1.2rem; // mobile base
   line-height: 1.4;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
 
-/* Responsive Design - Améliorations pour mobile */
-@media (max-width: 768px) {
+/* Tablet */
+@include respond-to(tablet) {
   .hologram-effect {
     padding: 0.5rem;
   }
 
   .ascii-welcome {
-    font-size: 1.5rem; /* Optimisé pour mobile */
+    font-size: 1.5rem;
     margin-bottom: 0.3rem;
   }
 
   .ascii-commands {
-    font-size: 1.3rem; /* Optimisé pour mobile */
+    font-size: 1.3rem;
   }
 }
 
-@media (max-width: 480px) {
+/* Desktop */
+@include respond-to(desktop) {
   .hologram-effect {
-    padding: 0.3rem;
+    padding: 0.8rem;
   }
 
   .ascii-welcome {
-    font-size: 1.4rem; /* Ajusté pour petits écrans */
-    margin-bottom: 0.2rem;
+    font-size: 1rem; // plus petit sur desktop
+    margin-bottom: 0.5rem;
   }
 
   .ascii-commands {
-    font-size: 1.2rem; /* Ajusté pour petits écrans */
+    font-size: 1.2rem;
   }
 }
 

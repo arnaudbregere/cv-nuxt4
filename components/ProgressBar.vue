@@ -17,7 +17,6 @@ const props = defineProps<{
 const loading = ref(props.loading);
 const progress = ref(props.progress);
 
-// Formater la section pour un affichage convivial
 const formattedSection = computed(() => {
   const sectionMap: { [key: string]: string } = {
     cv: "CV",
@@ -40,51 +39,50 @@ watch(() => props.progress, (newProgress) => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .loading-text {
   color: var(--electric-cyan);
   font-family: 'Courier New', monospace;
-  font-size: 1rem;
+  font-size: 0.85rem; 
   text-align: center;
   margin-bottom: 0.5rem;
 }
 
 .progress-bar {
   width: 100%;
-  border: 1px solid var(--neon-blue);
-  height: 15px;
+  border: .1rem solid var(--neon-blue);
+  height: 1.2rem;
   margin: 0 auto;
   position: relative;
   background: var(--bg-darker);
-  border-radius: 5px;
+  border-radius: .5rem;
 }
 
 .progress {
   height: 100%;
   background: var(--neon-blue);
-  box-shadow: 0 0 8px var(--electric-cyan);
+  box-shadow: 0 0 .8rem var(--electric-cyan);
   transition: width 0.15s linear;
-  border-radius: 5px;
+  border-radius: .5rem;
 }
 
-/* Améliorations mobile */
-@media (max-width: 768px) {
+/* Tablet */
+@include respond-to(tablet) {
   .loading-text {
     font-size: 0.9rem;
   }
-
   .progress-bar {
-    height: 14px;
+    height: 1.4rem;
   }
 }
 
-@media (max-width: 480px) {
+/* Desktop */
+@include respond-to(desktop) {
   .loading-text {
-    font-size: 0.85rem;
+    font-size: 1rem;
   }
-
   .progress-bar {
-    height: 12px;
+    height: 1.5rem;
   }
 }
 </style>

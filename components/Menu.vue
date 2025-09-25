@@ -1,13 +1,9 @@
 <template>
   <div class="menu-wrapper">
-    <!-- Bouton burger pour mobile -->
     <button class="burger-btn" @click="toggleMenu" v-if="isMobile" aria-label="Ouvrir le menu">
     <Icon name="burger" width="32" height="32" />
     </button>
-    
-    <!-- Liste de navigation -->
     <ul :class="{ 'mobile-open': menuOpen }" v-show="!isMobile || menuOpen">
-      <!-- Bouton de fermeture pour mobile -->
       <button v-if="isMobile && menuOpen" class="close-btn" @click="closeMenu" aria-label="Fermer le menu">
         <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M6 18L18 6M6 6L18 18" stroke="var(--neon-blue)" stroke-width="2" stroke-linecap="round"/>
@@ -74,7 +70,7 @@ const navigate = (section: string) => {
 
 .burger-btn:hover {
   color: var(--electric-cyan);
-  text-shadow: 0 0 10px var(--electric-cyan);
+  text-shadow: 0 0 1rem var(--electric-cyan);
 }
 
 .burger-icon {
@@ -107,14 +103,17 @@ const navigate = (section: string) => {
 ul {
   list-style: none;
   display: flex;
-      justify-content: center;
+  justify-content: center;
   gap: 1.5rem;
   margin: 0;
   padding: 1rem 2rem;
   background: rgba(0, 153, 255, 0.05);
-  border-radius: 12px;
-  border: 1px solid var(--glass-border);
+  border-radius: 1.2rem;
+  border: .1rem solid var(--glass-border);
   transition: transform 0.3s ease, opacity 0.3s ease;
+  flex-direction: column; // base mobile
+  text-align: center;
+  gap: 1rem;
 }
 
 ul.mobile-open {
@@ -138,7 +137,7 @@ ul.mobile-open {
 li {
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: 0.5rem;
   width: 100%;
 }
 
@@ -146,12 +145,12 @@ a {
   color: var(--text-light);
   text-decoration: none;
   padding: 0.8rem 1.5rem;
-  border: 1px solid transparent;
-  border-radius: 12px;
+  border: .1rem solid transparent;
+  border-radius: 1.2rem;
   transition: all 0.3s ease;
   position: relative;
   font-weight: 600;
-  letter-spacing: 1px;
+  letter-spacing: .1rem;
   text-transform: uppercase;
   font-size: 0.85rem;
   background: rgba(255, 255, 255, 0.03);
@@ -163,7 +162,7 @@ a::before {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 12px;
+  border-radius: 1.2rem;
   background: linear-gradient(135deg, var(--neon-blue), var(--electric-cyan));
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -172,9 +171,9 @@ a::before {
 
 a:hover {
   color: var(--bright-white);
-  text-shadow: 0 0 10px var(--bright-white);
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 10px 25px rgba(0, 153, 255, 0.4);
+  text-shadow: 0 0 1rem var(--bright-white);
+  transform: translateY(-.2rem) scale(1.05);
+  box-shadow: 0 1rem 2.5rem rgba(0, 153, 255, 0.4);
 }
 
 a:hover::before {
@@ -186,7 +185,7 @@ a.download-btn {
   padding: 0.8rem 1.5rem;
   background-color: var(--neon-blue);
   color: var(--bg-deepest);
-  border-radius: 12px;
+  border-radius: 1.2rem;
   text-decoration: none;
   transition: all 0.3s ease;
   font-weight: bold;
@@ -197,12 +196,28 @@ a.download-btn {
 a.download-btn:hover {
   background-color: var(--bg-deepest);
   color: var(--neon-blue);
-  border: 1px solid var(--electric-cyan);
-  text-shadow: 0 0 5px var(--neon-blue);
-  transform: translateY(-2px) scale(1.05);
+  border: .1rem solid var(--electric-cyan);
+  text-shadow: 0 0 .5rem var(--neon-blue);
+  transform: translateY(-.2rem) scale(1.05);
 }
 
-@media (min-width: 769px) {
+@include respond-to(tablet) {
+  ul {
+    flex-direction: row;
+    text-align: left;
+    gap: 1.5rem;
+  }
+
+  li {
+    width: auto;
+  }
+
+  a {
+    width: auto;
+  }
+}
+
+@include respond-to(desktop) {
   .burger-btn {
     display: none;
   }
@@ -215,29 +230,13 @@ a.download-btn:hover {
     flex-direction: row;
     position: static;
     background: rgba(0, 153, 255, 0.05);
-    border: 1px solid var(--glass-border);
-    border-radius: 12px;
+    border: .1rem solid var(--glass-border);
+    border-radius: 1.2rem;
     padding: 1rem 2rem;
     transform: none;
     opacity: 1;
     pointer-events: auto;
-    width: auto; /* Ensure full width is not forced */
-  }
-
-  li {
-    width: auto;
-  }
-
-  a {
-    width: auto;
-  }
-}
-
-@media (max-width: 768px) {
-  ul {
-    flex-direction: column;
-    gap: 1rem;
-    text-align: center;
+    width: auto; 
   }
 }
 </style>

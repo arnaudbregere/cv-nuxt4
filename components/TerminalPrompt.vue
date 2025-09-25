@@ -58,7 +58,7 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .prompt-input {
   display: flex;
   align-items: center;
@@ -66,11 +66,11 @@ onBeforeUnmount(() => {
 
 .cursor {
   display: inline-block;
-  width: 10px;
-  margin-left: 2px;
+  width: .6rem; 
+  margin-left: .2rem;
   animation: blink 1s step-start infinite;
   color: var(--neon-blue);
-  text-shadow: 0 0 5px var(--electric-cyan);
+  text-shadow: 0 0 .5rem var(--electric-cyan);
 }
 
 @keyframes blink {
@@ -79,16 +79,17 @@ onBeforeUnmount(() => {
   }
 }
 
-/* Améliorations mobile */
-@media (max-width: 768px) {
+
+@include respond-to(tablet) {
   .cursor {
-    width: 8px;
+    width: .8rem;
   }
 }
 
-@media (max-width: 480px) {
+
+@include respond-to(desktop) {
   .cursor {
-    width: 6px;
+    width: 1rem;
   }
 }
 </style>

@@ -133,32 +133,32 @@ function handleEnter() {
 
 .title {
   margin-bottom: 1rem;
-  text-shadow: 0 0 10px #00ff66, 0 0 20px #00ff66;
+  text-shadow: 0 0 1rem #00ff66, 0 0 2rem #00ff66;
 }
 
 .display {
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 2px solid #00ff66;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: .2rem solid #00ff66;
   text-align: right;
   font-size: 1.5rem;
   background: black;
   color: #00ff66;
-  text-shadow: 0 0 8px #00ff66;
+  text-shadow: 0 0 .8rem #00ff66;
 }
 
 .buttons {
   display: grid;
-  grid-template-columns: repeat(4, 78px);
-  gap: 8px;
+  grid-template-columns: repeat(4, 7.8rem);
+  gap: 0.8rem;
 }
 
 button {
   background: black;
-  border: 2px solid #00ff66;
+  border: .2rem solid #00ff66;
   color: #00ff66;
   font-size: 1.2rem;
-  padding: 10px;
+  padding: 1rem;
   cursor: pointer;
   transition: background 0.2s, color 0.2s;
 }

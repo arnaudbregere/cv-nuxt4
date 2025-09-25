@@ -303,53 +303,53 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .todo-container {
   font-family: 'Courier New', monospace;
   background-color: #000;
-  color: #00ff00;
-  padding: 2rem;
+  color: #00ff66;
+  padding: 1rem; // base mobile
   min-height: 100vh;
-  max-width: 1000px;
+  max-width: 100rem;
   margin: 0 auto;
 }
 
 .title {
   text-align: center;
   color: #ffa500;
-  text-shadow: 0 0 10px #ffa500;
+  text-shadow: 0 0 1rem #ffa500;
   margin-bottom: 2rem;
   font-size: 2rem;
 }
 
-/* Formulaire d'ajout */
 .add-form {
   display: flex;
+  flex-direction: column; // mobile
   gap: 1rem;
   margin-bottom: 2rem;
   flex-wrap: wrap;
   padding: 1rem;
-  border: 2px solid #00ff00;
+  border: .2rem solid #00ff66;
   background: rgba(0, 255, 0, 0.05);
 }
 
 .input-field, .select-field {
   background: #000;
-  border: 1px solid #00ff00;
-  color: #00ff00;
+  border: .1rem solid #00ff66;
+  color: #00ff66;
   padding: 0.5rem;
   font-family: 'Courier New', monospace;
   flex: 1;
-  min-width: 150px;
+  min-width: 15rem;
 }
 
 .input-field:focus, .select-field:focus {
   outline: none;
-  box-shadow: 0 0 5px #00ff00;
+  box-shadow: 0 0 .5rem #00ff66;
 }
 
 .btn-add {
-  background: #00ff00;
+  background: #00ff66;
   color: #000;
   border: none;
   padding: 0.5rem 1rem;
@@ -361,24 +361,26 @@ onMounted(() => {
 
 .btn-add:hover {
   background: #000;
-  color: #00ff00;
-  border: 1px solid #00ff00;
-  text-shadow: 0 0 5px #00ff00;
+  color: #00ff66;
+  border: .1rem solid #00ff66;
+  text-shadow: 0 0 .5rem #00ff66;
 }
 
 /* Filtres */
 .filters {
   display: flex;
+  flex-direction: column; // mobile
   gap: 1rem;
   margin-bottom: 2rem;
   justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
 }
 
 .filter-btn {
   background: transparent;
-  color: #00ff00;
-  border: 1px solid #00ff00;
+  color: #00ff66;
+  border: .1rem solid #00ff66;
   padding: 0.5rem 1rem;
   cursor: pointer;
   font-family: 'Courier New', monospace;
@@ -386,7 +388,7 @@ onMounted(() => {
 }
 
 .filter-btn.active, .filter-btn:hover {
-  background: #00ff00;
+  background: #00ff66;
   color: #000;
   text-shadow: none;
 }
@@ -396,7 +398,7 @@ onMounted(() => {
   text-align: center;
   padding: 1rem;
   margin: 1rem 0;
-  border: 1px solid #00ff00;
+  border: .1rem solid #00ff66;
 }
 
 .error {
@@ -413,7 +415,7 @@ onMounted(() => {
 }
 
 .todo-item {
-  border: 1px solid #00ff00;
+  border: .1rem solid #00ff66;
   padding: 1rem;
   background: rgba(0, 255, 0, 0.05);
   transition: all 0.2s;
@@ -425,20 +427,21 @@ onMounted(() => {
 }
 
 .todo-item.priority-high {
-  border-left: 4px solid #ff0000;
+  border-left: .4rem solid #ff0000;
 }
 
 .todo-item.priority-medium {
-  border-left: 4px solid #ffa500;
+  border-left: .4rem solid #ffa500;
 }
 
 .todo-item.priority-low {
-  border-left: 4px solid #00ff00;
+  border-left: .4rem solid #00ff66;
 }
 
 .todo-display {
   display: flex;
-  align-items: flex-start;
+  flex-direction: column; // mobile
+  align-items: stretch;
   gap: 1rem;
 }
 
@@ -453,7 +456,7 @@ onMounted(() => {
 
 .todo-title {
   margin: 0 0 0.5rem 0;
-  color: #00ff00;
+  color: #00ff66;
   font-size: 1.1rem;
 }
 
@@ -481,14 +484,15 @@ onMounted(() => {
 
 .todo-actions {
   display: flex;
+  flex-direction: row; // mobile
+  justify-content: flex-end;
   gap: 0.5rem;
-  flex-direction: column;
 }
 
 .btn-edit, .btn-delete, .btn-save, .btn-cancel {
   background: transparent;
-  color: #00ff00;
-  border: 1px solid #00ff00;
+  color: #00ff66;
+  border: .1rem solid #00ff66;
   padding: 0.25rem 0.5rem;
   cursor: pointer;
   font-family: 'Courier New', monospace;
@@ -503,7 +507,7 @@ onMounted(() => {
 }
 
 .btn-edit:hover, .btn-save:hover {
-  background: #00ff00;
+  background: #00ff66;
   color: #000;
 }
 
@@ -521,8 +525,8 @@ onMounted(() => {
 
 .edit-input, .edit-select {
   background: #000;
-  border: 1px solid #00ff00;
-  color: #00ff00;
+  border: .1rem solid #00ff66;
+  color: #00ff66;
   padding: 0.5rem;
   font-family: 'Courier New', monospace;
 }
@@ -544,7 +548,7 @@ onMounted(() => {
 .btn-global {
   background: transparent;
   color: #ffa500;
-  border: 1px solid #ffa500;
+  border: .1rem solid #ffa500;
   padding: 0.5rem 1rem;
   cursor: pointer;
   font-family: 'Courier New', monospace;
@@ -556,29 +560,30 @@ onMounted(() => {
   color: #000;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* Tablet and up */
+@include respond-to(tablet) {
   .todo-container {
-    padding: 1rem;
+    padding: 2rem;
   }
-  
+
   .add-form {
-    flex-direction: column;
-  }
-  
-  .todo-display {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .todo-actions {
     flex-direction: row;
-    justify-content: flex-end;
   }
-  
-  .filters {
+
+  .todo-display {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .todo-actions {
     flex-direction: column;
+    justify-content: flex-start;
+  }
+
+  .filters {
+    flex-direction: row;
     align-items: center;
   }
 }
 </style>
+

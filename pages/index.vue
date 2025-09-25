@@ -28,8 +28,8 @@
   line-height: 1.5;
   width: 100%;
   padding: 0.5rem; 
-  border: 2px solid var(--border-glow);
-  box-shadow: 0 0 15px var(--neon-blue);
+  border: .2rem solid var(--border-glow);
+  box-shadow: 0 0 1.5rem var(--neon-blue);
   text-align: left;
   overflow-y: auto;
   overflow-x: auto;
@@ -52,13 +52,13 @@
 
 .cursor {
   display: inline-block;
-  width: 8px;
+  width: 0.8rem;
   background: var(--neon-blue);
-  margin-left: 2px;
+  margin-left: .2rem;
   animation: blink 1s step-start infinite;
 
   @include respond-to(tablet) {
-    width: 10px;
+    width: 1rem;
   }
 }
 
@@ -70,25 +70,25 @@
 
 .progress-bar {
   width: 100%;
-  border: 1px solid var(--neon-blue);
-  height: 14px; 
+  border: .1rem solid var(--neon-blue);
+  height: 1.4rem; 
   margin-top: 0.5rem;
   position: relative;
   background: var(--bg-darker);
 
   @include respond-to(tablet) {
-    height: 16px;
+    height: 1.6rem;
   }
 
   @include respond-to(desktop) {
-    height: 18px;
+    height: 1.8rem;
   }
 }
 
 .progress {
   height: 100%;
   background: var(--neon-blue);
-  box-shadow: 0 0 10px var(--electric-cyan);
+  box-shadow: 0 0 1rem var(--electric-cyan);
   transition: width 0.15s linear;
 }
 
