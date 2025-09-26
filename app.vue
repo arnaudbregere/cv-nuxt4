@@ -69,7 +69,7 @@ const { createCircuits } = useCircuits();
 const { initScrollEffects, destroyScrollEffects } = useScrollEffects();
 
 const handleNavigation = (section: string) => {
-  if (['calculatrice', 'todolist'].includes(section)) {
+  if (['works'].includes(section)) {
     router.push(`/${section}`);
   } else {
     router.push({ path: '/', query: { section } });
@@ -93,7 +93,7 @@ onBeforeUnmount(() => {
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use "/assets/scss/base.scss";
 @use "/assets/scss/animations.scss";
 
@@ -429,11 +429,6 @@ onBeforeUnmount(() => {
 
   .header-content {
     padding: 0 0.5rem;
-  }
-
-  .modern-main {
-    margin-top: 9rem;
-    padding: 1rem 0;
   }
 
   .content-wrapper {

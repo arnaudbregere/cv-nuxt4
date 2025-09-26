@@ -22,10 +22,9 @@
       <li><a href="#" @click.prevent="navigate('formation')">Formation</a></li>
       <li><a href="#" @click.prevent="navigate('competences')">Compétences</a></li>
       <li><a href="#" @click.prevent="navigate('projets')">Projets</a></li>
+      <li><a href="#" @click.prevent="navigate('works')">Works</a></li>
       <li><a href="#" @click.prevent="navigate('contact')">Contact</a></li>
-     <li><a href="#" @click.prevent="navigate('calculatrice')">Calculatrice</a></li>
-      <li><a href="#" @click.prevent="navigate('todolist')">TodoList</a></li> 
-      <li><a href="/pdf/arnaud_bregere.pdf" download="Arnaud-Bregere-CV.pdf" class="download-btn" @click="closeMenu">Télécharger le CV</a></li>
+      <li><a href="/pdf/arnaud_bregere.pdf" download="Arnaud-Bregere-CV.pdf" class="download-btn">Télécharger le CV</a></li>
     </ul>
   </div>
 </template>

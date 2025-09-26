@@ -8,15 +8,12 @@
 html {
   font-family: 'Courier New', Courier, monospace;
   background: var(--bg-deepest);
-  color: var(--text-light);
   line-height: 1.6;
   scroll-behavior: smooth;
 }
 
 body {
   font-family: inherit;
-  background: inherit;
-  color: inherit;
   line-height: inherit;
 }
 
@@ -26,5 +23,4 @@ body {
   display: flex;
   flex-direction: column;
   overflow-x: hidden;
-  isolation: isolate;
 }
