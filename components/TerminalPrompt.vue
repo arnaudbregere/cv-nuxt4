@@ -59,6 +59,67 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped lang="scss">
+
+.terminal-container {
+  background: var(--bg-darker);
+  padding: 0.5rem; 
+
+  @include respond-to(tablet) {
+    padding: 0.8rem;
+  }
+
+  @include respond-to(desktop) {
+    padding: 1.5rem;
+  }
+}
+
+.terminal-window {
+  background: var(--bg-darker);
+  color: var(--electric-cyan);
+  font-family: "Courier New", monospace;
+  font-size: 0.85rem; 
+  line-height: 1.5;
+  width: 100%;
+  padding: 0.5rem; 
+  border: .2rem solid var(--border-glow);
+  box-shadow: 0 0 1.5rem var(--neon-blue);
+  text-align: left;
+  overflow-y: auto;
+  overflow-x: auto;
+  max-height: 50vh; 
+  white-space: pre-wrap;
+  word-wrap: break-word;
+
+  @include respond-to(tablet) {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+    max-height: 60vh;
+  }
+
+  @include respond-to(desktop) {
+    padding: 1rem;
+    font-size: 1rem;
+    max-height: 70vh;
+  }
+}
+
+.cursor {
+  display: inline-block;
+  width: 0.8rem;
+  background: var(--neon-blue);
+  margin-left: .2rem;
+  animation: blink 1s step-start infinite;
+
+  @include respond-to(tablet) {
+    width: 1rem;
+  }
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
 .prompt-input {
   display: flex;
   align-items: center;
@@ -83,13 +144,6 @@ onBeforeUnmount(() => {
 @include respond-to(tablet) {
   .cursor {
     width: .8rem;
-  }
-}
-
-
-@include respond-to(desktop) {
-  .cursor {
-    width: 1rem;
   }
 }
 </style>

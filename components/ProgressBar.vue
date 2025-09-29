@@ -40,6 +40,30 @@ watch(() => props.progress, (newProgress) => {
 </script>
 
 <style scoped lang="scss">
+
+.progress-bar {
+  width: 100%;
+  border: .1rem solid var(--neon-blue);
+  height: 1.4rem; 
+  margin-top: 0.5rem;
+  position: relative;
+  background: var(--bg-darker);
+
+  @include respond-to(tablet) {
+    height: 1.6rem;
+  }
+
+  @include respond-to(desktop) {
+    height: 1.8rem;
+  }
+}
+
+.progress {
+  height: 100%;
+  background: var(--neon-blue);
+  box-shadow: 0 0 1rem var(--electric-cyan);
+  transition: width 0.15s linear;
+}
 .loading-text {
   color: var(--electric-cyan);
   font-family: 'Courier New', monospace;
