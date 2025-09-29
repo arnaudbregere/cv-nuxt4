@@ -1,4 +1,3 @@
-// server/api/todos/[id].js
 import { todos, saveTodos, ensureInitialized } from '../../utils/todoStore';
 
 export default defineEventHandler(async (event) => {
