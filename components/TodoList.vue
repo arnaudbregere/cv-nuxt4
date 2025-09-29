@@ -121,8 +121,7 @@
   </div>
 </template>
 
-<script setup>
-import { ref, computed, onMounted } from 'vue'
+<script setup lang="ts">
 
 // État local
 const todos = ref([])

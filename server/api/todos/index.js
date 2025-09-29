@@ -1,23 +1,25 @@
 // server/api/todos/index.js
-import { todos } from '../../utils/todoStore'
+import { todos, saveTodos, ensureInitialized } from '../../utils/todoStore';
 
 export default defineEventHandler(async (event) => {
-  const method = getMethod(event)
+  await ensureInitialized(); // Ensure todos are loaded
+
+  const method = event.method.toUpperCase();
 
   if (method === 'GET') {
-    return todos.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    return todos.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   }
 
   if (method === 'POST') {
-    const body = await readBody(event)
+    const body = await readBody(event);
 
     if (!body.title || typeof body.title !== 'string' || !body.title.trim()) {
-      throw createError({ statusCode: 400, statusMessage: 'Le titre est requis' })
+      throw createError({ statusCode: 400, statusMessage: 'Le titre est requis' });
     }
 
-    const validPriorities = ['low', 'medium', 'high']
+    const validPriorities = ['low', 'medium', 'high'];
     if (body.priority && !validPriorities.includes(body.priority)) {
-      throw createError({ statusCode: 400, statusMessage: 'Priorité invalide' })
+      throw createError({ statusCode: 400, statusMessage: 'Priorité invalide' });
     }
 
     const newTodo = {
@@ -28,11 +30,12 @@ export default defineEventHandler(async (event) => {
       priority: body.priority || 'medium',
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
-    }
+    };
 
-    todos.push(newTodo)
-    return newTodo
+    todos.push(newTodo);
+    await saveTodos();
+    return newTodo;
   }
 
-  throw createError({ statusCode: 405, statusMessage: 'Méthode non autorisée' })
-})
+  throw createError({ statusCode: 405, statusMessage: 'Méthode non autorisée' });
+});
