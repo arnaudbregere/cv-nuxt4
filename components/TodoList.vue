@@ -1,6 +1,6 @@
 <template>
   <div class="todo-container">
-    <h1 class="title">Liste de Tâches</h1>
+    <h1 class="title">TODO LIST</h1>
 
     <!-- Formulaire d'ajout -->
     <form @submit.prevent="addTodo" class="add-form">
@@ -163,108 +163,125 @@ onMounted(() => {
 <style scoped lang="scss">
 .todo-container {
   font-family: 'Courier New', monospace;
-  background-color: #000;
-  color: #00ff66;
-  padding: 1rem; // base mobile
+  background: var(--bg-deepest);
+  color: var(--text-light);
+  padding: 0.1rem;
   min-height: 100vh;
-  max-width: 100rem;
+  max-width: 160rem;
   margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+  &::before {
+    content: '';
+    position: absolute;
+    top: -8rem;
+    left: -8rem;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, var(--electric-cyan) 0%, var(--bg-dark) 70%);
+    opacity: 0.1;
+    animation: pulse 10s infinite alternate;
+  }
 }
 
 .title {
   text-align: center;
-  color: #ffa500;
-  text-shadow: 0 0 1rem #ffa500;
+  color: var(--electric-cyan);
+  text-shadow: 0 0 1rem var(--neon-blue), 0 0 2rem var(--accent-purple);
   margin-bottom: 2rem;
-  font-size: 2rem;
+  font-size: 2.5rem;
+  position: relative;
+  z-index: 1;
 }
 
 .add-form {
   display: flex;
-  flex-direction: column; // mobile
+  flex-direction: column;
   gap: 1rem;
   margin-bottom: 2rem;
-  flex-wrap: wrap;
-  padding: 1rem;
-  border: .2rem solid #00ff66;
-  background: rgba(0, 255, 0, 0.05);
+  padding: 1.5rem;
+  background: var(--glass-bg);
+  border: 0.2rem solid var(--glass-border);
+  border-radius: 0.8rem;
+  backdrop-filter: blur(0.5rem);
+  box-shadow: var(--neo-shadow);
+  @include respond-to(tablet) {
+    flex-direction: row;
+  }
 }
 
 .input-field, .select-field {
-  background: #000;
-  border: .1rem solid #00ff66;
-  color: #00ff66;
-  padding: 0.5rem;
-  font-family: 'Courier New', monospace;
-  flex: 1;
-  min-width: 15rem;
-}
-
-.input-field:focus, .select-field:focus {
-  outline: none;
-  box-shadow: 0 0 .5rem #00ff66;
+  background: var(--bg-darker);
+  border: 0.1rem solid var(--neon-blue);
+  color: var(--text-light);
+  padding: 0.75rem;
+  font-family: inherit;
+  border-radius: 0.4rem;
+  transition: all 0.3s ease;
+  &:focus {
+    outline: none;
+    border-color: var(--electric-cyan);
+    box-shadow: 0 0 1.5rem var(--border-glow);
+  }
 }
 
 .btn-add {
-  background: #00ff66;
-  color: #000;
+  background: var(--neon-blue);
+  color: var(--bright-white);
   border: none;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   cursor: pointer;
-  font-family: 'Courier New', monospace;
+  border-radius: 0.4rem;
   font-weight: bold;
-  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  transition: all 0.3s ease;
+  &:hover {
+    background: var(--accent-purple);
+    box-shadow: 0 0 2rem var(--accent-purple);
+  }
 }
 
-.btn-add:hover {
-  background: #000;
-  color: #00ff66;
-  border: .1rem solid #00ff66;
-  text-shadow: 0 0 .5rem #00ff66;
-}
-
-/* Filtres */
 .filters {
   display: flex;
-  flex-direction: column; // mobile
   gap: 1rem;
   margin-bottom: 2rem;
   justify-content: center;
-  align-items: center;
   flex-wrap: wrap;
+  @include respond-to(tablet) {
+    flex-direction: row;
+  }
 }
 
 .filter-btn {
-  background: transparent;
-  color: #00ff66;
-  border: .1rem solid #00ff66;
-  padding: 0.5rem 1rem;
+  background: var(--bg-darker);
+  color: var(--text-light);
+  border: 0.1rem solid var(--neon-blue);
+  padding: 0.75rem 1.5rem;
   cursor: pointer;
-  font-family: 'Courier New', monospace;
-  transition: all 0.2s;
+  border-radius: 0.4rem;
+  transition: all 0.3s ease;
+  &.active, &:hover {
+    background: var(--electric-cyan);
+    color: var(--bg-deepest);
+    box-shadow: 0 0 1rem var(--electric-cyan);
+  }
 }
 
-.filter-btn.active, .filter-btn:hover {
-  background: #00ff66;
-  color: #000;
-  text-shadow: none;
-}
-
-/* Messages */
 .loading, .error {
   text-align: center;
   padding: 1rem;
   margin: 1rem 0;
-  border: .1rem solid #00ff66;
+  border: 0.1rem solid var(--neon-blue);
+  border-radius: 0.4rem;
 }
 
 .error {
-  color: #ff0000;
-  border-color: #ff0000;
-  background: rgba(255, 0, 0, 0.1);
+  color: var(--accent-pink);
+  border-color: var(--accent-pink);
+  background: rgba(236, 72, 153, 0.1);
 }
 
-/* Liste des tâches */
 .todos-list {
   display: flex;
   flex-direction: column;
@@ -272,39 +289,53 @@ onMounted(() => {
 }
 
 .todo-item {
-  border: .1rem solid #00ff66;
-  padding: 1rem;
-  background: rgba(0, 255, 0, 0.05);
-  transition: all 0.2s;
-}
-
-.todo-item.completed {
-  opacity: 0.6;
-  border-color: #666;
-}
-
-.todo-item.priority-high {
-  border-left: .4rem solid #ff0000;
-}
-
-.todo-item.priority-medium {
-  border-left: .4rem solid #ffa500;
-}
-
-.todo-item.priority-low {
-  border-left: .4rem solid #00ff66;
+  border: 0.1rem solid var(--glass-border);
+  padding: 1.5rem;
+  background: var(--glass-bg);
+  border-radius: 0.8rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  &.completed {
+    opacity: 0.7;
+    border-color: var(--text-dim);
+  }
+  &.priority-high {
+    border-left: 0.5rem solid var(--accent-pink);
+  }
+  &.priority-medium {
+    border-left: 0.5rem solid var(--accent-purple);
+  }
+  &.priority-low {
+    border-left: 0.5rem solid var(--neon-blue);
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    top: -5rem;
+    left: -5rem;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, var(--electric-cyan) 0%, transparent 70%);
+    opacity: 0.05;
+    animation: rotate 20s infinite linear;
+  }
 }
 
 .todo-display {
   display: flex;
-  flex-direction: column; // mobile
-  align-items: stretch;
+  flex-direction: column;
   gap: 1rem;
+  @include respond-to(tablet) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
 }
 
 .checkbox {
   margin-top: 0.5rem;
-  transform: scale(1.2);
+  transform: scale(1.5);
+  accent-color: var(--neon-blue);
 }
 
 .todo-content {
@@ -313,67 +344,62 @@ onMounted(() => {
 
 .todo-title {
   margin: 0 0 0.5rem 0;
-  color: #00ff66;
-  font-size: 1.1rem;
+  color: var(--electric-cyan);
+  font-size: 1.2rem;
+  text-shadow: 0 0 0.5rem var(--neon-blue);
 }
 
 .todo-item.completed .todo-title {
   text-decoration: line-through;
-  color: #666;
+  color: var(--text-dim);
 }
 
 .todo-description {
   margin: 0 0 0.5rem 0;
-  color: #a9b7c0;
-  font-size: 0.9rem;
+  color: var(--text-dim);
+  font-size: 1rem;
 }
 
 .todo-meta {
   display: flex;
   gap: 1rem;
-  font-size: 0.8rem;
-  color: #666;
-}
-
-.priority {
-  font-weight: bold;
+  font-size: 0.9rem;
+  color: var(--text-dim);
 }
 
 .todo-actions {
   display: flex;
-  flex-direction: row; // mobile
-  justify-content: flex-end;
   gap: 0.5rem;
+  @include respond-to(tablet) {
+    flex-direction: column;
+    justify-content: flex-start;
+  }
 }
 
 .btn-edit, .btn-delete, .btn-save, .btn-cancel {
-  background: transparent;
-  color: #00ff66;
-  border: .1rem solid #00ff66;
-  padding: 0.25rem 0.5rem;
+  background: var(--bg-darker);
+  color: var(--text-light);
+  border: 0.1rem solid var(--neon-blue);
+  padding: 0.5rem 1rem;
   cursor: pointer;
-  font-family: 'Courier New', monospace;
-  font-size: 0.8rem;
-  transition: all 0.2s;
-  white-space: nowrap;
+  border-radius: 0.4rem;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  &:hover {
+    background: var(--neon-blue);
+    color: var(--bright-white);
+  }
 }
 
 .btn-delete {
-  color: #ff0000;
-  border-color: #ff0000;
+  color: var(--accent-pink);
+  border-color: var(--accent-pink);
+  &:hover {
+    background: var(--accent-pink);
+    color: var(--bg-deepest);
+  }
 }
 
-.btn-edit:hover, .btn-save:hover {
-  background: #00ff66;
-  color: #000;
-}
-
-.btn-delete:hover, .btn-cancel:hover {
-  background: #ff0000;
-  color: #000;
-}
-
-/* Mode édition */
 .todo-edit {
   display: flex;
   flex-direction: column;
@@ -381,11 +407,17 @@ onMounted(() => {
 }
 
 .edit-input, .edit-select {
-  background: #000;
-  border: .1rem solid #00ff66;
-  color: #00ff66;
-  padding: 0.5rem;
-  font-family: 'Courier New', monospace;
+  background: var(--bg-darker);
+  border: 0.1rem solid var(--neon-blue);
+  color: var(--text-light);
+  padding: 0.75rem;
+  border-radius: 0.4rem;
+  transition: all 0.3s ease;
+  &:focus {
+    outline: none;
+    border-color: var(--electric-cyan);
+    box-shadow: 0 0 1.5rem var(--border-glow);
+  }
 }
 
 .edit-actions {
@@ -393,7 +425,6 @@ onMounted(() => {
   gap: 1rem;
 }
 
-/* Actions globales */
 .global-actions {
   display: flex;
   gap: 1rem;
@@ -403,40 +434,46 @@ onMounted(() => {
 }
 
 .btn-global {
-  background: transparent;
-  color: #ffa500;
-  border: .1rem solid #ffa500;
-  padding: 0.5rem 1rem;
+  background: var(--bg-darker);
+  color: var(--accent-purple);
+  border: 0.1rem solid var(--accent-purple);
+  padding: 0.75rem 1.5rem;
   cursor: pointer;
-  font-family: 'Courier New', monospace;
-  transition: all 0.2s;
+  border-radius: 0.4rem;
+  transition: all 0.3s ease;
+  &:hover {
+    background: var(--accent-purple);
+    color: var(--bright-white);
+  }
 }
 
-.btn-global:hover {
-  background: #ffa500;
-  color: #000;
+/* Animations */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.1); }
 }
 
-/* Tablet and up */
+@keyframes rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Media Queries */
 @include respond-to(tablet) {
   .todo-container {
     padding: 2rem;
   }
-
   .add-form {
     flex-direction: row;
   }
-
   .todo-display {
     flex-direction: row;
     align-items: flex-start;
   }
-
   .todo-actions {
     flex-direction: column;
     justify-content: flex-start;
   }
-
   .filters {
     flex-direction: row;
     align-items: center;
