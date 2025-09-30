@@ -21,15 +21,13 @@
       </div>
     </template>
 
-    <!-- Flash avant affichage terminal -->
-    <template v-else-if="showFlash">
-      <div class="flash-screen">
-        <div class="flash-pulse"></div>
-      </div>
-    </template>
+
+    <div v-if="showFlash" class="flash-screen">
+      <div class="flash-pulse"></div>
+    </div>
 
     <!-- Terminal après boot et flash -->
-    <template v-else>
+    <template v-if="bootDone && !showFlash">
       <div class="terminal-interface">
         <!-- Barre de titre moderne -->
         <div class="terminal-header">
@@ -44,22 +42,18 @@
 
         <!-- Fenêtre terminal principale -->
         <div class="terminal-window">
-          <!-- Message initial avec effet de typing moderne -->
           <div class="welcome-section">
             <pre class="initial-message">{{ initialMessage }}</pre>
           </div>
 
-          <!-- ASCII art de bienvenue avec effet holographique -->
           <div v-if="showWelcome" class="ascii-container">
             <WelcomeAscii />
           </div>
 
-          <!-- Historique des outputs -->
           <div class="output-history">
             <pre v-for="(output, idx) in outputs" :key="idx" class="output-message" :class="output.type">{{ output.message }}</pre>
           </div>
 
-          <!-- Prompt modernisé -->
           <div class="prompt-container">
             <div class="prompt-line">
               <span class="prompt-symbol">▶</span>
@@ -68,10 +62,8 @@
             </div>
           </div>
 
-          <!-- Progress bar modernisée -->
           <ProgressBar :loading="loading" :progress="progress" :section="currentSection" />
 
-          <!-- Contenu affiché avec effects -->
           <div v-if="showContent" class="content-display">
             <div class="content-frame">
               <div class="content-header">
@@ -88,6 +80,8 @@
     </template>
   </div>
 </template>
+
+
 
 <script setup lang="ts">
 import { cvText, experienceText, formationText, competencesText, projetsText, contactText, helpText } from '~/utils/cv_content';
@@ -245,12 +239,11 @@ function updateSection(section: SectionKey) {
 onMounted(() => {
   // Démarrage du boot
   setTimeout(() => {
-    // on active directement le flash au lieu de bootDone
     showFlash.value = true;
 
     setTimeout(() => {
       showFlash.value = false;
-      bootDone.value = true; // terminal-interface apparaîtra après le flash
+      bootDone.value = true; 
       typeInitialMessage();
     }, 800); // durée du flash
   }, 3000); // durée boot
@@ -390,17 +383,17 @@ function isSectionKey(key: string): key is SectionKey {
 }
 
 .flash-screen {
-  position: absolute;
+  position: fixed; 
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background: var(--bright-white);
-  animation: modernFlash 0.8s ease-out forwards;
-  z-index: 999;
+  z-index: 9999; 
   display: flex;
   align-items: center;
   justify-content: center;
+  animation: modernFlash 0.8s ease-out forwards;
 }
 
 .flash-pulse {
@@ -688,9 +681,8 @@ function isSectionKey(key: string): key is SectionKey {
 }
 
 @keyframes modernFlash {
-  0% { opacity: 0.9; transform: scale(0.8); }
-  50% { opacity: 0.1; transform: scale(1.2); }
-  100% { opacity: 0; transform: scale(1.5); }
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 @keyframes pulseExpand {
