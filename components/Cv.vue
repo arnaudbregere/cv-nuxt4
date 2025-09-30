@@ -54,6 +54,11 @@
             <WelcomeAscii />
           </div>
 
+          <!-- Historique des outputs -->
+          <div class="output-history">
+            <pre v-for="(output, idx) in outputs" :key="idx" class="output-message" :class="output.type">{{ output.message }}</pre>
+          </div>
+
           <!-- Prompt modernisé -->
           <div class="prompt-container">
             <div class="prompt-line">
@@ -88,8 +93,10 @@
 import { cvText, experienceText, formationText, competencesText, projetsText, contactText, helpText } from '~/utils/cv_content';
 import type { SectionKey } from '~/types/sections';
 import { useRoute } from 'vue-router';
+import { useNavigation } from '~/composables/useNavigation';
 
 const route = useRoute();
+const { processCommand, navigateToSection } = useNavigation();
 
 const initialMessage = ref("");
 const displayed = ref("");
@@ -109,6 +116,9 @@ const hasStarted = ref(false);
 const bootDone = ref(false);
 const showFlash = ref(false);
 const currentSection = ref("");
+
+// Historique des outputs pour messages de feedback
+const outputs = ref<{ message: string; type: 'success' | 'error' | 'info' | 'special' }[]>([]);
 
 // Contenu des sections
 const sections: { [key in SectionKey]: string } = {
@@ -152,7 +162,6 @@ function typeInitialMessage() {
 }
 
 function typeASCII() {
-  // No longer needed here as WelcomeAscii handles the typing
   showWelcome.value = true;
 }
 
@@ -179,107 +188,83 @@ function typeContent(text: string) {
 }
 
 function handleEnter(enteredCommand: string) {
-  if (!hasStarted.value) {
+  // Trigger ASCII art on first Enter if not already started
+  if (!hasStarted.value && !enteredCommand.trim()) {
     hasStarted.value = true;
     playSound("http://www.alienmovies.ca/html/sounds/alien1/mother.wav");
-    typeASCII();
-    command.value = "";
+    setTimeout(() => {
+      typeASCII();
+    }, 500); // Short delay for smoother transition
     return;
   }
 
-  const cmd = enteredCommand.trim().toLowerCase();
-  
-  if (cmd === 'clear') {
-    clearScreen();
-    return;
-  }
-  
-  if (isSectionKey(cmd)) {
-    currentSection.value = cmd;
-    displayed.value += `\n> Commande reconnue: "${cmd}"... Chargement...\n`;
-    startLoading(cmd);
-  } else {
-    displayed.value += `\n> Commande inconnue: "${enteredCommand}". Tapez 'help' pour voir les commandes disponibles.\n`;
-  }
-  command.value = "";
-}
+  const result = processCommand(enteredCommand);
 
-function handleNavigation(section: string) {
-  if (sections[section as SectionKey]) {
-    currentSection.value = section as SectionKey;
-    displayed.value += `\n> Navigation vers ${section}... Chargement...\n`;
-    startLoading(section as SectionKey);
-  }
-}
+  outputs.value.push({
+    message: result.message,
+    type: result.type
+  });
 
-function startLoading(section: string) {
-  loading.value = true;
-  progress.value = 0;
-  if (progressInterval) clearInterval(progressInterval);
-  progressInterval = setInterval(() => {
-    progress.value += Math.random() * 10;
-    if (progress.value >= 100) {
-      progress.value = 100;
-      clearInterval(progressInterval!);
-      progressInterval = null;
-      loading.value = false;
-      showContent.value = true;
-      typeContent(sections[section as SectionKey]);
-      playSound("https://www.orangefreesounds.com/wp-content/uploads/2021/01/Sci-fi-beep-sound-effect.mp3");
+  if (result.success) {
+    if (result.route) {
+      currentSection.value = result.route.section;
+      loading.value = true;
+      setTimeout(() => {
+        loading.value = false;
+        showContent.value = true;
+        typeContent(sections[result.route.section as SectionKey]);
+        navigateToSection(result.route);
+        playSound("https://www.orangefreesounds.com/wp-content/uploads/2021/01/Sci-fi-beep-sound-effect.mp3");
+      }, 1000);
+    } else if (result.type === 'special') {
+      if (enteredCommand.toLowerCase() === 'clear') {
+        outputs.value = [];
+        showContent.value = false;
+        showWelcome.value = false;
+        currentSection.value = "";
+        initialMessage.value = "";
+        hasStarted.value = false;
+        typeInitialMessage();
+      } else if (['help', '?', 'aide'].includes(enteredCommand.toLowerCase())) {
+        showContent.value = true;
+        typeContent(helpText);
+      }
     }
-  }, 200);
+  }
+
+  command.value = '';
 }
 
-function clearScreen() {
-  displayed.value = "";
-  showContent.value = false;
-  showWelcome.value = false;
-  command.value = "";
-  currentSection.value = "";
-  loading.value = false;
-  progress.value = 0;
-  initialMessage.value = "";
-  hasStarted.value = false;
-  typeInitialMessage();
-}
-
-// Écouter les événements de navigation depuis App.vue
 onMounted(() => {
-  typeInitialMessage();
+  // Start boot sequence and show initial message after flash
   setTimeout(() => {
     bootDone.value = true;
-    showFlash.value = true;
     setTimeout(() => {
-      showFlash.value = false;
-    }, 800);
+      showFlash.value = true;
+      setTimeout(() => {
+        showFlash.value = false;
+        typeInitialMessage(); // Show initial message after flash
+      }, 800);
+    }, 500);
   }, 3000);
 
   // Gérer la navigation basée sur la query string
   if (route.query.section && isSectionKey(route.query.section as string)) {
     currentSection.value = route.query.section as SectionKey;
-    startLoading(route.query.section as string);
+    loading.value = true;
+    setTimeout(() => {
+      loading.value = false;
+      showContent.value = true;
+      typeContent(sections[route.query.section as SectionKey]);
+    }, 1000);
   }
-
-  // Écouter les événements de navigation globaux
-  window.addEventListener('navigate-section', (event: any) => {
-    const section = event.detail;
-    if (isSectionKey(section)) {
-      currentSection.value = section;
-      startLoading(section);
-    }
-  });
 });
 
-// Watcher pour réagir aux changements de query (router.push avec query)
-watch(
-  () => route.query.section,
-  (newSection) => {
-    if (newSection && isSectionKey(newSection as string)) {
-      currentSection.value = newSection as SectionKey;
-      startLoading(newSection as string);
-    }
+onBeforeUnmount(() => {
+  if (progressInterval) {
+    clearInterval(progressInterval);
   }
-);
+});
 
 // Vérification de type pour les sections
 function isSectionKey(key: string): key is SectionKey {
@@ -577,6 +562,35 @@ function isSectionKey(key: string): key is SectionKey {
   color: var(--electric-cyan);
   font-weight: bold;
   font-size: 1rem;
+}
+
+.output-history {
+  margin-top: 1rem;
+  max-height: 20vh;
+  overflow-y: auto;
+}
+
+.output-message {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.output-message.success {
+  color: green;
+}
+
+.output-message.error {
+  color: red;
+}
+
+.output-message.info {
+  color: blue;
+}
+
+.output-message.special {
+  color: orange;
 }
 
 .content-display {
