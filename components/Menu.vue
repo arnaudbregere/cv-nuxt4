@@ -1,7 +1,7 @@
 <template>
   <div class="menu-wrapper">
     <button class="burger-btn" @click="toggleMenu" v-if="isMobile" aria-label="Ouvrir le menu">
-    <Icon name="burger" width="32" height="32" />
+      <Icon name="burger" width="32" height="32" />
     </button>
     <ul :class="{ 'mobile-open': menuOpen }" v-show="!isMobile || menuOpen">
       <button v-if="isMobile && menuOpen" class="close-btn" @click="closeMenu" aria-label="Fermer le menu">
@@ -11,31 +11,42 @@
       </button>
       <li v-if="isMobile && menuOpen" class="logo-container">
         <NuxtLink to="/" @click="closeMenu">
-           <div class="logo-text">
-              <h1 class="name">Arnaud Brégère</h1>
-              <h2 class="title">Développeur Front-End</h2>
+          <div class="logo-text">
+            <h1 class="name">Arnaud Brégère</h1>
+            <h2 class="title">Développeur Front-End</h2>
           </div>
         </NuxtLink>
       </li>
-      <li><a href="#" @click.prevent="navigate('cv')">CV</a></li>
-      <li><a href="#" @click.prevent="navigate('experience')">Expériences</a></li>
-      <li><a href="#" @click.prevent="navigate('formation')">Formation</a></li>
-      <li><a href="#" @click.prevent="navigate('competences')">Compétences</a></li>
-      <li><a href="#" @click.prevent="navigate('projets')">Projets</a></li>
-      <li><a href="#" @click.prevent="navigate('works')">Works</a></li>
-      <li><a href="#" @click.prevent="navigate('contact')">Contact</a></li>
-      <li><a href="/pdf/arnaud_bregere.pdf" download="Arnaud-Bregere-CV.pdf" class="download-btn">Télécharger le CV</a></li>
+      <li v-for="route in menuRoutes" :key="route.section">
+        <a href="#" @click.prevent="navigate(route.section)">{{ route.label }}</a>
+      </li>
+      <li>
+        <a href="/pdf/arnaud_bregere.pdf" download="Arnaud-Bregere-CV.pdf" class="download-btn">
+          Télécharger le CV
+        </a>
+      </li>
     </ul>
   </div>
 </template>
 
 <script setup lang="ts">
+import { routes } from '~/config/routes';
 
 const emit = defineEmits(['navigate']);
 
 const menuOpen = ref(false);
-const device = useDevice()
-const isMobile = computed(() => device.isMobile)
+const device = useDevice();
+const isMobile = computed(() => device.isMobile);
+
+// Filtre les routes pour le menu (exclut les doublons)
+const menuRoutes = computed(() => {
+  const seen = new Set();
+  return routes.filter(route => {
+    if (seen.has(route.section)) return false;
+    seen.add(route.section);
+    return true;
+  });
+});
 
 const toggleMenu = () => {
   menuOpen.value = !menuOpen.value;
@@ -47,7 +58,7 @@ const closeMenu = () => {
 const navigate = (section: string) => {
   emit('navigate', section);
   closeMenu();
-};
+}
 
 </script>
 
@@ -110,7 +121,7 @@ ul {
   border-radius: 1.2rem;
   border: .1rem solid var(--glass-border);
   transition: transform 0.3s ease, opacity 0.3s ease;
-  flex-direction: column; // base mobile
+  flex-direction: column;
   text-align: center;
   gap: 1rem;
 }
@@ -235,7 +246,7 @@ a.download-btn:hover {
     transform: none;
     opacity: 1;
     pointer-events: auto;
-    width: auto; 
+    width: auto;
   }
 }
 </style>

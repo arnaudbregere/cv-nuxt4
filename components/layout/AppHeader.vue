@@ -15,20 +15,17 @@
 </template>
 
 <script setup lang="ts">
-import { useRouter } from 'vue-router';
+import { useNavigation } from '~/composables/useNavigation';
 
-const router = useRouter();
+const { handleCommand } = useNavigation();
 
 const handleNavigation = (section: string) => {
-  if (['works'].includes(section)) {
-    router.push(`/${section}`);
-  } else {
-    router.push({ path: '/', query: { section } });
-  }
+  // Utilise le système de navigation centralisé
+  handleCommand(section);
 };
 </script>
+
 <style scoped lang="scss">
-/* --- Header --- */
 .modern-header {
   width: 100%;
   background: var(--glass-bg);
@@ -40,6 +37,7 @@ const handleNavigation = (section: string) => {
   z-index: 100;
   transition: all 0.3s ease;
 }
+
 .modern-header.scrolled {
   box-shadow: 0 .6rem 2.5rem rgba(0, 153, 255, 0.3);
   background: var(--glass-bg);
