@@ -14,7 +14,7 @@
           <div class="boot-progress">
             <div class="boot-bar"></div>
           </div>
-          <div class="boot-status">Initializing Quantum Terminal...</div>
+          <div class="boot-status">Initializing Terminal...</div>
         </div>
         <div class="scanline"></div>
         <div class="grid-overlay"></div>
@@ -92,7 +92,7 @@
 <script setup lang="ts">
 import { cvText, experienceText, formationText, competencesText, projetsText, contactText, helpText } from '~/utils/cv_content';
 import type { SectionKey } from '~/types/sections';
-import { useRoute } from 'vue-router';
+import { useRoute, onBeforeRouteUpdate } from 'vue-router';
 import { useNavigation } from '~/composables/useNavigation';
 
 const route = useRoute();
@@ -107,7 +107,6 @@ const command = ref("");
 const showContent = ref(false);
 const loading = ref(false);
 const progress = ref(0);
-let progressInterval: number | null = null;
 
 const contentDisplayed = ref("");
 let contentIndex = 0;
@@ -194,7 +193,7 @@ function handleEnter(enteredCommand: string) {
     playSound("http://www.alienmovies.ca/html/sounds/alien1/mother.wav");
     setTimeout(() => {
       typeASCII();
-    }, 500); // Short delay for smoother transition
+    }, 500);
     return;
   }
 
@@ -207,15 +206,8 @@ function handleEnter(enteredCommand: string) {
 
   if (result.success) {
     if (result.route) {
-      currentSection.value = result.route.section;
-      loading.value = true;
-      setTimeout(() => {
-        loading.value = false;
-        showContent.value = true;
-        typeContent(sections[result.route.section as SectionKey]);
-        navigateToSection(result.route);
-        playSound("https://www.orangefreesounds.com/wp-content/uploads/2021/01/Sci-fi-beep-sound-effect.mp3");
-      }, 1000);
+      updateSection(result.route.section as SectionKey);
+      navigateToSection(result.route);
     } else if (result.type === 'special') {
       if (enteredCommand.toLowerCase() === 'clear') {
         outputs.value = [];
@@ -235,36 +227,46 @@ function handleEnter(enteredCommand: string) {
   command.value = '';
 }
 
-onMounted(() => {
-  // Start boot sequence and show initial message after flash
+// Navigation initiale et gestion des changements de route
+function updateSection(section: SectionKey) {
+  currentSection.value = section;
+  loading.value = true;
+  showContent.value = false;
+
   setTimeout(() => {
-    bootDone.value = true;
-    setTimeout(() => {
-      showFlash.value = true;
-      setTimeout(() => {
-        showFlash.value = false;
-        typeInitialMessage(); // Show initial message after flash
-      }, 800);
-    }, 500);
-  }, 3000);
+    loading.value = false;
+    showContent.value = true;
+    typeContent(sections[section]);
+    // ⚡ Jouer le son à chaque mise à jour de section
+    playSound("https://www.orangefreesounds.com/wp-content/uploads/2021/01/Sci-fi-beep-sound-effect.mp3");
+  }, 1000);
+}
 
-  // Gérer la navigation basée sur la query string
+onMounted(() => {
+  // Démarrage du boot
+  setTimeout(() => {
+    // on active directement le flash au lieu de bootDone
+    showFlash.value = true;
+
+    setTimeout(() => {
+      showFlash.value = false;
+      bootDone.value = true; // terminal-interface apparaîtra après le flash
+      typeInitialMessage();
+    }, 800); // durée du flash
+  }, 3000); // durée boot
+
+  // Vérification section initiale
   if (route.query.section && isSectionKey(route.query.section as string)) {
-    currentSection.value = route.query.section as SectionKey;
-    loading.value = true;
-    setTimeout(() => {
-      loading.value = false;
-      showContent.value = true;
-      typeContent(sections[route.query.section as SectionKey]);
-    }, 1000);
+    updateSection(route.query.section as SectionKey);
   }
 });
 
-onBeforeUnmount(() => {
-  if (progressInterval) {
-    clearInterval(progressInterval);
+onBeforeRouteUpdate((to) => {
+  if (to.query.section && isSectionKey(to.query.section as string)) {
+    updateSection(to.query.section as SectionKey);
   }
 });
+
 
 // Vérification de type pour les sections
 function isSectionKey(key: string): key is SectionKey {
