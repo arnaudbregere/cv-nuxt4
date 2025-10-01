@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Site en maintenance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    html,body {
+      margin:0;
+      padding:0;
+      height:100%;
+      background:#03021a;
+      color:#6ef08b;
+      font-family: monospace;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+    }
+    .container {
+      text-align:center;
+    }
+    h1 {
+      font-size: 24px;
+      letter-spacing:2px;
+      text-shadow:0 0 10px rgba(110,240,139,0.5);
+    }
+    p {
+      color:#9be6be;
+      margin-top:0.5rem;
+    }
+
+    /* invader */
+    .invader {
+      display:inline-grid;
+      grid-template-columns: repeat(8, 12px);
+      grid-gap:2px;
+      margin:20px auto;
+      animation: bob 1.8s ease-in-out infinite;
+    }
+    .pixel {
+      width:12px;
+      height:12px;
+      background:transparent;
+    }
+    .pixel.on { background:#6ef08b; }
+
+    @keyframes bob {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+      100% { transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="invader">
+      <!-- simple space invader pixel grid -->
+      <div class="pixel"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel"></div>
+      <div class="pixel on"></div><div class="pixel"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel"></div><div class="pixel on"></div>
+      <div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div>
+      <div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div>
+      <div class="pixel on"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel on"></div>
+      <div class="pixel"></div><div class="pixel on"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel on"></div><div class="pixel"></div>
+    </div>
+    <h1>🚧 Site en maintenance 🚧</h1>
+    <p>Revenez bientôt…</p>
+  </div>
+</body>
+</html>
