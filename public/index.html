@@ -5,65 +5,365 @@
   <title>Site en maintenance</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    
     html,body {
-      margin:0;
-      padding:0;
       height:100%;
-      background:#03021a;
-      color:#6ef08b;
+      background:#0a0015;
+      overflow:hidden;
       font-family: monospace;
+    }
+
+    /* Étoiles en arrière-plan animées */
+    .stars {
+      position:absolute;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+    }
+    .star {
+      position:absolute;
+      background:#fff;
+      width:2px;
+      height:2px;
+      animation: starMove 20s linear infinite, twinkle 3s infinite;
+    }
+    @keyframes starMove {
+      0% { transform:translateY(-100vh); }
+      100% { transform:translateY(100vh); }
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity:0.3; }
+      50% { opacity:1; }
+    }
+
+    /* Planètes/astéroïdes flottants */
+    .planets {
+      position:absolute;
+      width:100%;
+      height:100%;
+      overflow:hidden;
+    }
+    .planet {
+      position:absolute;
+      border-radius:50%;
+      animation: planetFloat 30s linear infinite;
+    }
+    .planet1 {
+      width:80px;
+      height:80px;
+      background:radial-gradient(circle at 30% 30%, #ff6b9d, #c44569);
+      top:10%;
+      left:-100px;
+      animation-duration:25s;
+    }
+    .planet2 {
+      width:50px;
+      height:50px;
+      background:radial-gradient(circle at 30% 30%, #4facfe, #00f2fe);
+      top:60%;
+      right:-80px;
+      animation-duration:35s;
+      animation-direction:reverse;
+    }
+    @keyframes planetFloat {
+      0% { transform:translateX(0) rotate(0deg); }
+      100% { transform:translateX(calc(100vw + 200px)) rotate(360deg); }
+    }
+
+    .container {
+      position:relative;
+      height:100%;
       display:flex;
+      flex-direction:column;
       justify-content:center;
       align-items:center;
-    }
-    .container {
-      text-align:center;
-    }
-    h1 {
-      font-size: 24px;
-      letter-spacing:2px;
-      text-shadow:0 0 10px rgba(110,240,139,0.5);
-    }
-    p {
-      color:#9be6be;
-      margin-top:0.5rem;
+      z-index:10;
     }
 
-    /* invader */
+    /* Titre 3D style arcade */
+    .title-3d {
+      position:relative;
+      font-size:64px;
+      font-weight:bold;
+      color:#fff;
+      text-transform:uppercase;
+      letter-spacing:4px;
+      margin:30px 0 10px;
+      text-align:center;
+      animation:pulse 2s ease-in-out infinite;
+    }
+    .title-3d .layer-main { 
+      position:relative;
+      z-index:4;
+      color:#fff;
+      text-shadow: 
+        2px 2px 0 #ff0066,
+        4px 4px 0 #00ffff,
+        6px 6px 0 #ffff00,
+        8px 8px 20px rgba(255,0,102,0.5);
+    }
+
+    .subtitle-name {
+      font-size:28px;
+      color:#ffff00;
+      text-shadow:0 0 15px rgba(255,255,0,0.8);
+      margin:5px 0 20px;
+      letter-spacing:4px;
+      font-weight:bold;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform:scale(1); }
+      50% { transform:scale(1.05); }
+    }
+
+    /* Invaders ennemis colorés */
+    .invaders {
+      display:flex;
+      gap:30px;
+      margin:30px 0;
+      animation:invaderMove 4s linear infinite;
+    }
     .invader {
       display:inline-grid;
-      grid-template-columns: repeat(8, 12px);
-      grid-gap:2px;
-      margin:20px auto;
-      animation: bob 1.8s ease-in-out infinite;
+      grid-template-columns: repeat(11, 8px);
+      grid-gap:1px;
     }
-    .pixel {
-      width:12px;
-      height:12px;
-      background:transparent;
-    }
-    .pixel.on { background:#6ef08b; }
+    .px { width:8px; height:8px; background:transparent; }
+    .invader:nth-child(1) .px.on { background:#ff0066; box-shadow:0 0 5px #ff0066; }
+    .invader:nth-child(2) .px.on { background:#00ffff; box-shadow:0 0 5px #00ffff; }
+    .invader:nth-child(3) .px.on { background:#ffff00; box-shadow:0 0 5px #ffff00; }
 
-    @keyframes bob {
-      0% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-      100% { transform: translateY(0); }
+    @keyframes invaderMove {
+      0%, 100% { transform:translateX(0); }
+      25% { transform:translateX(10px); }
+      75% { transform:translateX(-10px); }
+    }
+
+    /* Vaisseau spatial amélioré */
+    .spaceship-wrapper {
+      position:relative;
+      margin:40px auto 30px;
+    }
+    .spaceship {
+      display:inline-grid;
+      grid-template-columns: repeat(20, 8px);
+      grid-gap:1px;
+      animation: float 3s ease-in-out infinite;
+    }
+    .sp { width:8px; height:8px; background:transparent; }
+    .sp.b { background:#5a6c7d; } /* corps */
+    .sp.d { background:#3a4c5d; } /* corps sombre */
+    .sp.w { background:#00ffff; box-shadow:0 0 5px #00ffff; } /* fenêtre */
+    .sp.r { background:#ff0066; box-shadow:0 0 8px #ff0066; } /* moteur */
+    .sp.g { background:#6ef08b; box-shadow:0 0 5px #6ef08b; } /* détails */
+    .sp.y { background:#ffff00; box-shadow:0 0 5px #ffff00; } /* détails jaunes */
+
+    @keyframes float {
+      0%, 100% { transform:translateY(0) rotate(-2deg); }
+      50% { transform:translateY(-15px) rotate(2deg); }
+    }
+
+    /* Laser */
+    .laser {
+      position:absolute;
+      width:3px;
+      height:80px;
+      background:linear-gradient(to bottom, #00ffff, transparent);
+      bottom:-85px;
+      left:50%;
+      transform:translateX(-50%);
+      box-shadow:0 0 10px #00ffff;
+      animation:laserShoot 1.5s ease-in-out infinite;
+    }
+    @keyframes laserShoot {
+      0% { opacity:0; height:0; }
+      20% { opacity:1; height:80px; }
+      80% { opacity:1; height:80px; }
+      100% { opacity:0; height:80px; }
+    }
+
+    /* Texte et UI */
+    .subtitle {
+      font-size:24px;
+      color:#00ffff;
+      text-shadow:0 0 10px rgba(0,255,255,0.8);
+      margin:20px 0 10px;
+      letter-spacing:3px;
+      animation:blink 1.5s infinite;
+    }
+    @keyframes blink {
+      0%, 49%, 100% { opacity:1; }
+      50%, 99% { opacity:0.3; }
+    }
+
+    .info {
+      color:#6ef08b;
+      font-size:18px;
+      margin:5px 0;
+      text-shadow:0 0 5px rgba(110,240,139,0.5);
+      text-align:center;
+    }
+
+    .credits {
+      color:#9be6be;
+      font-size:14px;
+      margin-top:20px;
+      opacity:0.8;
+    }
+
+    /* Scanlines effet CRT */
+    .scanlines {
+      position:absolute;
+      top:0;
+      left:0;
+      width:100%;
+      height:100%;
+      background:repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0.15),
+        rgba(0,0,0,0.15) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      pointer-events:none;
+      z-index:100;
+    }
+
+    /* Bordure arcade */
+    .arcade-frame {
+      position:absolute;
+      top:20px;
+      left:20px;
+      right:20px;
+      bottom:20px;
+      border:4px solid #ff0066;
+      box-shadow:
+        inset 0 0 20px rgba(255,0,102,0.3),
+        0 0 20px rgba(255,0,102,0.5);
+      pointer-events:none;
+    }
+
+    @media (max-width:768px) {
+      .title-3d { font-size:36px; }
+      .subtitle-name { font-size:20px; }
+      .spaceship { transform:scale(0.7); }
+      .invaders { transform:scale(0.7); gap:15px; }
+      .subtitle { font-size:18px; }
+      .info { font-size:14px; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="invader">
-      <!-- simple space invader pixel grid -->
-      <div class="pixel"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel"></div>
-      <div class="pixel on"></div><div class="pixel"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel"></div><div class="pixel on"></div>
-      <div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div>
-      <div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel on"></div>
-      <div class="pixel on"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel on"></div><div class="pixel on"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel on"></div>
-      <div class="pixel"></div><div class="pixel on"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel"></div><div class="pixel on"></div><div class="pixel"></div>
-    </div>
-    <h1>🚧 Site en maintenance 🚧</h1>
-    <p>Revenez bientôt…</p>
+  <!-- Étoiles -->
+  <div class="stars" id="stars"></div>
+  
+  <!-- Planètes -->
+  <div class="planets">
+    <div class="planet planet1"></div>
+    <div class="planet planet2"></div>
   </div>
+
+  <!-- Scanlines CRT -->
+  <div class="scanlines"></div>
+  
+  <!-- Bordure arcade -->
+  <div class="arcade-frame"></div>
+
+  <div class="container">
+    <!-- Invaders ennemis colorés -->
+    <div class="invaders">
+      <div class="invader">
+        <div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div>
+        <div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div>
+        <div class="px"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px"></div>
+        <div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px"></div>
+        <div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div>
+        <div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px on"></div>
+        <div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px on"></div>
+        <div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div>
+      </div>
+      <div class="invader">
+        <div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div>
+        <div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div>
+        <div class="px"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px"></div>
+        <div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px"></div>
+        <div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div>
+        <div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px on"></div>
+        <div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px on"></div>
+        <div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div>
+      </div>
+      <div class="invader">
+        <div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div>
+        <div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div>
+        <div class="px"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px"></div>
+        <div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px"></div>
+        <div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div>
+        <div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px on"></div>
+        <div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px"></div><div class="px on"></div>
+        <div class="px"></div><div class="px"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px on"></div><div class="px on"></div><div class="px"></div><div class="px"></div><div class="px"></div>
+      </div>
+    </div>
+
+    <!-- Titre 3D -->
+    <div class="title-3d">
+      <div class="layer-main">NIVEAU EN COURS</div>
+    </div>
+
+    <div class="subtitle-name">⭐ ARNAUD BRÉGÈRE ⭐</div>
+
+    <!-- Vaisseau spatial avec laser -->
+    <div class="spaceship-wrapper">
+      <div class="spaceship">
+        <!-- Ligne 1 -->
+        <div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp y"></div><div class="sp y"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div>
+        <!-- Ligne 2 -->
+        <div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp b"></div><div class="sp b"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div>
+        <!-- Ligne 3 -->
+        <div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp b"></div><div class="sp w"></div><div class="sp w"></div><div class="sp b"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div>
+        <!-- Ligne 4 -->
+        <div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div>
+        <!-- Ligne 5 -->
+        <div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div>
+        <!-- Ligne 6 -->
+        <div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp g"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp g"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div>
+        <!-- Ligne 7 -->
+        <div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp g"></div><div class="sp g"></div><div class="sp b"></div><div class="sp d"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp d"></div><div class="sp b"></div><div class="sp g"></div><div class="sp g"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div>
+        <!-- Ligne 8 -->
+        <div class="sp"></div><div class="sp"></div><div class="sp g"></div><div class="sp g"></div><div class="sp y"></div><div class="sp b"></div><div class="sp d"></div><div class="sp d"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp d"></div><div class="sp d"></div><div class="sp b"></div><div class="sp y"></div><div class="sp g"></div><div class="sp g"></div><div class="sp"></div><div class="sp"></div>
+        <!-- Ligne 9 -->
+        <div class="sp"></div><div class="sp g"></div><div class="sp g"></div><div class="sp y"></div><div class="sp y"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp y"></div><div class="sp y"></div><div class="sp g"></div><div class="sp g"></div><div class="sp"></div>
+        <!-- Ligne 10 -->
+        <div class="sp g"></div><div class="sp g"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp g"></div><div class="sp g"></div>
+        <!-- Ligne 11 -->
+        <div class="sp"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp b"></div><div class="sp"></div>
+        <!-- Ligne 12 -->
+        <div class="sp"></div><div class="sp"></div><div class="sp r"></div><div class="sp r"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp r"></div><div class="sp r"></div><div class="sp"></div>
+        <!-- Ligne 13 -->
+        <div class="sp"></div><div class="sp"></div><div class="sp r"></div><div class="sp r"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp"></div><div class="sp r"></div><div class="sp r"></div><div class="sp"></div>
+      </div>
+      <div class="laser"></div>
+    </div>
+
+    <div class="subtitle">▶ CHARGEMENT EN COURS... ◀</div>
+    <div class="info">Développeur Front-End • React • JavaScript • CSS</div>
+    <div class="info">Portfolio en construction 🚀</div>
+    <div class="credits">INSERT COIN TO CONTINUE...</div>
+  </div>
+
+  <script>
+    // Génération des étoiles avec mouvement
+    const starsContainer = document.getElementById('stars');
+    for(let i = 0; i < 150; i++) {
+      const star = document.createElement('div');
+      star.className = 'star';
+      star.style.left = Math.random() * 100 + '%';
+      star.style.top = Math.random() * 100 + '%';
+      star.style.animationDelay = Math.random() * 20 + 's';
+      star.style.animationDuration = (15 + Math.random() * 10) + 's';
+      starsContainer.appendChild(star);
+    }
+  </script>
 </body>
 </html>
