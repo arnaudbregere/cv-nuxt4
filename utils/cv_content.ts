@@ -384,11 +384,11 @@ export const helpText = `
 export const commandsList = "> Commandes disponibles: 'cv', 'experience', 'formation', 'competences', 'projets', 'contact', 'help', 'clear'";
 
 export const welcomeAscii = `
-BBBBB   IIIII EEEEEEE NN   NN VV     VV EEEEEEE NN   NN UU   UU EEEEEEE
-BB   B   III  EE      NNN  NN VV     VV EE      NNN  NN UU   UU EE     
-BBBBBB   III  EEEEE   NN N NN  VV   VV  EEEEE   NN N NN UU   UU EEEEE  
-BB   BB  III  EE      NN  NNN   VV VV   EE      NN  NNN UU   UU EE     
-BBBBBB  IIIII EEEEEEE NN   NN    VVV    EEEEEEE NN   NN  UUUUU  EEEEEEE
+██████  ██ ███████ ███    ██ ██    ██ ███████ ███    ██ ██    ██ ███████ 
+██   ██ ██ ██      ████   ██ ██    ██ ██      ████   ██ ██    ██ ██      
+██████  ██ █████   ██ ██  ██ ██    ██ █████   ██ ██  ██ ██    ██ █████   
+██   ██ ██ ██      ██  ██ ██  ██  ██  ██      ██  ██ ██ ██    ██ ██      
+██████  ██ ███████ ██   ████   ████   ███████ ██   ████  ██████  ███████
 
 ${commandsList}
 `;

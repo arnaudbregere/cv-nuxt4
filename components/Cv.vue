@@ -821,7 +821,7 @@ function isSectionKey(key: string): key is SectionKey {
   }
 
   .initial-message {
-    font-size: 0.9rem;
+    font-size: 1.2rem;
   }
 
   .ascii-container {
@@ -836,9 +836,6 @@ function isSectionKey(key: string): key is SectionKey {
     font-size: 0.9rem;
   }
 
-  .prompt-path {
-    font-size: 0.8rem;
-  }
 
   .content-title {
     font-size: 1rem;

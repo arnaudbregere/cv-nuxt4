@@ -171,17 +171,6 @@ onMounted(() => {
   margin: 0 auto;
   position: relative;
   overflow: hidden;
-  &::before {
-    content: '';
-    position: absolute;
-    top: -8rem;
-    left: -8rem;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, var(--electric-cyan) 0%, var(--bg-dark) 70%);
-    opacity: 0.1;
-    animation: pulse 10s infinite alternate;
-  }
 }
 
 .title {
@@ -308,17 +297,6 @@ onMounted(() => {
   }
   &.priority-low {
     border-left: 0.5rem solid var(--neon-blue);
-  }
-  &::before {
-    content: '';
-    position: absolute;
-    top: -5rem;
-    left: -5rem;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle, var(--electric-cyan) 0%, transparent 70%);
-    opacity: 0.05;
-    animation: rotate 20s infinite linear;
   }
 }
 

@@ -2,10 +2,8 @@
   <header class="modern-header">
     <div class="header-content">
       <NuxtLink to="/" class="logo-container">
-        <div class="logo-text">
-          <h1 class="name">Arnaud Brégère</h1>
-          <h2 class="title">Développeur Front-End</h2>
-        </div>
+        <img src="../../public/images/logo_ab.png" alt="Logo" class="logo" />
+
       </NuxtLink>
       <nav class="main-nav">
         <Menu @navigate="handleNavigation" />
@@ -63,7 +61,7 @@ const handleNavigation = (section: string) => {
 }
 
 .logo {
-  max-width: 7rem;
+  max-width: 11rem;
   border-radius: 1rem;
   transition: all 0.3s ease;
 }
