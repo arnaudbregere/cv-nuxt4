@@ -21,13 +21,19 @@
       </div>
     </template>
 
-
     <div v-if="showFlash" class="flash-screen">
       <div class="flash-pulse"></div>
     </div>
 
     <!-- Terminal après boot et flash -->
     <template v-if="bootDone && !showFlash">
+      <!-- Navigation rapide mobile -->
+      <MobileQuickNav 
+        v-if="device.isMobile"
+        :current-section="currentSection" 
+        @navigate="handleMobileNav"
+      />
+      
       <div class="terminal-interface">
         <!-- Barre de titre moderne -->
         <div class="terminal-header">
@@ -42,11 +48,11 @@
 
         <!-- Fenêtre terminal principale -->
         <div class="terminal-window">
-          <div class="welcome-section">
+          <div v-if="!device.isMobile" class="welcome-section">
             <pre class="initial-message">{{ initialMessage }}</pre>
           </div>
 
-          <div v-if="showWelcome" class="ascii-container">
+          <div v-if="showWelcome && !device.isMobile" class="ascii-container">
             <WelcomeAscii />
           </div>
 
@@ -54,7 +60,7 @@
             <pre v-for="(output, idx) in outputs" :key="idx" class="output-message" :class="output.type">{{ output.message }}</pre>
           </div>
 
-          <div class="prompt-container">
+          <div class="prompt-container" v-show="showPrompt">
             <div class="prompt-line">
               <span class="prompt-symbol">▶</span>
               <span class="prompt-path">root@portfolio:~$</span>
@@ -81,19 +87,17 @@
   </div>
 </template>
 
-
-
 <script setup lang="ts">
 import { cvText, experienceText, formationText, competencesText, projetsText, contactText, helpText } from '~/utils/cv_content';
 import type { SectionKey } from '~/types/sections';
 import { useRoute, onBeforeRouteUpdate } from 'vue-router';
 import { useNavigation } from '~/composables/useNavigation';
 
+const device = useDevice();
 const route = useRoute();
 const { processCommand, navigateToSection } = useNavigation();
 
 const initialMessage = ref("");
-const displayed = ref("");
 let index = 0;
 
 const showWelcome = ref(false);
@@ -109,6 +113,7 @@ const hasStarted = ref(false);
 const bootDone = ref(false);
 const showFlash = ref(false);
 const currentSection = ref("");
+const showPrompt = ref(!device.isMobile); // Masqué par défaut sur mobile
 
 // Historique des outputs pour messages de feedback
 const outputs = ref<{ message: string; type: 'success' | 'error' | 'info' | 'special' }[]>([]);
@@ -144,7 +149,9 @@ function playSound(url: string) {
 }
 
 function typeInitialMessage() {
-  const text = "> Appuyez sur Entrée pour démarrer.";
+  const text = device.isMobile 
+    ? "" // Pas de message initial sur mobile
+    : "> Appuyez sur Entrée pour démarrer.";
   if (index < text.length) {
     initialMessage.value += text[index];
     index++;
@@ -221,6 +228,12 @@ function handleEnter(enteredCommand: string) {
   command.value = '';
 }
 
+// Nouvelle fonction pour la navigation mobile
+function handleMobileNav(section: SectionKey) {
+  updateSection(section);
+  navigateToSection({ section });
+}
+
 // Navigation initiale et gestion des changements de route
 function updateSection(section: SectionKey) {
   currentSection.value = section;
@@ -260,7 +273,6 @@ onBeforeRouteUpdate((to) => {
   }
 });
 
-
 // Vérification de type pour les sections
 function isSectionKey(key: string): key is SectionKey {
   return key in sections;
@@ -271,7 +283,7 @@ function isSectionKey(key: string): key is SectionKey {
 /* Utilisation des variables de App.vue pour une cohérence bleue rétro-moderne */
 .terminal-container {
   max-width: 180rem;
-  margin: 1rem auto;
+  margin: 2rem auto;
   background: var(--glass-bg);
   backdrop-filter: blur(1.5rem);
   border-radius: 1.5rem;
@@ -603,6 +615,7 @@ function isSectionKey(key: string): key is SectionKey {
 
 .content-header {
   background: rgba(0, 153, 255, 0.1);
+  gap: 1rem;
   padding: 0.8rem;
   display: flex;
   justify-content: space-between;
@@ -705,7 +718,7 @@ function isSectionKey(key: string): key is SectionKey {
   95% { transform: translate(-.1rem, .1rem); }
 }
 
-/* Responsive Design - Améliorations pour mobile */
+/* Responsive Design - Améliorations pour tablet */
 @include respond-to(tablet) {
   .terminal-container {
     margin: 0.5rem;
@@ -791,6 +804,7 @@ function isSectionKey(key: string): key is SectionKey {
   }
 }
 
+/* Responsive Design - Améliorations pour mobile : UX simplifiée, sans terminal, focus sur navigation et contenu */
 @include respond-to(mobile) {
   .terminal-container {
     margin: 0.3rem;
@@ -821,32 +835,57 @@ function isSectionKey(key: string): key is SectionKey {
   }
 
   .initial-message {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    text-align: center;
   }
 
   .ascii-container {
-    margin: 0.8rem 0;
+    margin: 0.5rem 0 2rem;
+    flex-shrink: 0;
   }
 
   .hologram-effect {
-    padding: 1rem;
+    padding: 0.5rem;
   }
 
-  .prompt-symbol {
-    font-size: 0.9rem;
-  }
 
 
   .content-title {
-    font-size: 1rem;
+    font-size: 1.3rem;
   }
 
-  .content-text {
+  .content-timestamp {
     font-size: 0.9rem;
   }
 
+  .content-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    user-select: text;
+  }
+
   .content-body {
-    padding: 0.5rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .output-history {
+    max-height: none;
+    margin-bottom: 1rem;
+    flex-shrink: 0;
+  }
+
+  .grid-overlay {
+    opacity: 0.2;
+  }
+
+  .scanline {
+    height: 0.3rem;
+  }
+
+  .progress-bar {
+    z-index: 5;
+    margin: 1rem 0;
   }
 }
 </style>

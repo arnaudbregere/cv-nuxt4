@@ -46,7 +46,6 @@ onBeforeUnmount(() => {
 .content-wrapper {
   max-width: 180rem;
   margin: 0 auto;
-  padding: 0 1rem;
 }
 
 ::-webkit-scrollbar {
