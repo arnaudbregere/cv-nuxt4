@@ -3,13 +3,12 @@
     <h1 class="title">Calculatrice</h1>
 
     <input
-    id="calc-display"
-    name="calc-display"
-    v-model="display"
-    class="display"
-    @keyup.enter="handleEnter"
+      id="calc-display"
+      name="calc-display"
+      v-model="display"
+      class="display"
+      @keyup.enter="handleEnter"
     />
-
 
     <!-- Boutons -->
     <div class="buttons">
@@ -23,9 +22,9 @@
 <script setup>
 import { ref } from "vue"
 
-const display = ref("")  
-const current = ref("") 
-const previous = ref("") 
+const display = ref("")
+const current = ref("")
+const previous = ref("")
 const operator = ref(null)
 
 const buttons = [
@@ -36,13 +35,12 @@ const buttons = [
   "C"
 ]
 
-
-function calculate() {
+const calculate = () => {
   const prev = parseFloat(previous.value)
   const curr = parseFloat(current.value)
 
   if (isNaN(prev) || isNaN(curr)) {
-    console.error("Erreur: un des opérandes n’est pas un nombre valide.", { prev, curr })
+    console.error("Erreur: un des opérandes n'est pas un nombre valide.", { prev, curr })
     return
   }
 
@@ -68,7 +66,7 @@ function calculate() {
   previous.value = ""
 }
 
-function press(btn) {
+const press = (btn) => {
   if (!isNaN(btn) || btn === ".") {
     current.value += btn
     display.value = current.value
@@ -105,8 +103,7 @@ function press(btn) {
   }
 }
 
-
-function handleEnter() {
+const handleEnter = () => {
   const match = display.value.match(/(-?\d+(\.\d+)?)([+\-*/])(-?\d+(\.\d+)?)/)
   if (match) {
     previous.value = match[1]
@@ -114,7 +111,7 @@ function handleEnter() {
     current.value = match[4]
     calculate()
   } else {
-    console.error("Expression invalide saisie dans l’input :", display.value)
+    console.error("Expression invalide saisie dans l'input :", display.value)
   }
 }
 </script>

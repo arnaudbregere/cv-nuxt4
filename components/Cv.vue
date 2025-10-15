@@ -113,7 +113,7 @@ const hasStarted = ref(false);
 const bootDone = ref(false);
 const showFlash = ref(false);
 const currentSection = ref("");
-const showPrompt = ref(!device.isMobile); // Masqué par défaut sur mobile
+const showPrompt = ref(!device.isMobile);
 
 // Historique des outputs pour messages de feedback
 const outputs = ref<{ message: string; type: 'success' | 'error' | 'info' | 'special' }[]>([]);
@@ -129,7 +129,8 @@ const sections: { [key in SectionKey]: string } = {
   help: helpText,
 };
 
-function getCurrentTimestamp() {
+// Toutes les fonctions remplacées par des arrow functions
+const getCurrentTimestamp = () => {
   return new Date().toLocaleString('fr-FR', {
     year: 'numeric',
     month: '2-digit',
@@ -138,17 +139,17 @@ function getCurrentTimestamp() {
     minute: '2-digit',
     second: '2-digit'
   });
-}
+};
 
-function playSound(url: string) {
+const playSound = (url: string) => {
   const audio = new Audio(url);
   audio.volume = 0.3;
   audio.play().catch(() => {
     console.log("Son non disponible");
   });
-}
+};
 
-function typeInitialMessage() {
+const typeInitialMessage = () => {
   const text = device.isMobile 
     ? "" // Pas de message initial sur mobile
     : "> Appuyez sur Entrée pour démarrer.";
@@ -159,35 +160,35 @@ function typeInitialMessage() {
   } else {
     index = 0;
   }
-}
+};
 
-function typeASCII() {
+const typeASCII = () => {
   showWelcome.value = true;
-}
+};
 
-function typeContent(text: string) {
+const typeContent = (text: string) => {
   contentDisplayed.value = "";
   contentIndex = 0;
 
-  function applyInlineStyles(input: string): string {
+  const applyInlineStyles = (input: string): string => {
     return input
       .replace(/<span class="title"/g, '<span class="content-title-span"')
       .replace(/<span class="date"/g, '<span class="content-date-span"')
-  }
+  };
 
   const styledText = applyInlineStyles(text);
 
-  function type() {
+  const type = () => {
     if (contentIndex < styledText.length) {
       contentDisplayed.value += styledText[contentIndex];
       contentIndex++;
       setTimeout(type, 3);
     }
-  }
+  };
   type();
-}
+};
 
-function handleEnter(enteredCommand: string) {
+const handleEnter = (enteredCommand: string) => {
   // Trigger ASCII art on first Enter if not already started
   if (!hasStarted.value && !enteredCommand.trim()) {
     hasStarted.value = true;
@@ -226,16 +227,43 @@ function handleEnter(enteredCommand: string) {
   }
 
   command.value = '';
-}
+};
 
-// Nouvelle fonction pour la navigation mobile
-function handleMobileNav(section: SectionKey) {
+// Navigation mobile
+const handleMobileNav = (section: SectionKey) => {
   updateSection(section);
-  navigateToSection({ section });
-}
+  // Find the route config for the section
+  const routeConfig = getRouteConfigForSection(section);
+  if (routeConfig) {
+    navigateToSection(routeConfig);
+  }
+};
 
-// Navigation initiale et gestion des changements de route
-function updateSection(section: SectionKey) {
+// Helper to get the RouteConfig for a section
+type RouteConfig = {
+  section: SectionKey;
+  path: string;
+  label: string;
+  description: string;
+};
+
+const getRouteConfigForSection = (section: SectionKey) => {
+  // You may need to import or define your route configs somewhere accessible
+  // Example: import { routeConfigs } from '~/router/routeConfigs';
+  // Here is a placeholder implementation:
+  const routeConfigs: RouteConfig[] = [
+    { section: 'cv', path: '/cv', label: 'CV', description: 'Curriculum Vitae' },
+    { section: 'experience', path: '/experience', label: 'Expérience', description: 'Expérience professionnelle' },
+    { section: 'formation', path: '/formation', label: 'Formation', description: 'Parcours scolaire' },
+    { section: 'competences', path: '/competences', label: 'Compétences', description: 'Compétences techniques' },
+    { section: 'projets', path: '/projets', label: 'Projets', description: 'Projets réalisés' },
+    { section: 'contact', path: '/contact', label: 'Contact', description: 'Contactez-moi' },
+    { section: 'help', path: '/help', label: 'Aide', description: 'Aide et commandes' },
+  ];
+  return routeConfigs.find(cfg => cfg.section === section);
+};
+
+const updateSection = (section: SectionKey) => {
   currentSection.value = section;
   loading.value = true;
   showContent.value = false;
@@ -247,7 +275,12 @@ function updateSection(section: SectionKey) {
     // ⚡ Jouer le son à chaque mise à jour de section
     playSound("https://www.orangefreesounds.com/wp-content/uploads/2021/01/Sci-fi-beep-sound-effect.mp3");
   }, 1000);
-}
+};
+
+// Vérification de type pour les sections
+const isSectionKey = (key: string): key is SectionKey => {
+  return key in sections;
+};
 
 onMounted(() => {
   // Démarrage du boot
@@ -272,11 +305,6 @@ onBeforeRouteUpdate((to) => {
     updateSection(to.query.section as SectionKey);
   }
 });
-
-// Vérification de type pour les sections
-function isSectionKey(key: string): key is SectionKey {
-  return key in sections;
-}
 </script>
 
 <style scoped lang="scss">
@@ -813,6 +841,7 @@ function isSectionKey(key: string): key is SectionKey {
 
   .terminal-interface {
     padding: 0.3rem;
+    margin-top: 2.5rem;
   }
   
   .terminal-window {
