@@ -66,10 +66,6 @@ const handleNavigation = (section: string) => {
   transition: all 0.3s ease;
 }
 
-.logo-container:hover .logo {
-  transform: scale(1.05);
-  box-shadow: 0 0 1.5rem var(--neon-blue);
-}
 
 .name {
   font-size: 1.3rem;

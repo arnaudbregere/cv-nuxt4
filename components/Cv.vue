@@ -36,7 +36,7 @@
       
       <div class="terminal-interface">
         <!-- Barre de titre moderne -->
-        <div class="terminal-header">
+        <div class="terminal-header" v-if="device.isDesktop">
           <div class="terminal-title">
             <span class="terminal-path">~/arnaud-bregere/portfolio</span>
             <div class="connection-status">
@@ -60,7 +60,7 @@
             <pre v-for="(output, idx) in outputs" :key="idx" class="output-message" :class="output.type">{{ output.message }}</pre>
           </div>
 
-          <div class="prompt-container" v-show="showPrompt">
+          <div class="prompt-container" v-if="device.isDesktop">
             <div class="prompt-line">
               <span class="prompt-symbol">▶</span>
               <span class="prompt-path">root@portfolio:~$</span>
@@ -113,7 +113,6 @@ const hasStarted = ref(false);
 const bootDone = ref(false);
 const showFlash = ref(false);
 const currentSection = ref("");
-const showPrompt = ref(!device.isMobile);
 
 // Historique des outputs pour messages de feedback
 const outputs = ref<{ message: string; type: 'success' | 'error' | 'info' | 'special' }[]>([]);
@@ -498,7 +497,6 @@ onBeforeRouteUpdate((to) => {
   background: var(--glass-bg);
   backdrop-filter: blur(1.5rem);
   border: .1rem solid var(--border-glow);
-  border-top: none;
   border-radius: 0 0 1rem 1rem;
   padding: 1rem;
   color: var(--electric-cyan);

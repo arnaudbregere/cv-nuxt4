@@ -1,5 +1,10 @@
 <template>
   <div class="calculator">
+    <NuxtLink to="/works" class="back-button">
+      <span class="back-arrow">←</span>
+      <span>Retour à Works</span>
+    </NuxtLink>
+
     <h1 class="title">Calculatrice</h1>
 
     <input
@@ -8,9 +13,11 @@
       v-model="display"
       class="display"
       @keyup.enter="handleEnter"
+      @keyup.backspace="handleBackspace"
+      @input="handleInput"
+      placeholder="0"
     />
 
-    <!-- Boutons -->
     <div class="buttons">
       <button v-for="btn in buttons" :key="btn" @click="press(btn)">
         {{ btn }}
@@ -40,129 +47,313 @@ const calculate = () => {
   const curr = parseFloat(current.value)
 
   if (isNaN(prev) || isNaN(curr)) {
-    console.error("Erreur: un des opérandes n'est pas un nombre valide.", { prev, curr })
+    display.value = "Erreur"
     return
   }
 
-  if (operator.value === "+") {
-    current.value = (prev + curr).toString()
-  } else if (operator.value === "-") {
-    current.value = (prev - curr).toString()
-  } else if (operator.value === "*") {
-    current.value = (prev * curr).toString()
-  } else if (operator.value === "/") {
-    if (curr === 0) {
-      console.error("Erreur: division par zéro.")
-      current.value = "Erreur"
-    } else {
-      current.value = (prev / curr).toString()
-    }
-  } else {
-    console.warn("Aucun opérateur défini au moment du calcul.")
+  let result
+  switch (operator.value) {
+    case "+": result = prev + curr; break
+    case "-": result = prev - curr; break
+    case "*": result = prev * curr; break
+    case "/":
+      if (curr === 0) {
+        display.value = "Erreur"
+        reset()
+        return
+      }
+      result = prev / curr
+      break
+    default:
+      return
   }
 
+  current.value = result.toString()
   display.value = current.value
   operator.value = null
   previous.value = ""
 }
 
+const reset = () => {
+  current.value = ""
+  previous.value = ""
+  operator.value = null
+  display.value = ""
+}
+
 const press = (btn) => {
+  if (display.value === "Erreur") reset()
+
   if (!isNaN(btn) || btn === ".") {
+    if (btn === "." && current.value.includes(".")) return
     current.value += btn
     display.value = current.value
   } 
   else if (["+", "-", "*", "/"].includes(btn)) {
-    if (current.value === "") {
-      console.warn("Tentative de poser un opérateur sans nombre courant.")
-      return
-    }
-    if (previous.value !== "" && operator.value) {
-      calculate()
-    }
+    if (current.value === "") return
+    if (previous.value !== "" && operator.value) calculate()
     operator.value = btn
     previous.value = current.value
     current.value = ""
   } 
   else if (btn === "=") {
-    if (previous.value !== "" && operator.value && current.value !== "") {
-      calculate()
-    } else {
-      console.warn("Impossible de calculer: expression incomplète.", {
-        previous: previous.value,
-        operator: operator.value,
-        current: current.value
-      })
-    }
+    if (previous.value && operator.value && current.value) calculate()
   } 
   else if (btn === "C") {
-    console.info("Réinitialisation de la calculatrice.")
-    current.value = ""
-    previous.value = ""
+    reset()
+  }
+}
+
+const handleInput = () => {
+  display.value = display.value.replace(/[^0-9+\-*/.]/g, '')
+
+  const parts = display.value.split(/([+\-*/])/)
+  if (parts.length === 1) {
+    current.value = parts[0]
     operator.value = null
-    display.value = ""
+    previous.value = ""
+  } else if (parts.length >= 3) {
+    previous.value = parts[0]
+    operator.value = parts[1]
+    current.value = parts.slice(2).join("")
   }
 }
 
 const handleEnter = () => {
-  const match = display.value.match(/(-?\d+(\.\d+)?)([+\-*/])(-?\d+(\.\d+)?)/)
+  const input = display.value.trim()
+  if (!input) return
+  if (display.value === "Erreur") return reset()
+
+  const match = input.match(/^(-?\d+\.?\d*)([+\-*/])(-?\d+\.?\d*)$/)
   if (match) {
     previous.value = match[1]
-    operator.value = match[3]
-    current.value = match[4]
+    operator.value = match[2]
+    current.value = match[3]
     calculate()
   } else {
-    console.error("Expression invalide saisie dans l'input :", display.value)
+    const num = parseFloat(input)
+    if (!isNaN(num)) {
+      current.value = num.toString()
+      display.value = current.value
+    } else {
+      display.value = "Erreur"
+      setTimeout(() => { if (display.value === "Erreur") reset() }, 1500)
+    }
+  }
+}
+
+const handleBackspace = () => {
+  if (!display.value || display.value === "Erreur") {
+    reset()
+  } else {
+    display.value = display.value.slice(0, -1)
+    current.value = display.value
   }
 }
 </script>
 
-<style scoped>
-/* Style rétro terminal */
+<style scoped lang="scss">
+/* --- Animations --- */
+@keyframes scanline {
+  0% { transform: translateY(-100%); }
+  100% { transform: translateY(100%); }
+}
+
+@keyframes glow-pulse {
+  0%, 100% { 
+    box-shadow: 
+      0 0 0.3125rem var(--neon-blue),
+      0 0 0.625rem var(--neon-blue),
+      0 0 1.25rem var(--neon-blue),
+      inset 0 0 0.625rem rgba(0, 153, 255, 0.2);
+  }
+  50% { 
+    box-shadow: 
+      0 0 0.625rem var(--electric-cyan),
+      0 0 1.25rem var(--electric-cyan),
+      0 0 1.875rem var(--neon-blue),
+      inset 0 0 0.9375rem rgba(0, 212, 255, 0.3);
+  }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.95; }
+}
+
+
+.back-button {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(145deg, rgba(0, 102, 204, 0.3), rgba(8, 8, 26, 0.8));
+  border: 0.125rem solid var(--glass-border);
+  color: var(--electric-cyan);
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0.0625rem 0 rgba(255, 255, 255, 0.1), 0 0.125rem 0.625rem rgba(0, 153, 255, 0.2);
+  z-index: 100;
+  text-shadow: 0 0 0.3125rem var(--electric-cyan);
+  overflow: hidden;
+
+  &::before, &::after {
+    content: '';
+    position: absolute;
+    width: 0.625rem;
+    height: 0.625rem;
+    transition: all 0.3s ease;
+  }
+
+  &::before {
+    top: -0.125rem; left: -0.125rem;
+    background: var(--electric-cyan);
+    clip-path: polygon(0 0, 100% 0, 100% 30%, 30% 30%, 30% 100%, 0 100%);
+    box-shadow: 0 0 0.5rem var(--electric-cyan);
+  }
+
+  &::after {
+    bottom: -0.125rem; right: -0.125rem;
+    background: var(--accent-purple);
+    clip-path: polygon(70% 0, 100% 0, 100% 100%, 0 100%, 0 70%, 70% 70%);
+    box-shadow: 0 0 0.5rem var(--accent-purple);
+  }
+
+  .back-arrow { font-size: 1.3rem; transition: transform 0.3s ease; }
+
+  &:hover {
+    background: linear-gradient(145deg, rgba(0, 153, 255, 0.5), rgba(0, 102, 204, 0.7));
+    border-color: var(--electric-cyan);
+    color: var(--bright-white);
+    transform: translateX(-0.5rem);
+    box-shadow: inset 0 0.0625rem 0 rgba(255, 255, 255, 0.2),
+                0 0 1.5625rem rgba(0, 212, 255, 0.7),
+                0 0 2.1875rem rgba(0, 153, 255, 0.5),
+                0 0.25rem 0.9375rem rgba(0, 153, 255, 0.3);
+    .back-arrow { transform: translateX(-0.3125rem) scale(1.1); }
+    &::before, &::after { width: 0.875rem; height: 0.875rem; }
+  }
+
+  &:active {
+    transform: translateX(-0.1875rem) scale(0.97);
+    box-shadow: inset 0 0.1875rem 0.75rem rgba(0, 153, 255, 0.6),
+                0 0 0.9375rem rgba(0, 212, 255, 0.5);
+  }
+}
+
+/* --- Layout principal --- */
 .calculator {
-  font-family: monospace;
-  background-color: black;
-  color: #00ff66;
+  font-family: 'Courier New', monospace;
+  background: linear-gradient(to bottom, var(--bg-deepest) 0%, var(--bg-darker) 50%, var(--bg-dark) 100%);
+  color: var(--text-light);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  padding: 2rem;
+  min-height: 100vh;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 0.125rem;
+    background: linear-gradient(to bottom, transparent, rgba(0, 212, 255, 0.3), transparent);
+    animation: scanline 8s linear infinite;
+    z-index: 10;
+  }
+
+  &::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      repeating-linear-gradient(0deg, rgba(0, 153, 255, 0.03) 0px, transparent 3px),
+      repeating-linear-gradient(90deg, rgba(0, 153, 255, 0.03) 0px, transparent 3px);
+    pointer-events: none;
+    z-index: 1;
+  }
 }
 
 .title {
-  margin-bottom: 1rem;
-  text-shadow: 0 0 1rem #00ff66, 0 0 2rem #00ff66;
+  margin-bottom: 2rem;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.3rem;
+  background: linear-gradient(135deg, var(--electric-cyan), var(--neon-blue), var(--accent-purple), var(--accent-pink));
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 0.625rem rgba(0, 153, 255, 0.8)) drop-shadow(0 0 1.25rem rgba(0, 212, 255, 0.5));
+  animation: flicker 3s infinite;
+  z-index: 2;
 }
 
 .display {
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border: .2rem solid #00ff66;
+  width: 100%;
+  max-width: 31.2rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 0.1875rem solid transparent;
+  background: linear-gradient(var(--bg-darker), var(--bg-darker)) padding-box,
+              linear-gradient(135deg, var(--electric-cyan), var(--neon-blue)) border-box;
   text-align: right;
-  font-size: 1.5rem;
-  background: black;
-  color: #00ff66;
-  text-shadow: 0 0 .8rem #00ff66;
+  font-size: 2rem;
+  color: var(--bright-white);
+  animation: glow-pulse 3s ease-in-out infinite;
+  z-index: 2;
+  font-weight: bold;
+
+  &::placeholder { color: rgba(148, 163, 184, 0.5); }
+  &:focus { outline: none; animation: glow-pulse 1.5s ease-in-out infinite; }
 }
 
 .buttons {
   display: grid;
   grid-template-columns: repeat(4, 7.8rem);
   gap: 0.8rem;
+  z-index: 2;
 }
 
 button {
-  background: black;
-  border: .2rem solid #00ff66;
-  color: #00ff66;
-  font-size: 1.2rem;
-  padding: 1rem;
+  background: linear-gradient(145deg, rgba(0, 102, 204, 0.3), rgba(8, 8, 26, 0.8));
+  border: 0.125rem solid var(--glass-border);
+  color: var(--electric-cyan);
+  font-size: 1.5rem;
+  font-weight: bold;
+  padding: 1.2rem;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s;
-}
+  transition: all 0.2s ease;
+  text-shadow: 0 0 0.3125rem var(--electric-cyan);
+  overflow: hidden;
 
-button:hover {
-  background: #00ff66;
-  color: black;
-  text-shadow: none;
+  &:hover {
+    background: linear-gradient(145deg, rgba(0, 153, 255, 0.4), rgba(0, 102, 204, 0.6));
+    border-color: var(--electric-cyan);
+    color: var(--bright-white);
+    transform: translateY(-0.125rem);
+  }
+
+  &:active { transform: translateY(0) scale(0.98); }
+
+  &:last-child {
+    background: linear-gradient(145deg, rgba(236, 72, 153, 0.3), rgba(8, 8, 26, 0.8));
+    border-color: rgba(236, 72, 153, 0.5);
+    color: var(--accent-pink);
+    &:hover {
+      background: linear-gradient(145deg, rgba(236, 72, 153, 0.5), rgba(99, 102, 241, 0.4));
+      border-color: var(--accent-pink);
+    }
+  }
 }
 </style>
