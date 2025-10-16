@@ -48,12 +48,12 @@
 
         <!-- Fenêtre terminal principale -->
         <div class="terminal-window">
-          <div v-if="!device.isMobile" class="welcome-section">
+          <div v-if="!device.isMobile && showWelcome === false" class="welcome-section">
             <pre class="initial-message">{{ initialMessage }}</pre>
           </div>
 
           <div v-if="showWelcome && !device.isMobile" class="ascii-container">
-            <WelcomeAscii />
+            <WelcomeAscii @selectCommand="handleAsciiCommand" />
           </div>
 
           <div class="output-history">
@@ -90,11 +90,12 @@
 <script setup lang="ts">
 import { cvText, experienceText, formationText, competencesText, projetsText, contactText, helpText } from '~/utils/cv_content';
 import type { SectionKey } from '~/types/sections';
-import { useRoute, onBeforeRouteUpdate } from 'vue-router';
+import { useRoute, useRouter, onBeforeRouteUpdate } from 'vue-router';
 import { useNavigation } from '~/composables/useNavigation';
 
 const device = useDevice();
 const route = useRoute();
+const router = useRouter();
 const { processCommand, navigateToSection } = useNavigation();
 
 const initialMessage = ref("");
@@ -152,7 +153,7 @@ const typeInitialMessage = () => {
   const text = device.isMobile 
     ? "" // Pas de message initial sur mobile
     : "> Appuyez sur Entrée pour démarrer.";
-  if (index < text.length) {
+  if (index < text.length && showWelcome.value === false) {
     initialMessage.value += text[index];
     index++;
     setTimeout(typeInitialMessage, 50);
@@ -191,6 +192,7 @@ const handleEnter = (enteredCommand: string) => {
   // Trigger ASCII art on first Enter if not already started
   if (!hasStarted.value && !enteredCommand.trim()) {
     hasStarted.value = true;
+    initialMessage.value = ""; // Efface le message initial
     playSound("http://www.alienmovies.ca/html/sounds/alien1/mother.wav");
     setTimeout(() => {
       typeASCII();
@@ -217,6 +219,7 @@ const handleEnter = (enteredCommand: string) => {
         currentSection.value = "";
         initialMessage.value = "";
         hasStarted.value = false;
+        index = 0;
         typeInitialMessage();
       } else if (['help', '?', 'aide'].includes(enteredCommand.toLowerCase())) {
         showContent.value = true;
@@ -228,10 +231,18 @@ const handleEnter = (enteredCommand: string) => {
   command.value = '';
 };
 
+// Navigation depuis les boutons ASCII
+const handleAsciiCommand = (section: SectionKey) => {
+  updateSection(section);
+  const routeConfig = getRouteConfigForSection(section);
+  if (routeConfig) {
+    navigateToSection(routeConfig);
+  }
+};
+
 // Navigation mobile
 const handleMobileNav = (section: SectionKey) => {
   updateSection(section);
-  // Find the route config for the section
   const routeConfig = getRouteConfigForSection(section);
   if (routeConfig) {
     navigateToSection(routeConfig);
@@ -247,9 +258,6 @@ type RouteConfig = {
 };
 
 const getRouteConfigForSection = (section: SectionKey) => {
-  // You may need to import or define your route configs somewhere accessible
-  // Example: import { routeConfigs } from '~/router/routeConfigs';
-  // Here is a placeholder implementation:
   const routeConfigs: RouteConfig[] = [
     { section: 'cv', path: '/cv', label: 'CV', description: 'Curriculum Vitae' },
     { section: 'experience', path: '/experience', label: 'Expérience', description: 'Expérience professionnelle' },
@@ -271,7 +279,6 @@ const updateSection = (section: SectionKey) => {
     loading.value = false;
     showContent.value = true;
     typeContent(sections[section]);
-    // ⚡ Jouer le son à chaque mise à jour de section
     playSound("https://www.orangefreesounds.com/wp-content/uploads/2021/01/Sci-fi-beep-sound-effect.mp3");
   }, 1000);
 };
@@ -539,6 +546,7 @@ onBeforeRouteUpdate((to) => {
   font-size: 1rem;
   text-shadow: 0 0 1rem var(--electric-cyan);
   margin-bottom: 1.5rem;
+  min-height: 1.5rem;
 }
 
 .ascii-container {
@@ -790,7 +798,7 @@ onBeforeRouteUpdate((to) => {
   }
 
   .hologram-effect {
-    padding: 0.5rem;
+    padding: 2rem;
   }
 
   .prompt-line {
@@ -875,8 +883,6 @@ onBeforeRouteUpdate((to) => {
   .hologram-effect {
     padding: 0.5rem;
   }
-
-
 
   .content-title {
     font-size: 1.3rem;
