@@ -677,7 +677,7 @@ onBeforeRouteUpdate((to) => {
 .content-text {
   color: var(--text-light);
   line-height: 1.6;
-  font-size: 1.1rem;
+  font-size: .8rem;
   white-space: pre-wrap;
   word-wrap: break-word;
 }
