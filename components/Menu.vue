@@ -1,18 +1,16 @@
 <template>
   <div class="menu-wrapper">
-    <button class="burger-btn" @click="toggleMenu" v-if="isMobile" aria-label="Ouvrir le menu">
-      <Icon name="burger" width="32" height="32" />
-    </button>
+    <MenuToggle 
+      v-if="isMobile"
+      :menuOpen="menuOpen"
+      @open="toggleMenu"
+      @close="closeMenu"
+    />
     <ul :class="{ 'mobile-open': menuOpen }" v-show="!isMobile || menuOpen">
-      <button v-if="isMobile && menuOpen" class="close-btn" @click="closeMenu" aria-label="Fermer le menu">
-        <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M6 18L18 6M6 6L18 18" stroke="var(--neon-blue)" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </button>
       <li v-if="isMobile && menuOpen" class="logo-container">
         <NuxtLink to="/" @click="closeMenu">
           <div class="logo-text">
-            <h1 class="name">Arnaud Brégère</h1>
+            <h1 class="name">Arnaud Brègère</h1>
             <h2 class="title">Développeur Front-End</h2>
           </div>
         </NuxtLink>
@@ -31,6 +29,7 @@
 
 <script setup lang="ts">
 import { routes } from '~/config/routes';
+import MenuToggle from './MenuToggle.vue';
 
 const emit = defineEmits(['navigate']);
 
@@ -38,7 +37,6 @@ const menuOpen = ref(false);
 const device = useDevice();
 const isMobile = computed(() => device.isMobile);
 
-// Filtre les routes pour le menu (exclut les doublons)
 const menuRoutes = computed(() => {
   const seen = new Set();
   return routes.filter(route => {
@@ -55,59 +53,16 @@ const toggleMenu = () => {
 const closeMenu = () => {
   menuOpen.value = false;
 }
+
 const navigate = (section: string) => {
   emit('navigate', section);
   closeMenu();
 }
-
 </script>
 
 <style scoped lang="scss">
 .menu-wrapper {
   position: relative;
-}
-
-.burger-btn {
-  background: none;
-  border: none;
-  color: var(--neon-blue);
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  transition: all 0.3s ease;
-  z-index: 200;
-}
-
-.burger-btn:hover {
-  color: var(--electric-cyan);
-  text-shadow: 0 0 1rem var(--electric-cyan);
-}
-
-.burger-icon {
-  transition: all 0.3s ease;
-}
-
-.burger-btn:hover .burger-icon {
-  stroke: var(--electric-cyan);
-}
-
-.close-btn {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  z-index: 201;
-}
-
-.close-icon {
-  transition: all 0.3s ease;
-}
-
-.close-btn:hover .close-icon {
-  stroke: var(--electric-cyan);
 }
 
 ul {
@@ -124,25 +79,27 @@ ul {
   flex-direction: column;
   text-align: center;
   gap: 1rem;
-}
 
-ul.mobile-open {
+  &.mobile-open {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 80vh;
   background: var(--bg-darker);
   border: none;
   border-radius: 0;
-  padding: 2rem 1rem 1rem;
-  z-index: 150;
+  padding: 1rem;
+  z-index: 1;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
   transform: translateY(0);
   opacity: 1;
   overflow-y: auto;
 }
+}
+
+
 
 li {
   display: flex;
@@ -154,7 +111,7 @@ li {
 a {
   color: var(--text-light);
   text-decoration: none;
-  padding: 0.8rem 1.5rem;
+  padding: 0.6rem 1.2rem;
   border: .1rem solid transparent;
   border-radius: 1.2rem;
   transition: all 0.3s ease;
@@ -192,7 +149,7 @@ a:hover::before {
 
 a.download-btn {
   display: inline-flex;
-  padding: 0.8rem 1.5rem;
+  padding: 0.6rem 1.2rem;
   background-color: var(--neon-blue);
   color: var(--bg-deepest);
   border-radius: 1.2rem;
@@ -228,14 +185,6 @@ a.download-btn:hover {
 }
 
 @include respond-to(desktop) {
-  .burger-btn {
-    display: none;
-  }
-
-  .close-btn {
-    display: none;
-  }
-
   ul {
     flex-direction: row;
     position: static;

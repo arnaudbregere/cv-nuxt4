@@ -81,4 +81,16 @@ const handleNavigation = (section: string) => {
   text-transform: uppercase;
   letter-spacing: .1rem;
 }
+
+.main-nav {
+    position: absolute;
+    top: 0;
+    right: 1rem;
+}
+
+@include respond-to(desktop) {
+.main-nav {
+    position: relative;
+}
+}
 </style>

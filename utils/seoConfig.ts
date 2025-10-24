@@ -1,4 +1,3 @@
-
 export const seoConfig = {
   title: "Arnaud Brégère | Développeur Front-End",
   meta: [
@@ -23,6 +22,10 @@ export const seoConfig = {
     {
       name: "viewport",
       content: "width=device-width, initial-scale=1.0",
+    },
+    {
+      name: "theme-color",
+      content: "#0A2C6B",
     },
     {
       property: "og:title",
@@ -64,10 +67,12 @@ export const seoConfig = {
     },
   ],
   link: [
-    {
-      rel: "canonical",
-      href: "https://arnaudbregere.fr",
-    },
+    { rel: "canonical", href: "https://arnaudbregere.fr" },
+    { rel: "icon", type: "image/png", href: "/favicon-96x96.png", sizes: "96x96" },
+    { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
+    { rel: "shortcut icon", href: "/favicon.ico" },
+    { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+    { rel: "manifest", href: "/site.webmanifest" },
   ],
   script: [
     {
