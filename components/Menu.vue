@@ -1,13 +1,11 @@
 <template>
   <div class="menu-wrapper">
-    <button class="burger-btn" @click="toggleMenu" v-if="isMobile && !menuOpen" aria-label="Ouvrir le menu">
-      <Icon name="burger" width="32" height="32" />
-    </button>
-          <button v-if="isMobile && menuOpen" class="close-btn" @click="closeMenu" aria-label="Fermer le menu">
-        <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M6 18L18 6M6 6L18 18" stroke="var(--neon-blue)" stroke-width="2" stroke-linecap="round"/>
-        </svg>
-      </button>
+    <MenuToggle 
+      v-if="isMobile"
+      :menuOpen="menuOpen"
+      @open="toggleMenu"
+      @close="closeMenu"
+    />
     <ul :class="{ 'mobile-open': menuOpen }" v-show="!isMobile || menuOpen">
       <li v-if="isMobile && menuOpen" class="logo-container">
         <NuxtLink to="/" @click="closeMenu">
@@ -31,6 +29,7 @@
 
 <script setup lang="ts">
 import { routes } from '~/config/routes';
+import MenuToggle from './MenuToggle.vue';
 
 const emit = defineEmits(['navigate']);
 
@@ -66,52 +65,6 @@ const navigate = (section: string) => {
   position: relative;
 }
 
-.burger-btn {
-  background: none;
-  border: none;
-  color: var(--neon-blue);
-  font-size: 1.5rem;
-  cursor: pointer;
-  padding: 0.5rem;
-  transition: all 0.3s ease;
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  z-index: 300;
-}
-
-.burger-btn:hover {
-  color: var(--electric-cyan);
-  text-shadow: 0 0 1rem var(--electric-cyan);
-}
-
-.burger-icon {
-  transition: all 0.3s ease;
-}
-
-.burger-btn:hover .burger-icon {
-  stroke: var(--electric-cyan);
-}
-
-.close-btn {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.5rem;
-  z-index: 300;
-}
-
-.close-icon {
-  transition: all 0.3s ease;
-}
-
-.close-btn:hover .close-icon {
-  stroke: var(--electric-cyan);
-}
-
 ul {
   list-style: none;
   display: flex;
@@ -126,25 +79,27 @@ ul {
   flex-direction: column;
   text-align: center;
   gap: 1rem;
-}
 
-ul.mobile-open {
+  &.mobile-open {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 80vh;
   background: var(--bg-darker);
   border: none;
   border-radius: 0;
-  padding: 5rem 1rem 1rem;
-  z-index: 250;
+  padding: 1rem;
+  z-index: 1;
   flex-direction: column;
   gap: 0.75rem;
   transform: translateY(0);
   opacity: 1;
   overflow-y: auto;
 }
+}
+
+
 
 li {
   display: flex;
@@ -230,14 +185,6 @@ a.download-btn:hover {
 }
 
 @include respond-to(desktop) {
-  .burger-btn {
-    display: none;
-  }
-
-  .close-btn {
-    display: none;
-  }
-
   ul {
     flex-direction: row;
     position: static;

@@ -6,14 +6,6 @@
 
 
       <div class="contact-grid">
-        <div class="contact-item">
-          <span class="pixel-icon">📍</span>
-          <div class="info-block">
-            <span class="label">LOCATION</span>
-            <span class="value">45, rue Lemercier</span>
-            <span class="value">75017 Paris</span>
-          </div>
-        </div>
 
         <div class="contact-item">
           <span class="pixel-icon">📱</span>

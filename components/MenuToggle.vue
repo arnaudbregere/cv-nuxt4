@@ -44,6 +44,7 @@ const closeMenu = () => {
 
 <style scoped lang="scss">
 .menu-toggle-wrapper {
+    z-index: 2;
   position: relative;
   display: inline-block;
 }
