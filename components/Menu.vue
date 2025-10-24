@@ -1,14 +1,14 @@
 <template>
   <div class="menu-wrapper">
-    <button class="burger-btn" @click="toggleMenu" v-if="isMobile" aria-label="Ouvrir le menu">
+    <button class="burger-btn" @click="toggleMenu" v-if="isMobile && !menuOpen" aria-label="Ouvrir le menu">
       <Icon name="burger" width="32" height="32" />
     </button>
-    <ul :class="{ 'mobile-open': menuOpen }" v-show="!isMobile || menuOpen">
-      <button v-if="isMobile && menuOpen" class="close-btn" @click="closeMenu" aria-label="Fermer le menu">
+          <button v-if="isMobile && menuOpen" class="close-btn" @click="closeMenu" aria-label="Fermer le menu">
         <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M6 18L18 6M6 6L18 18" stroke="var(--neon-blue)" stroke-width="2" stroke-linecap="round"/>
         </svg>
       </button>
+    <ul :class="{ 'mobile-open': menuOpen }" v-show="!isMobile || menuOpen">
       <li v-if="isMobile && menuOpen" class="logo-container">
         <NuxtLink to="/" @click="closeMenu">
           <div class="logo-text">
