@@ -12,7 +12,7 @@
       <li v-if="isMobile && menuOpen" class="logo-container">
         <NuxtLink to="/" @click="closeMenu">
           <div class="logo-text">
-            <h1 class="name">Arnaud Brégère</h1>
+            <h1 class="name">Arnaud Brègère</h1>
             <h2 class="title">Développeur Front-End</h2>
           </div>
         </NuxtLink>
@@ -38,7 +38,6 @@ const menuOpen = ref(false);
 const device = useDevice();
 const isMobile = computed(() => device.isMobile);
 
-// Filtre les routes pour le menu (exclut les doublons)
 const menuRoutes = computed(() => {
   const seen = new Set();
   return routes.filter(route => {
@@ -55,11 +54,11 @@ const toggleMenu = () => {
 const closeMenu = () => {
   menuOpen.value = false;
 }
+
 const navigate = (section: string) => {
   emit('navigate', section);
   closeMenu();
 }
-
 </script>
 
 <style scoped lang="scss">
@@ -75,7 +74,10 @@ const navigate = (section: string) => {
   cursor: pointer;
   padding: 0.5rem;
   transition: all 0.3s ease;
-  z-index: 200;
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 300;
 }
 
 .burger-btn:hover {
@@ -92,14 +94,14 @@ const navigate = (section: string) => {
 }
 
 .close-btn {
-  position: absolute;
+  position: fixed;
   top: 1rem;
   right: 1rem;
   background: none;
   border: none;
   cursor: pointer;
   padding: 0.5rem;
-  z-index: 201;
+  z-index: 300;
 }
 
 .close-icon {
@@ -135,10 +137,10 @@ ul.mobile-open {
   background: var(--bg-darker);
   border: none;
   border-radius: 0;
-  padding: 2rem 1rem 1rem;
-  z-index: 150;
+  padding: 5rem 1rem 1rem;
+  z-index: 250;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
   transform: translateY(0);
   opacity: 1;
   overflow-y: auto;
@@ -154,7 +156,7 @@ li {
 a {
   color: var(--text-light);
   text-decoration: none;
-  padding: 0.8rem 1.5rem;
+  padding: 0.6rem 1.2rem;
   border: .1rem solid transparent;
   border-radius: 1.2rem;
   transition: all 0.3s ease;
@@ -192,7 +194,7 @@ a:hover::before {
 
 a.download-btn {
   display: inline-flex;
-  padding: 0.8rem 1.5rem;
+  padding: 0.6rem 1.2rem;
   background-color: var(--neon-blue);
   color: var(--bg-deepest);
   border-radius: 1.2rem;
