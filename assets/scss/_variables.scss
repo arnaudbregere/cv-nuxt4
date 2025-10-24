@@ -20,12 +20,21 @@
   --neo-shadow: 0 0 20px rgba(0, 153, 255, 0.3);
 }
 
-
+// Breakpoints
 $breakpoint-mobile: 480px;
 $breakpoint-tablet: 768px;
 $breakpoint-desktop: 1024px;
 
+// Transitions
+$transition-default: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
+// Filters
+$icon-filter-base: brightness(0) saturate(100%);
+
+// Borders
+$border-style: 0.1rem solid;
+
+// Responsive Mixin
 @mixin respond-to($device) {
   @if $device == mobile {
     @media (min-width: #{$breakpoint-mobile}) {
@@ -41,4 +50,3 @@ $breakpoint-desktop: 1024px;
     }
   } 
 }
-

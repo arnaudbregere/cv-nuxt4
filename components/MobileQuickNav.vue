@@ -6,14 +6,17 @@
       @click="navigate(route.section)"
       class="quick-nav-btn"
       :class="{ active: currentSection === route.section }"
+      :aria-label="route.label"
     >
-      <span class="nav-icon">{{ route.icon }}</span>
+      <Icon :name="route.icon" :width="20" :height="20" class="nav-icon" />
       <span class="nav-label">{{ route.label }}</span>
     </button>
   </div>
 </template>
 
 <script setup lang="ts">
+import Icon from './Icon.vue';
+
 const props = defineProps<{
   currentSection: string;
 }>();
@@ -24,12 +27,12 @@ const device = useDevice();
 const isMobile = computed(() => device.isMobile);
 
 const quickRoutes = [
-  { section: 'cv', label: 'CV', icon: '📄' },
-  { section: 'experience', label: 'Exp', icon: '💼' },
-  { section: 'formation', label: 'Formation', icon: '🎓' },
-  { section: 'competences', label: 'Skills', icon: '⚡' },
-  { section: 'projets', label: 'Projets', icon: '🚀' },
-  { section: 'contact', label: 'Contact', icon: '📧' }
+  { section: 'cv', label: 'CV', icon: 'document' },
+  { section: 'experience', label: 'Exp', icon: 'briefcase' },
+  { section: 'formation', label: 'Formation', icon: 'graduation' },
+  { section: 'competences', label: 'Skills', icon: 'lightning' },
+  { section: 'projets', label: 'Projets', icon: 'rocket' },
+  { section: 'contact', label: 'Contact', icon: 'mail' }
 ];
 
 const navigate = (section: string) => {
@@ -38,54 +41,72 @@ const navigate = (section: string) => {
 </script>
 
 <style scoped lang="scss">
+
 .mobile-quick-nav {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-  padding: 0.8rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+  padding: 1rem;
   background: var(--glass-bg);
   backdrop-filter: blur(2rem);
-  border-top: .1rem solid var(--border-glow);
-
+  border-top: $border-style var(--border-glow);
 }
 
 .quick-nav-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.8rem 1.2rem;
-  background: rgba(0, 153, 255, 0.1);
-  border: .1rem solid rgba(0, 153, 255, 0.3);
-  border-radius: .8rem;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: rgba(0, 153, 255, 0.05);
+  border: $border-style var(--border-glow);
+  border-radius: 1rem;
   color: var(--text-light);
   font-family: 'Courier New', monospace;
   font-size: 0.75rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: $transition-default;
   flex-shrink: 0;
-  min-width: 6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  
+  &:hover {
+    background: var(--deep-blue);
+    border-color: var(--electric-cyan);
+    color: var(--bright-white);
+    transform: translateY(-2px);
+  }
   
   &:active {
+    background: var(--deep-blue);
     transform: scale(0.95);
   }
   
   &.active {
-    background: var(--neon-blue);
+    background: var(--electric-cyan);
     color: var(--bg-deepest);
     border-color: var(--electric-cyan);
-    box-shadow: 0 0 1.5rem rgba(0, 153, 255, 0.5);
+    box-shadow: 0 0 1.5rem rgba(0, 212, 255, 0.6);
   }
 }
 
 .nav-icon {
-  font-size: 1.5rem;
+  transition: $transition-default;
+  filter: #{$icon-filter-base} invert(60%) sepia(100%) saturate(500%) hue-rotate(180deg);
+  
+  .quick-nav-btn:hover & {
+    filter: #{$icon-filter-base} invert(100%);
+  }
+  
+  .quick-nav-btn.active & {
+    filter: #{$icon-filter-base} invert(0%);
+  }
 }
 
 .nav-label {
   font-weight: bold;
-  text-transform: uppercase;
-  letter-spacing: .05rem;
 }
 </style>
