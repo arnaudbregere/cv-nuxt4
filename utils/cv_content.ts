@@ -9,7 +9,6 @@ Mon parcours atypique me permet d'allier créativité, technicité et adaptabili
 <span class="title" style="color: orange"> COORDONNÉES ====================</span>
 <span class="text">☎ 06 07 98 52 85</span>
 <span class="text">✉ arnaud.bregere@gmail.com</span>
-<span class="text">☗ 45, rue Lemercier 75017 Paris</span>
 
 <span class="title" style="color: orange"> LOISIRS ====================</span>
 <span class="text">Dessin | Web | Cinéma | Sport | Voyages | Cuisine</span>
@@ -343,7 +342,6 @@ export const contactText = `
 <span class="subtitle">▸ Informations de Contact</span>
 <span class="text">☎ Téléphone: 06 07 98 52 85</span>
 <span class="text">✉ Email: arnaud.bregere@gmail.com</span>
-<span class="text">☗ Adresse: 45, rue Lemercier 75017 Paris</span>
 
 <span class="subtitle">▸ Présence en Ligne</span>
 <span class="text">▸ LinkedIn: linkedin.com/in/arnaud-bregere</span>
