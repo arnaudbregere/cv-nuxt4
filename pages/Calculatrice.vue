@@ -181,20 +181,19 @@ const handleBackspace = () => {
   50% { opacity: 0.95; }
 }
 
-
 .back-button {
   position: absolute;
-  top: 2rem;
-  left: 2rem;
+  top: 1rem;
+  left: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.8rem 1.5rem;
+  padding: 0.6rem 1rem;
   background: linear-gradient(145deg, rgba(0, 102, 204, 0.3), rgba(8, 8, 26, 0.8));
   border: 0.125rem solid var(--glass-border);
   color: var(--electric-cyan);
   text-decoration: none;
-  font-size: 1rem;
+  font-size: 0.875rem;
   font-weight: bold;
   font-family: 'Courier New', monospace;
   cursor: pointer;
@@ -203,6 +202,13 @@ const handleBackspace = () => {
   z-index: 100;
   text-shadow: 0 0 0.3125rem var(--electric-cyan);
   overflow: hidden;
+
+  @include respond-to(tablet) {
+    top: 2rem;
+    left: 2rem;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
 
   &::before, &::after {
     content: '';
@@ -226,7 +232,13 @@ const handleBackspace = () => {
     box-shadow: 0 0 0.5rem var(--accent-purple);
   }
 
-  .back-arrow { font-size: 1.3rem; transition: transform 0.3s ease; }
+  .back-arrow {
+    font-size: 1rem;
+    transition: transform 0.3s ease;
+    @include respond-to(tablet) {
+      font-size: 1.3rem;
+    }
+  }
 
   &:hover {
     background: linear-gradient(145deg, rgba(0, 153, 255, 0.5), rgba(0, 102, 204, 0.7));
@@ -257,9 +269,13 @@ const handleBackspace = () => {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 1rem;
   min-height: 100vh;
   position: relative;
+
+  @include respond-to(tablet) {
+    padding: 2rem;
+  }
 
   &::before {
     content: '';
@@ -284,11 +300,12 @@ const handleBackspace = () => {
 }
 
 .title {
-  margin-bottom: 2rem;
-  font-size: 2.5rem;
+  margin-top: 3rem;
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
   font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 0.3rem;
+  letter-spacing: 0.2rem;
   background: linear-gradient(135deg, var(--electric-cyan), var(--neon-blue), var(--accent-purple), var(--accent-pink));
   background-size: 300% 300%;
   -webkit-background-clip: text;
@@ -297,22 +314,34 @@ const handleBackspace = () => {
   filter: drop-shadow(0 0 0.625rem rgba(0, 153, 255, 0.8)) drop-shadow(0 0 1.25rem rgba(0, 212, 255, 0.5));
   animation: flicker 3s infinite;
   z-index: 2;
+
+  @include respond-to(tablet) {
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    letter-spacing: 0.3rem;
+  }
 }
 
 .display {
   width: 100%;
   max-width: 31.2rem;
-  padding: 1.5rem;
-  margin-bottom: 1.5rem;
+  padding: 1rem;
+  margin-bottom: 1rem;
   border: 0.1875rem solid transparent;
   background: linear-gradient(var(--bg-darker), var(--bg-darker)) padding-box,
               linear-gradient(135deg, var(--electric-cyan), var(--neon-blue)) border-box;
   text-align: right;
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: var(--bright-white);
   animation: glow-pulse 3s ease-in-out infinite;
   z-index: 2;
   font-weight: bold;
+
+  @include respond-to(tablet) {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+  }
 
   &::placeholder { color: rgba(148, 163, 184, 0.5); }
   &:focus { outline: none; animation: glow-pulse 1.5s ease-in-out infinite; }
@@ -320,22 +349,41 @@ const handleBackspace = () => {
 
 .buttons {
   display: grid;
-  grid-template-columns: repeat(4, 7.8rem);
-  gap: 0.8rem;
+  grid-template-columns: repeat(4, minmax(3rem, 1fr));
+  gap: 0.5rem;
   z-index: 2;
+  width: 100%;
+  max-width: 31.2rem;
+  padding: 0 0.5rem;
+
+  @include respond-to(tablet) {
+    grid-template-columns: repeat(4, 7.8rem);
+    gap: 0.8rem;
+    padding: 0;
+  }
 }
 
 button {
   background: linear-gradient(145deg, rgba(0, 102, 204, 0.3), rgba(8, 8, 26, 0.8));
   border: 0.125rem solid var(--glass-border);
   color: var(--electric-cyan);
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   font-weight: bold;
-  padding: 1.2rem;
+  padding: 0.8rem 0.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
   text-shadow: 0 0 0.3125rem var(--electric-cyan);
   overflow: hidden;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  @include respond-to(tablet) {
+    font-size: 1.5rem;
+    padding: 1.2rem;
+    aspect-ratio: auto;
+  }
 
   &:hover {
     background: linear-gradient(145deg, rgba(0, 153, 255, 0.4), rgba(0, 102, 204, 0.6));
