@@ -63,7 +63,7 @@
           <div class="prompt-container" v-if="device.isDesktop">
             <div class="prompt-line">
               <span class="prompt-symbol">▶</span>
-              <span class="prompt-path">root@portfolio:~$</span>
+              <span class="prompt-path">Tapez votre commande :</span>
               <TerminalPrompt v-model:command="command" @enter="handleEnter" />
             </div>
           </div>
