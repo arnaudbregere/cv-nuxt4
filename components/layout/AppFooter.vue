@@ -24,6 +24,16 @@
             </a>
           </div>
         </div>
+
+        <div class="contact-item">
+          <span class="pixel-icon">👨‍🎓</span>
+          <div class="info-block">
+            <span class="label">Formation</span>
+            <a href="https://www.formapedia.com/" class="value formation-link" target="_blank">
+              Formapedia
+            </a>
+          </div>
+        </div>
       </div>
 
       <div class="scan-line-container">
@@ -159,7 +169,7 @@
   letter-spacing: 0.05rem;
 }
 
-.email-link {
+.email-link, .formation-link {
   color: var(--electric-cyan);
   text-decoration: none;
   transition: all 0.3s ease;

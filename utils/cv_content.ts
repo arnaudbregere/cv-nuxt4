@@ -30,6 +30,15 @@ Mon parcours atypique me permet d'allier créativité, technicité et adaptabili
 <span class="text">Javascript / jQuery - SCSS - UI/UX - Pages produit/liste</span>
 
 <span class="title" style="color: orange"> FORMATION ====================</span>
+<span class="subtitle">Javascript Développement Web </span>
+<span class="date">
+    <a
+     href="https://www.formapedia.com/" target="_blank"
+     style="color: orange"
+     >
+        FORMAPEDIA – 2026
+    </a>
+</span>
 <span class="subtitle">Licence Communication & Médias (Webdesign)</span>
 <span class="date">Cergy Paris Université – 2007/2008</span>
 <span class="subtitle">BTS Communication Visuelle</span>
@@ -101,6 +110,11 @@ export const experienceText = `
 
 export const formationText = `
 <span class="title" style="color: orange"> FORMATION ====================</span>
+
+<span class="subtitle">▸ Javascript Développement Web </span>
+<span class="date">▸ 2026</span>
+<span class="text">
+<a href="https://www.formapedia.com/" target="_blank" style="color: white" title="Formapedia - Formation">▸ FORMAPEDIA</a></span>
 
 <span class="subtitle">▸ Licence Communication & Médias (Webdesign)</span>
 <span class="date">▸ 2007 - 2008</span>
