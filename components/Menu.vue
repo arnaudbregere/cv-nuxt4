@@ -24,7 +24,7 @@
         </a>
       </li>
             <li>
-        <a href="/pdf/arnaud_bregere_light.pdf" download="Arnaud-Bregere-CV.pdf" class="download-btn-light">
+        <a href="/pdf/arnaud_bregere_print.pdf" download="Arnaud-Bregere-CV.pdf" class="download-btn-light">
           CV version light - print
         </a>
       </li>
