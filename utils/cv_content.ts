@@ -159,7 +159,7 @@ export const formationText = `
 
 <span class="text">▸ Technologies apprises:</span>
 • JavaScript moderne (ES6+, TypeScript)
-• Frameworks frontend (Vue.js, Nuxt.js, React)
+• Frameworks frontend (Vue.js, Nuxt.js)
 • Outils de développement (Webpack, Vite, Git)
 • Méthodologies Agile et bonnes pratiques
 
@@ -183,7 +183,6 @@ export const competencesText = `
 <span class="text">HTML5 / CSS3 / SCSS: ████████████████████ 100%</span>
 <span class="text">JavaScript / TypeScript: ██████████████████░░ 95%</span>
 <span class="text">Vue.js / Nuxt.js: █████████████████░░░ 85%</span>
-<span class="text">React / Next.js: ███████████████░░░░░ 75%</span>
 
 <span class="subtitle">▸ Outils & Technologies</span>
 <span class="text">Git / GitHub: ████████████████████ 100%</span>
@@ -370,7 +369,7 @@ export const contactText = `
 
 <span class="subtitle">▸ Recherche</span>
 <span class="text">▸ Poste: Développeur Front-end Senior / Lead Developer</span>
-<span class="text">▸ Technologies: Vue.js, React, TypeScript, Node.js</span>
+<span class="text">▸ Technologies: Vue.js, TypeScript, Node.js</span>
 <span class="text">▸ Secteurs: Tech, E-commerce, Media, Fintech</span>
 <span class="text">▸ Taille équipe: 5-15 développeurs</span>
 
