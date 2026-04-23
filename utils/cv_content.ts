@@ -258,16 +258,7 @@ export const projetsText = `
 • Site portfolio avec animations 3D interactives
 • Transitions fluides et microinteractions
 • Optimisation SEO et génération statique
-• Intégration CMS headless (Strapi)
 • Performance optimisée (Lighthouse 95+)
-
-<span class="text">▸ E-commerce Fullstack</span>
-<span class="date">2022 | Vue 3, Node.js, MongoDB</span>
-• Application e-commerce complète
-• Gestion utilisateurs et authentification JWT
-• Panier persistant et système de commandes
-• Interface d'administration avec CRUD
-• Payment integration (Stripe API)
 
 ---
 
@@ -301,7 +292,7 @@ export const projetsText = `
 • Export video des visualisations
 
 <span class="text">▸ Mini-jeux JavaScript</span>
-<span class="date">2021-2023 | Vanilla JS, Canvas, WebGL</span>
+<span class="date">2021-2023 | Vanilla JS</span>
 • Collection de jeux 2D et 3D dans le navigateur
 • Physics engine simple et collision detection
 • Système de scores et sauvegarde locale
