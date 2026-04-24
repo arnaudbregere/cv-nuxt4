@@ -23,11 +23,6 @@
           Télécharger le CV
         </a>
       </li>
-            <li>
-        <a href="/pdf/arnaud_bregere_print.pdf" download="Arnaud-Bregere-CV.pdf" class="download-btn-light">
-          CV version light - print
-        </a>
-      </li>
     </ul>
   </div>
 </template>
@@ -167,7 +162,7 @@ a.download-btn {
 
 a.download-btn:hover {
   background-color: var(--bg-deepest);
-  color: var(--neon-blue);
+  color: var(--bright-white);
   border: .1rem solid var(--electric-cyan);
   text-shadow: 0 0 .5rem var(--neon-blue);
   transform: translateY(-.2rem) scale(1.05);
