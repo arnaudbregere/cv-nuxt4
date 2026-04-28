@@ -8,7 +8,7 @@
     <div class="accessicheck__form">
       <textarea
         v-model="htmlInput"
-        placeholder="Colle ton HTML ici... ex: <img src='photo.jpg'><button>Clic</button>"
+        placeholder="Colle ton HTML ici..."
         rows="10"
       />
       <button :disabled="loading || !htmlInput" @click="analyser">
@@ -55,6 +55,22 @@
           </p>
         </li>
       </ul>
+
+      <!-- 🔥 NOUVELLE FEATURE -->
+      <div v-if="resultat.htmlCorrige" class="accessicheck__fix">
+        <h2>✨ HTML corrigé automatiquement</h2>
+
+        <textarea
+          :value="resultat.htmlCorrige"
+          rows="10"
+          readonly
+        />
+
+        <button @click="copierHtmlCorrige">
+          Copier le HTML corrigé
+        </button>
+      </div>
+
     </div>
   </div>
 </template>
@@ -72,6 +88,7 @@ interface AuditResultat {
   score: number
   resume: string
   violations: Violation[]
+  htmlCorrige: string
 }
 
 const htmlInput = ref('')
@@ -102,6 +119,12 @@ async function analyser() {
     console.error(e)
   } finally {
     loading.value = false
+  }
+}
+
+function copierHtmlCorrige() {
+  if (resultat.value?.htmlCorrige) {
+    navigator.clipboard.writeText(resultat.value.htmlCorrige)
   }
 }
 </script>
@@ -219,6 +242,31 @@ async function analyser() {
   &__correction {
     margin: 0.5rem 0 0;
     span { font-weight: bold; }
+  }
+}
+
+.accessicheck__fix {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  textarea {
+    width: 100%;
+    font-family: monospace;
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+  }
+
+  button {
+    align-self: flex-start;
+    padding: 0.5rem 1.5rem;
+    background: #1a7a3f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
   }
 }
 </style>

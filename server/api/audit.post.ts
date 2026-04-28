@@ -17,8 +17,9 @@ export default defineEventHandler(async (event) => {
       {
         role: 'system',
         content: `Tu es un expert en accessibilité web (WCAG 2.1, RGAA 4.1).
-Analyse le HTML fourni et retourne UNIQUEMENT un JSON valide, sans texte avant ou après, sans balises markdown.
-Structure exacte :
+
+Analyse le HTML et retourne UNIQUEMENT un JSON valide :
+
 {
   "score": 75,
   "resume": "Résumé en 2 phrases.",
@@ -27,10 +28,11 @@ Structure exacte :
       "critere": "Nom du critère RGAA",
       "niveau": "A",
       "description": "Ce qui ne va pas",
-      "element": "l'élément HTML concerné",
-      "correction": "Ce qu'il faut faire"
+      "element": "élément HTML",
+      "correction": "Correction"
     }
-  ]
+  ],
+  "htmlCorrige": "<html corrigé avec améliorations accessibilité>"
 }`
       },
       {
@@ -46,10 +48,27 @@ Structure exacte :
     throw createError({ statusCode: 500, message: 'Réponse vide de Mistral' })
   }
 
-try {
-    const cleaned = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim()
-    return JSON.parse(cleaned)
-  } catch {
-    throw createError({ statusCode: 500, message: 'Réponse invalide de Mistral' })
+  try {
+    const cleaned = text
+      .replace(/```json\n?/g, '')
+      .replace(/```\n?/g, '')
+      .trim()
+
+    const parsed = JSON.parse(cleaned)
+
+    // 🔒 sécurité minimale
+    return {
+      score: parsed.score ?? 0,
+      resume: parsed.resume ?? '',
+      violations: parsed.violations ?? [],
+      htmlCorrige: parsed.htmlCorrige ?? ''
+    }
+
+  } catch (err) {
+    console.error('Erreur parsing:', text)
+    throw createError({
+      statusCode: 500,
+      message: 'Réponse invalide de Mistral'
+    })
   }
 })
