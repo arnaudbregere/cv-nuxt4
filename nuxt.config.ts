@@ -15,5 +15,8 @@ export default defineNuxtConfig({
         }
       }
     }
-  }
+  },
+runtimeConfig: {
+  mistralApiKey: process.env.MISTRAL_API_KEY
+}
 })
