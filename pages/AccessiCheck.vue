@@ -72,16 +72,11 @@
 
       <div v-if="resultat.htmlCorrige" class="accessicheck__fix">
         <h2>✨ HTML corrigé automatiquement</h2>
-
-        <textarea
-          :value="resultat.htmlCorrige"
-          rows="10"
-          readonly
-        />
-
-        <button @click="copierHtmlCorrige">
-          Copier le HTML corrigé
-        </button>
+        <textarea :value="resultat.htmlCorrige" rows="10" readonly />
+        <div class="accessicheck__fix-actions">
+          <button @click="copierHtmlCorrige">📋 Copier le HTML corrigé</button>
+          <button class="btn-pdf" @click="generatePDF">⬇️ Télécharger le rapport PDF</button>
+        </div>
       </div>
 
     </div>
@@ -161,6 +156,113 @@ function copierHtmlCorrige() {
   if (resultat.value?.htmlCorrige) {
     navigator.clipboard.writeText(resultat.value.htmlCorrige)
   }
+}
+
+
+// Import dynamique pour éviter les erreurs SSR Nuxt
+async function generatePDF() {
+  const { jsPDF } = await import('jspdf')
+  const doc = new jsPDF()
+
+  const date = new Date().toLocaleDateString('fr-FR', {
+    day: '2-digit', month: 'long', year: 'numeric'
+  })
+
+  const pageWidth = doc.internal.pageSize.getWidth()
+  const margin = 15
+  const maxWidth = pageWidth - margin * 2
+  let y = 20 // position verticale courante
+
+  // --- Fonction utilitaire : texte multiligne avec gestion de page ---
+  function addText(text: string, x: number, size: number, style: 'normal' | 'bold' = 'normal', color: [number, number, number] = [0, 0, 0]) {
+    doc.setFontSize(size)
+    doc.setFont('helvetica', style)
+    doc.setTextColor(...color)
+    const lines = doc.splitTextToSize(text, maxWidth)
+    lines.forEach((line: string) => {
+      if (y > 270) { doc.addPage(); y = 20 }
+      doc.text(line, x, y)
+      y += size * 0.5
+    })
+    y += 3
+  }
+
+  function addSeparator(color: [number, number, number] = [200, 200, 200]) {
+    if (y > 270) { doc.addPage(); y = 20 }
+    doc.setDrawColor(...color)
+    doc.line(margin, y, pageWidth - margin, y)
+    y += 6
+  }
+
+  // --- EN-TÊTE ---
+  addText('AccessiCheck — Rapport d\'audit RGAA', margin, 18, 'bold', [0, 102, 204])
+  addText(`Date : ${date}`, margin, 10, 'normal', [100, 100, 100])
+  if (urlInput.value) {
+    addText(`URL analysée : ${urlInput.value}`, margin, 10, 'normal', [100, 100, 100])
+  }
+  y += 4
+  addSeparator([0, 102, 204])
+
+  // --- SCORE ---
+  const score = resultat.value!.score
+  const scoreColor: [number, number, number] = score >= 80
+    ? [26, 122, 63]
+    : score >= 50
+      ? [230, 81, 0]
+      : [198, 40, 40]
+
+  addText(`Score accessibilité : ${score}/100`, margin, 16, 'bold', scoreColor)
+  addText(resultat.value!.resume, margin, 11, 'normal', [68, 68, 68])
+  y += 4
+  addSeparator()
+
+  // --- VIOLATIONS ---
+  if (resultat.value!.violations.length === 0) {
+    addText('✅ Aucun problème détecté !', margin, 12, 'bold', [26, 122, 63])
+  } else {
+    addText(`Violations détectées (${resultat.value!.violations.length})`, margin, 13, 'bold', [0, 0, 0])
+    y += 2
+
+    resultat.value!.violations.forEach((v, i) => {
+      if (y > 260) { doc.addPage(); y = 20 }
+
+      const niveauColor: [number, number, number] = v.niveau === 'A'
+        ? [198, 40, 40]
+        : v.niveau === 'AA'
+          ? [230, 81, 0]
+          : [26, 101, 232]
+
+      addText(`${i + 1}. [Niveau ${v.niveau}] ${v.critere}`, margin, 11, 'bold', niveauColor)
+      addText(`Description : ${v.description}`, margin + 4, 10, 'normal', [68, 68, 68])
+      addText(`Élément : ${v.element}`, margin + 4, 9, 'normal', [80, 80, 80])
+      addText(`Correction : ${v.correction}`, margin + 4, 10, 'normal', [26, 122, 63])
+      y += 3
+    })
+  }
+
+  addSeparator()
+
+  // --- HTML CORRIGÉ ---
+  if (resultat.value!.htmlCorrige) {
+    addText('HTML corrigé (annexe)', margin, 13, 'bold', [0, 0, 0])
+    addText(resultat.value!.htmlCorrige.slice(0, 1500), margin, 8, 'normal', [80, 80, 80])
+  }
+
+  // --- PIED DE PAGE sur chaque page ---
+  const totalPages = (doc.internal as any).getNumberOfPages()
+  for (let p = 1; p <= totalPages; p++) {
+    doc.setPage(p)
+    doc.setFontSize(8)
+    doc.setTextColor(150, 150, 150)
+    doc.text(`AccessiCheck — ${date} — Page ${p}/${totalPages}`, margin, 290)
+  }
+
+  // --- TÉLÉCHARGEMENT ---
+  const filename = urlInput.value
+    ? `audit-${new URL(urlInput.value).hostname}-${Date.now()}.pdf`
+    : `audit-accessicheck-${Date.now()}.pdf`
+
+  doc.save(filename)
 }
 </script>
 
@@ -334,6 +436,28 @@ function copierHtmlCorrige() {
     border: none;
     border-radius: 6px;
     cursor: pointer;
+  }
+}
+
+.accessicheck__fix-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+
+  button {
+    padding: 0.5rem 1.5rem;
+    background: #1a7a3f;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    &:hover { background: #145c30; }
+  }
+
+  .btn-pdf {
+    background: #c62828;
+    &:hover { background: #9b1e1e; }
   }
 }
 </style>
