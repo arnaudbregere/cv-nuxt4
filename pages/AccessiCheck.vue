@@ -2,8 +2,22 @@
   <div class="accessicheck">
     <header class="accessicheck__header">
       <h1>AccessiCheck</h1>
-      <p>Colle du HTML ci-dessous — l'IA analyse son accessibilité RGAA</p>
+      <p>Entre une URL ou colle du HTML — l'IA analyse son accessibilité RGAA</p>
     </header>
+
+    <!-- 🆕 Champ URL -->
+    <div class="accessicheck__url">
+      <input
+        v-model="urlInput"
+        type="url"
+        placeholder="https://exemple.fr"
+        :disabled="loadingUrl"
+      />
+      <button :disabled="loadingUrl || !urlInput" @click="fetchUrl">
+        {{ loadingUrl ? 'Récupération...' : '🌐 Récupérer le HTML' }}
+      </button>
+      <p v-if="erreurUrl" class="accessicheck__erreur">❌ {{ erreurUrl }}</p>
+    </div>
 
     <div class="accessicheck__form">
       <textarea
@@ -56,7 +70,6 @@
         </li>
       </ul>
 
-      <!-- 🔥 NOUVELLE FEATURE -->
       <div v-if="resultat.htmlCorrige" class="accessicheck__fix">
         <h2>✨ HTML corrigé automatiquement</h2>
 
@@ -70,7 +83,6 @@
           Copier le HTML corrigé
         </button>
       </div>
-
     </div>
   </div>
 </template>
@@ -91,10 +103,13 @@ interface AuditResultat {
   htmlCorrige: string
 }
 
-const htmlInput = ref('')
-const loading = ref(false)
-const erreur = ref('')
-const resultat = ref<AuditResultat | null>(null)
+const urlInput    = ref('')
+const htmlInput   = ref('')
+const loading     = ref(false)
+const loadingUrl  = ref(false)
+const erreur      = ref('')
+const erreurUrl   = ref('')
+const resultat    = ref<AuditResultat | null>(null)
 
 const scoreClass = computed(() => {
   if (!resultat.value) return ''
@@ -103,10 +118,29 @@ const scoreClass = computed(() => {
   return 'score--rouge'
 })
 
+// 🆕 Agent 1 : récupère le HTML depuis une URL
+async function fetchUrl() {
+  loadingUrl.value = true
+  erreurUrl.value  = ''
+  htmlInput.value  = ''
+
+  try {
+    const data = await $fetch<{ html: string }>('/api/fetch-url', {
+      method: 'POST',
+      body: { url: urlInput.value }
+    })
+    htmlInput.value = data.html
+  } catch (e: any) {
+    erreurUrl.value = e?.data?.message ?? 'Impossible de récupérer la page.'
+  } finally {
+    loadingUrl.value = false
+  }
+}
+
 async function analyser() {
-  loading.value = true
-  erreur.value = ''
-  resultat.value = null
+  loading.value   = true
+  erreur.value    = ''
+  resultat.value  = null
 
   try {
     const data = await $fetch<AuditResultat>('/api/audit', {
@@ -267,6 +301,38 @@ function copierHtmlCorrige() {
     border: none;
     border-radius: 6px;
     cursor: pointer;
+  }
+}
+
+.accessicheck__url {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+
+  input {
+    flex: 1;
+    min-width: 200px;
+    padding: 0.75rem 1rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 1rem;
+    &:focus { outline: none; border-color: #0066cc; }
+    &:disabled { opacity: 0.5; }
+  }
+
+  button {
+    padding: 0.75rem 1.5rem;
+    background: #6200ea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    white-space: nowrap;
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+    &:hover:not(:disabled) { background: #4a00b4; }
   }
 }
 </style>
