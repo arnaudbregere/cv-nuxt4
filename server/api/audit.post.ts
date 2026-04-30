@@ -1,6 +1,7 @@
 // Déléguation
 
 import { runAudit } from '../utils/runAudit'
+import { runCritic } from '../agents/runCritic'
 
 
 // appelle runAudit, attend le résultat, et le renvoie au front.
@@ -17,7 +18,23 @@ export default defineEventHandler(async (event) => {
 
   try {
     const resultat = await runAudit(html, config.mistralApiKey as string)
-    return resultat
+
+    const critic = await runCritic(
+      html,
+      resultat,
+      config.mistralApiKey as string
+    )
+
+    // merge simple
+    const violationsFinales = [
+      ...critic.violationsValides,
+      ...critic.violationsCorrigees
+    ]
+
+    return {
+      ...resultat,
+      violations: violationsFinales
+    }
   } catch (err) {
     console.error('Erreur audit:', err)
     throw createError({ statusCode: 500, message: 'Réponse invalide de Mistral' })
