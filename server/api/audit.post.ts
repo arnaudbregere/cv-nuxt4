@@ -1,6 +1,10 @@
-// server/api/audit.post.ts
-import { createClient, callLLM, cleanJSON } from '../utils/mistral'
+// Déléguation
 
+import { runAudit } from '../utils/runAudit'
+
+
+// appelle runAudit, attend le résultat, et le renvoie au front.
+// Le comportement est exactement identique à avant — on a juste rangé le code dans un tiroir séparé pour pouvoir le réutiliser dans l'agent itératif.
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const { html } = body
@@ -10,46 +14,12 @@ export default defineEventHandler(async (event) => {
   }
 
   const config = useRuntimeConfig()
-  const client = createClient(config.mistralApiKey as string)
-
-  const messages = [
-    {
-      role: 'system',
-      content: `Tu es un expert en accessibilité web (WCAG 2.1, RGAA 4.1).
-Analyse le HTML et retourne UNIQUEMENT un JSON valide :
-{
-  "score": 75,
-  "resume": "Résumé en 2 phrases.",
-  "violations": [
-    {
-      "critere": "Nom du critère RGAA",
-      "niveau": "A",
-      "description": "Ce qui ne va pas",
-      "element": "élément HTML",
-      "correction": "Correction"
-    }
-  ],
-  "htmlCorrige": "<html corrigé avec améliorations accessibilité>"
-}`
-    },
-    {
-      role: 'user',
-      content: `Analyse ce HTML :\n\n${html.slice(0, 8000)}`
-    }
-  ]
 
   try {
-    const text = await callLLM(client, messages)
-    const parsed = JSON.parse(cleanJSON(text))
-
-    return {
-      score: parsed.score ?? 0,
-      resume: parsed.resume ?? '',
-      violations: parsed.violations ?? [],
-      htmlCorrige: parsed.htmlCorrige ?? ''
-    }
+    const resultat = await runAudit(html, config.mistralApiKey as string)
+    return resultat
   } catch (err) {
-    console.error('Erreur parsing Mistral:', err)
+    console.error('Erreur audit:', err)
     throw createError({ statusCode: 500, message: 'Réponse invalide de Mistral' })
   }
 })
