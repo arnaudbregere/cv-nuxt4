@@ -7,169 +7,55 @@
       <p>Entre une URL ou colle du HTML — l'IA analyse son accessibilité RGAA</p>
     </header>
 
-    <!-- ── Agent 1 : récupération par URL ── -->
-    <div class="accessicheck__url">
-      <input
-        v-model="urlInput"
-        type="url"
-        placeholder="https://exemple.fr"
-        :disabled="loadingUrl"
-      />
-      <button :disabled="loadingUrl || !urlInput" @click="fetchUrl">
-        {{ loadingUrl ? 'Récupération...' : '🌐 Récupérer le HTML' }}
-      </button>
-      <p v-if="erreurUrl" class="accessicheck__erreur">❌ {{ erreurUrl }}</p>
-    </div>
+    <!-- Agent 1 : récupération par URL -->
+    <AccessiCheckUrl
+      v-model:urlInput="urlInput"
+      :loadingUrl="loadingUrl"
+      :erreurUrl="erreurUrl"
+      @fetchUrl="fetchUrl"
+    />
 
-    <!-- ── Zone HTML + boutons d'action ── -->
-    <div class="accessicheck__form">
-      <textarea
-        v-model="htmlInput"
-        placeholder="Colle ton HTML ici..."
-        rows="10"
-      />
+    <!-- Zone HTML + boutons -->
+    <AccessiCheckForm
+      v-model:htmlInput="htmlInput"
+      :loading="loading"
+      :modeAutoFix="modeAutoFix"
+      :iterationCourante="iterationCourante"
+      :MAX_ITERATIONS="MAX_ITERATIONS"
+      @analyser="analyser"
+      @lancerAutoFix="lancerAutoFix"
+    />
 
-      <div class="accessicheck__modes">
-        <!-- Audit simple : 1 appel Mistral, résultat immédiat -->
-        <button
-          class="btn-analyser"
-          :disabled="loading || !htmlInput"
-          @click="analyser"
-        >
-          {{ loading && !modeAutoFix ? 'Analyse en cours...' : '🔍 Analyser' }}
-        </button>
-
-        <!-- Auto-Fix : Mistral se corrige lui-même jusqu'à score ≥ 80 (max 3 passes) -->
-        <button
-          class="btn-autofix"
-          :disabled="loading || !htmlInput"
-          @click="lancerAutoFix"
-        >
-          {{ loading && modeAutoFix ? `Itération ${iterationCourante}/${MAX_ITERATIONS}...` : '🤖 Mode Auto-Fix' }}
-        </button>
-      </div>
-
-      <p class="accessicheck__hint">
-        <strong>Auto-Fix</strong> : l'IA corrige le HTML puis ré-analyse jusqu'à score ≥ 80 (max 3 passes)
-      </p>
-    </div>
-
-    <!-- ── Indicateur de chargement ── -->
+    <!-- Indicateur de chargement -->
     <p v-if="loading" class="accessicheck__loading">
       ⏳ {{ modeAutoFix ? `Itération ${iterationCourante} en cours...` : 'Analyse en cours...' }}
     </p>
 
-    <!-- ── Erreur globale ── -->
+    <!-- Erreur globale -->
     <p v-if="erreur" class="accessicheck__erreur">❌ {{ erreur }}</p>
 
-    <!-- ── Historique des passes (visible seulement si Auto-Fix avec 2+ passes) ── -->
-    <div v-if="historique.length > 1" class="accessicheck__historique">
-      <h2>📈 Progression de l'agent</h2>
+    <!-- Progression des passes Auto-Fix -->
+    <AccessiCheckHistorique
+      :historique="historique"
+      :objectifAtteint="objectifAtteint"
+      :score="resultat?.score ?? 0"
+      :scoreClass="scoreClass"
+    />
 
-      <div class="historique__steps">
-        <div
-          v-for="step in historique"
-          :key="step.iteration"
-          class="historique__step"
-          :class="scoreClass(step.score)"
-        >
-          <span class="step__label">Passe {{ step.iteration }}</span>
-          <span class="step__score">{{ step.score }}/100</span>
-          <span v-if="step.score >= 80" class="step__badge">✅</span>
-        </div>
-      </div>
+    <!-- Résultats : score + violations + diff + fix -->
+    <AccessiCheckResultats
+      :resultat="resultat"
+      :diffLignes="diffLignes"
+      :scoreClass="scoreClass"
+      @copierHtmlCorrige="copierHtmlCorrige"
+      @generatePDF="generatePDF"
+    />
 
-      <p v-if="objectifAtteint" class="historique__success">
-        ✅ Score ≥ 80 atteint en {{ historique.length }} itération(s)
-      </p>
-      <p v-else class="historique__partial">
-        ℹ️ Score maximum atteint après {{ historique.length }} passe(s) : {{ resultat?.score }}/100
-      </p>
-    </div>
-
-    <!-- ── Résultats ── -->
-    <div v-if="resultat" class="accessicheck__resultats">
-
-      <!-- Score coloré -->
-      <div class="accessicheck__score" :class="scoreClass(resultat.score)">
-        <span class="score-chiffre">{{ resultat.score }}/100</span>
-        <span class="score-label">Score accessibilité</span>
-      </div>
-
-      <p class="accessicheck__resume">{{ resultat.resume }}</p>
-
-      <!-- Cas zéro violation -->
-      <div v-if="resultat.violations.length === 0" class="accessicheck__ok">
-        ✅ Aucun problème détecté !
-      </div>
-
-      <!-- Liste des violations -->
-      <ul v-else class="accessicheck__violations">
-        <li
-          v-for="(v, index) in resultat.violations"
-          :key="index"
-          class="violation"
-          :class="`violation--${v.niveau.toLowerCase()}`"
-        >
-          <div class="violation__header">
-            <span class="violation__niveau">Niveau {{ v.niveau }}</span>
-            <strong class="violation__critere">{{ v.critere }}</strong>
-          </div>
-          <p class="violation__description">{{ v.description }}</p>
-          <code class="violation__element">{{ v.element }}</code>
-          <p class="violation__correction">
-            <span>✅ Correction :</span> {{ v.correction }}
-          </p>
-        </li>
-      </ul>
-
-      <!-- ── Diff avant / après ────────────────────────────────────────────── -->
-      <!--
-        Affiché uniquement si l'agent a produit un HTML corrigé différent du HTML original.
-        Chaque ligne est colorée selon son type :
-          - supprimée (rouge)  → ce que l'agent a retiré
-          - ajoutée   (vert)   → ce que l'agent a ajouté
-          - inchangée (neutre) → contexte
-      -->
-      <div v-if="diffLignes.length > 0" class="accessicheck__diff">
-        <h2>🔀 Ce que l'agent a modifié</h2>
-        <div class="diff__legende">
-          <span class="diff__badge diff__badge--supprime">− Avant</span>
-          <span class="diff__badge diff__badge--ajoute">+ Après</span>
-        </div>
-        <div class="diff__viewer">
-          <div
-            v-for="(ligne, i) in diffLignes"
-            :key="i"
-            class="diff__ligne"
-            :class="`diff__ligne--${ligne.type}`"
-          >
-            <!-- Préfixe visuel : − pour supprimé, + pour ajouté, espace sinon -->
-            <span class="diff__prefix">
-              {{ ligne.type === 'supprime' ? '−' : ligne.type === 'ajoute' ? '+' : ' ' }}
-            </span>
-            <code class="diff__code">{{ ligne.texte }}</code>
-          </div>
-        </div>
-      </div>
-      <!-- ──────────────────────────────────────────────────────────────────── -->
-
-      <!-- HTML corrigé + actions -->
-      <div v-if="resultat.htmlCorrige" class="accessicheck__fix">
-        <h2>✨ HTML corrigé automatiquement</h2>
-        <textarea :value="resultat.htmlCorrige" rows="10" readonly />
-        <div class="accessicheck__fix-actions">
-          <button @click="copierHtmlCorrige">📋 Copier le HTML corrigé</button>
-          <button class="btn-pdf" @click="generatePDF">⬇️ Télécharger le rapport PDF</button>
-        </div>
-      </div>
-
-    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-// Toute la logique est dans le composable — ce fichier ne fait qu'afficher
+// Toute la logique reste dans le composable — la page orchestre uniquement
 import { useAccessiCheck } from '~/composables/useAccessiCheck'
 
 const {
@@ -184,5 +70,4 @@ const {
 
 <style lang="scss">
 @use '~/assets/scss/accessicheck/accessicheck';
-
 </style>
