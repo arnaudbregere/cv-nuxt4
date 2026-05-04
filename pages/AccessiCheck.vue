@@ -15,7 +15,8 @@
         placeholder="https://exemple.fr"
         :disabled="loadingUrl"
       />
-      <button :disabled="loadingUrl || !urlInput" @click="fetchUrl">
+      <!-- Guard null : on désactive si urlInput est vide ou vaut la string "null" -->
+      <button :disabled="loadingUrl || !urlInput || urlInput === 'null'" @click="fetchUrl">
         {{ loadingUrl ? 'Récupération...' : '🌐 Récupérer le HTML' }}
       </button>
       <p v-if="erreurUrl" class="accessicheck__erreur">❌ {{ erreurUrl }}</p>

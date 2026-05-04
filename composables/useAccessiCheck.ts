@@ -53,6 +53,12 @@ export function useAccessiCheck() {
 
   // -- Helpers -----------------------------------------------------------------
 
+  // Garde défensive : si urlInput reçoit null (ex: SSR, query param vide),
+  // on remet une chaîne vide pour éviter l'affichage de "null" dans l'input
+  watch(urlInput, val => {
+    if (val === 'null' || val === null) urlInput.value = ''
+  })
+
   /** Retourne la classe CSS de couleur selon le score (rouge / orange / vert) */
   function scoreClass(score: number): string {
     if (score >= SCORE_CIBLE) return 'score--vert'

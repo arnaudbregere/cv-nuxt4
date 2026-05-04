@@ -8,7 +8,8 @@ export function createClient(apiKey: string) {
 // envoie le message à Mistral et récupère la réponse
 export async function callLLM(client: Mistral, messages: any[]) {
   const res = await client.chat.complete({
-    model: 'mistral-small-latest',
+    model:       'mistral-small-latest',
+    temperature: 0, // ← ajout : stabilise les scores
     messages
   })
 
@@ -21,8 +22,8 @@ export async function callLLM(client: Mistral, messages: any[]) {
   return content
 }
 
-// nettoie la réponse de Mistral pour qu'elle soit du JSON propre (Mistral ajoute parfois des ```json qui cassent le parsing)
-
+// nettoie la réponse de Mistral pour qu'elle soit du JSON propre
+// (Mistral ajoute parfois des ```json qui cassent le parsing)
 export function cleanJSON(text: string) {
   return text
     .replace(/```json\n?/g, '')
