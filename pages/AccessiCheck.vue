@@ -15,8 +15,7 @@
         placeholder="https://exemple.fr"
         :disabled="loadingUrl"
       />
-      <!-- Guard null : on désactive si urlInput est vide ou vaut la string "null" -->
-      <button :disabled="loadingUrl || !urlInput || urlInput === 'null'" @click="fetchUrl">
+      <button :disabled="loadingUrl || !urlInput" @click="fetchUrl">
         {{ loadingUrl ? 'Récupération...' : '🌐 Récupérer le HTML' }}
       </button>
       <p v-if="erreurUrl" class="accessicheck__erreur">❌ {{ erreurUrl }}</p>
@@ -124,6 +123,37 @@
         </li>
       </ul>
 
+      <!-- ── Diff avant / après ────────────────────────────────────────────── -->
+      <!--
+        Affiché uniquement si l'agent a produit un HTML corrigé différent du HTML original.
+        Chaque ligne est colorée selon son type :
+          - supprimée (rouge)  → ce que l'agent a retiré
+          - ajoutée   (vert)   → ce que l'agent a ajouté
+          - inchangée (neutre) → contexte
+      -->
+      <div v-if="diffLignes.length > 0" class="accessicheck__diff">
+        <h2>🔀 Ce que l'agent a modifié</h2>
+        <div class="diff__legende">
+          <span class="diff__badge diff__badge--supprime">− Avant</span>
+          <span class="diff__badge diff__badge--ajoute">+ Après</span>
+        </div>
+        <div class="diff__viewer">
+          <div
+            v-for="(ligne, i) in diffLignes"
+            :key="i"
+            class="diff__ligne"
+            :class="`diff__ligne--${ligne.type}`"
+          >
+            <!-- Préfixe visuel : − pour supprimé, + pour ajouté, espace sinon -->
+            <span class="diff__prefix">
+              {{ ligne.type === 'supprime' ? '−' : ligne.type === 'ajoute' ? '+' : ' ' }}
+            </span>
+            <code class="diff__code">{{ ligne.texte }}</code>
+          </div>
+        </div>
+      </div>
+      <!-- ──────────────────────────────────────────────────────────────────── -->
+
       <!-- HTML corrigé + actions -->
       <div v-if="resultat.htmlCorrige" class="accessicheck__fix">
         <h2>✨ HTML corrigé automatiquement</h2>
@@ -146,12 +176,13 @@ const {
   urlInput, htmlInput, loading, loadingUrl,
   modeAutoFix, iterationCourante, MAX_ITERATIONS,
   erreur, erreurUrl, resultat, historique, objectifAtteint,
+  diffLignes,
   fetchUrl, analyser, lancerAutoFix,
   copierHtmlCorrige, generatePDF, scoreClass
 } = useAccessiCheck()
 </script>
 
 <style lang="scss">
-// On importe le fichier SCSS externe plutôt que d'écrire les styles ici
 @use '~/assets/scss/accessicheck/accessicheck';
+
 </style>

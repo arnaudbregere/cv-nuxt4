@@ -28,6 +28,12 @@ export interface IterationStep {
   htmlCorrige: string
 }
 
+// Type d'une ligne dans le diff avant/après
+export interface DiffLigne {
+  type:  'inchange' | 'supprime' | 'ajoute'
+  texte: string
+}
+
 // ─── Constantes ───────────────────────────────────────────────────────────────
 
 export const MAX_ITERATIONS = 3
@@ -51,13 +57,13 @@ export function useAccessiCheck() {
   const historique        = ref<IterationStep[]>([])
   const objectifAtteint   = ref(false)
 
-  // -- Helpers -----------------------------------------------------------------
-
-  // Garde défensive : si urlInput reçoit null (ex: SSR, query param vide),
-  // on remet une chaîne vide pour éviter l'affichage de "null" dans l'input
-  watch(urlInput, val => {
-    if (val === 'null' || val === null) urlInput.value = ''
+  // Fix null : au montage, si urlInput vaut la string "null" on la vide
+  // (peut arriver si un query param vide est passé via le router)
+  onMounted(() => {
+    if (urlInput.value === 'null') urlInput.value = ''
   })
+
+  // -- Helpers -----------------------------------------------------------------
 
   /** Retourne la classe CSS de couleur selon le score (rouge / orange / vert) */
   function scoreClass(score: number): string {
@@ -68,12 +74,46 @@ export function useAccessiCheck() {
 
   /** Remet tout à zéro avant chaque nouvelle analyse */
   function resetEtat() {
-    erreur.value          = ''
-    resultat.value        = null
-    historique.value      = []
-    objectifAtteint.value = false
+    erreur.value            = ''
+    resultat.value          = null
+    historique.value        = []
+    objectifAtteint.value   = false
     iterationCourante.value = 0
   }
+
+  // -- Diff avant/après --------------------------------------------------------
+
+  /**
+   * Calcule un diff ligne par ligne entre le HTML original et le HTML corrigé.
+   * Algorithme simple : on compare les lignes une à une et on marque
+   * les lignes supprimées (rouge) et ajoutées (vert).
+   * Visible uniquement quand un résultat avec htmlCorrige est disponible.
+   */
+  const diffLignes = computed<DiffLigne[]>(() => {
+    if (!htmlInput.value || !resultat.value?.htmlCorrige) return []
+
+    const avant  = htmlInput.value.split('\n')
+    const apres  = resultat.value.htmlCorrige.split('\n')
+    const lignes: DiffLigne[] = []
+
+    const maxLen = Math.max(avant.length, apres.length)
+
+    for (let i = 0; i < maxLen; i++) {
+      const ligneAvant = avant[i]
+      const ligneApres = apres[i]
+
+      if (ligneAvant === ligneApres) {
+        // Ligne identique des deux côtés
+        lignes.push({ type: 'inchange', texte: ligneAvant ?? '' })
+      } else {
+        // Ligne modifiée : on affiche d'abord la suppression, puis l'ajout
+        if (ligneAvant !== undefined) lignes.push({ type: 'supprime', texte: ligneAvant })
+        if (ligneApres !== undefined) lignes.push({ type: 'ajoute',   texte: ligneApres })
+      }
+    }
+
+    return lignes
+  })
 
   // -- Agent 1 : fetch URL -----------------------------------------------------
 
@@ -303,6 +343,8 @@ export function useAccessiCheck() {
     urlInput, htmlInput, loading, loadingUrl,
     modeAutoFix, iterationCourante, MAX_ITERATIONS,
     erreur, erreurUrl, resultat, historique, objectifAtteint,
+    // Diff avant/après
+    diffLignes,
     // Fonctions
     fetchUrl, analyser, lancerAutoFix,
     copierHtmlCorrige, generatePDF, scoreClass
