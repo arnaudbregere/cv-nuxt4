@@ -102,6 +102,8 @@ tentative → le compteur de passes */
   // historique → toutes les passes (pour afficher la progression)
   // objectifAtteint → booléen simple pour que le front sache si on a atteint 80+
   const dernierResultat = historique[historique.length - 1]
+  if (!dernierResultat) throw createError({ statusCode: 500, message: 'Aucune itération complétée' })
+
 
   return {
     historique,
