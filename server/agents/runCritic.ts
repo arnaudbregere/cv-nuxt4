@@ -1,4 +1,4 @@
-import { createClient, callLLM, cleanJSON } from '../utils/mistral'
+import { createClient, callLLM, cleanJSON } from "../services/mistral.service"
 import type { AuditResult, Violation } from '../utils/runAudit'
 
 export interface CriticResult {

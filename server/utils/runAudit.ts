@@ -1,5 +1,5 @@
 
-import { createClient, callLLM, cleanJSON } from './mistral'
+import { createClient, callLLM, cleanJSON } from "../services/mistral.service"
 
 
 // On définit la forme des données 
