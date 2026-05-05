@@ -1,7 +1,9 @@
 export default defineNuxtConfig({
-  nitro: {
-    target: 'es2022', // or 'es2020' or later
-  },
+ nitro: {
+  esbuild: {
+    options: { target: 'es2022' }
+  }
+},
   css: [
     '~/assets/scss/base.scss'
   ],
@@ -15,5 +17,8 @@ export default defineNuxtConfig({
         }
       }
     }
-  }
+  },
+runtimeConfig: {
+  mistralApiKey: process.env.MISTRAL_API_KEY
+}
 })
