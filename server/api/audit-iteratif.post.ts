@@ -1,19 +1,12 @@
-import { runAudit, type AuditResult } from '../utils/runAudit'
+import { runAudit } from '../agents/runAudit'
+import type { AuditResult, IterationStep } from '../types/audit.types'
 import { runCritic } from '../agents/runCritic'
 
 const SCORE_CIBLE  = 80   // on s'arrête quand le score dépasse ce seuil
 const MAX_ITERATIONS = 3  // sécurité anti-boucle infinie
 
 
-// La forme d'une étape dans l'historique.
-// Chaque fois que l'agent fait une passe, on crée un objet de cette forme pour garder une trace
-export interface IterationStep {
-  iteration:   number
-  score:       number
-  resume:      string
-  violations:  AuditResult['violations']
-  htmlCorrige: string
-}
+
 
 
 // C'est la syntaxe Nuxt pour créer un endpoint API.

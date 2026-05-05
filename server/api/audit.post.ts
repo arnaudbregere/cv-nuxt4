@@ -1,6 +1,6 @@
 // Déléguation
 
-import { runAudit } from '../utils/runAudit'
+import { runAudit } from '../agents/runAudit'
 import { runCritic } from '../agents/runCritic'
 
 

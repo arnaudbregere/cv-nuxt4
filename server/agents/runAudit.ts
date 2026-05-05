@@ -1,31 +1,13 @@
+import { createClient, callLLM, cleanJSON } from '../services/mistral.service'
+import type { AuditResult } from '../types/audit.types'
 
-import { createClient, callLLM, cleanJSON } from "../services/mistral.service"
-
-
-// On définit la forme des données 
-// — ce que TypeScript appelle une interface.
-// C'est juste un contrat qui dit "une Violation aura toujours un critere, un niveau, une description...".
-// Le mot export veut dire "les autres fichiers peuvent aussi utiliser ces types", ce qui évite de les réécrire partout.
-export interface Violation {
-  critere: string
-  niveau: 'A' | 'AA' | 'AAA'
-  description: string
-  element: string
-  correction: string
-}
-
-export interface AuditResult {
-  score: number
-  resume: string
-  violations: Violation[]
-  htmlCorrige: string
-}
-
+// Analyse le HTML et retourne un score + violations + HTML corrigé
 /* prend du HTML en entrée (ce qu'on veut analyser)
 prend la clé API Mistral en entrée (pour s'authentifier)
 retourne une promesse d'AuditResult (= un résultat qui arrivera dans le futur, car l'appel réseau prend du temps) */
-export async function runAudit(html: string, apiKey: string): Promise<AuditResult> {
-   // On crée la connexion avec Mistral en lui donnant la clé API. C'est comme "ouvrir la ligne" avant de parler.
+export const runAudit = async (html: string, apiKey: string): Promise<AuditResult> => {
+     // On crée la connexion avec Mistral en lui donnant la clé API. C'est comme "ouvrir la ligne" avant de parler.
+
   const client = createClient(apiKey)
 
 

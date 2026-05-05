@@ -1,20 +1,12 @@
-import { createClient, callLLM, cleanJSON } from "../services/mistral.service"
-import type { AuditResult, Violation } from '../utils/runAudit'
+import { createClient, callLLM, cleanJSON } from '../services/mistral.service'
+import type { AuditResult, CriticResult } from '../types/audit.types'
 
-export interface CriticResult {
-  violationsValides: Violation[]
-  violationsCorrigees: Violation[]
-}
-
-/**
- * Vérifie et corrige les violations générées par le LLM
- */
-export async function runCritic(
-  html: string,
-  audit: AuditResult,
+// Valide et filtre les violations générées par runAudit
+export const runCritic = async (
+  html:   string,
+  audit:  AuditResult,
   apiKey: string
-): Promise<CriticResult> {
-
+): Promise<CriticResult> => {
   const client = createClient(apiKey)
 
   const messages = [
@@ -84,7 +76,7 @@ ${JSON.stringify(audit.violations, null, 2)}
   } catch (err) {
     console.error('Erreur runCritic:', err)
 
-    // fallback : ne rien casser
+    // Fallback : on garde les violations brutes plutôt que de planter
     return {
       violationsValides: audit.violations,
       violationsCorrigees: []
